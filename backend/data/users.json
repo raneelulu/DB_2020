@@ -1,0 +1,21 @@
+[
+    {
+        "id": "you108402",
+        "password": "1234",
+        "name": "유현석",
+        "position": "평가자"
+    },
+    {
+        "id": "you108401",
+        "password": "1234",
+        "name": "이예은",
+        "position": "사용자"
+    },
+
+    {
+        "id": "test",
+        "password": "1234",
+        "name": "관리자",
+        "position": "관리자"
+    }
+]
