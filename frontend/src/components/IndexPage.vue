@@ -14,36 +14,38 @@
 
 <script>
 export default {
-    data(){
-        return {
-            user:null,
-        };
-    },
-    methods:{
-    submitForm:function(){
+  data () {
+    return {
+      user: null
+    }
+  },
+  methods: {
+    submitForm: function () {
       var data = {
         userid: this.userid,
         password: this.password
       }
       this.$http.post('/api/sign_up', data)
-        .then((response)=>{
-          
+        .then((response) => {
+          console.log(response)
         })
-        .catch(function(error){
-          console.log(response);
-        });
-    }},
-    /*
-    created(){
-        this.$http.get('/api/login')
-        .then((res) => {
-            const user = res.data.user;
-            if(user) this.user = user;
+        .catch((error) => {
+          console.error(error)
         })
-        .catch((err) => {
-            console.error(err);
-        });
-    }*/
+    }
+  }
+  /*
+  created(){
+      this.$http.get('/api/login')
+      .then((res) => {
+          const user = res.data.user;
+          if(user) this.user = user;
+      })
+      .catch((err) => {
+          console.error(err);
+      });
+  }
+  */
 }
 </script>
 

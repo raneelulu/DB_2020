@@ -3,5 +3,5 @@
 
 module.exports = {
   DBHost: 'localhost', DBPort: 3306,
-  DBUser: 'root', DBPass: 'root'
+  DBUser: 'root', DBPass: 'nkkjlnkkwnjn'
 }

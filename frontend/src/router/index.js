@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import IndexPage from '@/components/IndexPage'
-import HelloWorld from '@/components/HelloWorld'
+import EvalMain from '@/views/EvalMain'
+import EvalTodoTask from '@/views/EvalTodoTask'
 
 Vue.use(Router)
 
@@ -12,11 +13,15 @@ export default new Router({
       name: 'IndexPage',
       component: IndexPage
     },
-
     {
-      path: '/ccc',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '/evaluator/:userID',
+      name: 'EvaluatorMainPage',
+      component: EvalMain
+    },
+    {
+      path: '/evaluator/:userID/:taskID',
+      name: 'EvaluateTask',
+      component: EvalTodoTask
     }
   ]
 })
