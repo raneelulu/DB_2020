@@ -8,7 +8,7 @@
       <p> 이름 : {{user.name}} </p>
       <p> 직책 : {{user.position}} </p>
     </div>
-    <button onClick="onSubmit">로그아웃</button>
+    <button>로그아웃</button>
     <ul>
       <p>© ED's DBD</p>
     </ul>
@@ -24,8 +24,8 @@ export default {
             const user = res.data.user;
             if(user){
               this.$store.commit("setUser",user);
-              if(user.id =="you108402"){
-                this.$router.push({name:"LoginPage"});
+              if(user.position =="관리자"){
+                this.$router.push({name:"Hi"});
               }
             }else{
               this.$router.push({name:"LoginPage"});
@@ -36,21 +36,10 @@ export default {
         });
     },
     methods:{
-      onSubmit:function(){
-        const id = this.id;
-        const password = this.password;
-        this.$http.post("api/logout",{id,password, },
-        {"Content-Type":"application-json"})
-          .then((res)=>{
-            if(res.data.user){
-              this.$router.push({name: "LoginPage"});
-            }else if (res.data.message){
-              alter(res.data.message);
-            }
-          })
-          .catch((err)=>{
-              console.error(err);
-          });
+      onSubmit(){
+        this.$http.get("api/logout")
+        this.$store.commit("initdata");
+        this.$router.push({name:"LoginPage"});
       }
     },
     computed:{

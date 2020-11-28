@@ -4,5 +4,8 @@ const router = express.Router();
 
 router.get('/', function(req, res, next){
     req.logOut();
-    res.redirect('/login');
+    req.session.save(function(){
+        res.redirect('/');
+    })
 });
+module.exports = router;

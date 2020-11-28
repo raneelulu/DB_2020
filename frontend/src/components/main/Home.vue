@@ -10,7 +10,7 @@
        <label for="password">PW:</label>
        <input name="password" type="password" v-model="password"  />
       </div>
-      <button onClick="onSubmit">로그인</button>
+      <button>로그인</button>
       <button type="newregister" onClick="location.href='http://localhost:3000/#/'">회원가입</button>
     </form>
     <ul>
@@ -29,7 +29,7 @@ export default {
         }
     },
     methods:{
-      onSubmit:function(){
+      onSubmit(){
         const id = this.id;
         const password = this.password;
         this.$http.post("api/login",{id,password, },

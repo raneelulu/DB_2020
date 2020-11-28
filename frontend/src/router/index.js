@@ -1,10 +1,11 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import IndexPage from '@/components/IndexPage'
+import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+const router = new VueRouter({
   mode: 'history',
   routes: [
     {
@@ -16,6 +17,12 @@ export default new Router({
       path: '/login',
       name: 'LoginPage',
       component: LoginPage
+    },
+    {
+      path: '/hi',
+      name: 'Hi',
+      component: Helloworld
     }
   ]
 })
+export default router;
