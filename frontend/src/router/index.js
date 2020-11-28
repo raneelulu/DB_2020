@@ -1,12 +1,14 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import IndexPage from '@/components/IndexPage'
 import EvalMain from '@/views/EvalMain'
 import EvalTodoTask from '@/views/EvalTodoTask'
+import Helloworld from '@/components/Helloworld'
+import LoginPage from '@/components/main/Home'
+Vue.use(VueRouter)
 
-Vue.use(Router)
-
-export default new Router({
+const router = new VueRouter({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -22,6 +24,17 @@ export default new Router({
       path: '/evaluator/:userID/:taskID',
       name: 'EvaluateTask',
       component: EvalTodoTask
+    },
+    {
+      path: '/login',
+      name: 'LoginPage',
+      component: LoginPage
+    },
+    {
+      path: '/hi',
+      name: 'Hi',
+      component: Helloworld
     }
   ]
 })
+export default router;

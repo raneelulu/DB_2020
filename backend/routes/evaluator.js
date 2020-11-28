@@ -10,7 +10,7 @@ router.get('/:userID', function (req, res, next) {
         // todo_list
         // 이 평가자에게 배당되었지만 아직 평가하지 않은 파싱 데이터 시퀀스 파일들을 리스트로 받아옴
         // (파일 ID, 파일 타입, 테스크 이름, 회차, 기간) 정보가 필요함
-        todo_list: [],
+        todo_list: [{id: '1', task: 'Task', type: 'Type', number: 1, start_period: '2020/10/01', end_period: '2020/11/11'}],
         // evaluated_list
         // 이 평가자에게 배당되었고, 이미 평가한 파싱 데이터 시퀀스 파일들을 리스트로 받아옴
         // (파일 ID, 파일 타입, 테스크 이름, 회차, 기간, 평가품질 점수, P/NP) 정보가 필요함
