@@ -4,27 +4,27 @@
       <div class="b">
         <div class="c bold">Task ID</div>
         |
-        <div class="c">{{ task.id }}</div>
+        <div class="c">{{ file.id }}</div>
       </div>
       <div class="b">
         <div class="c bold">Task</div>
         |
-        <div class="c">{{ task.task }}</div>
+        <div class="c">{{ file.task }}</div>
       </div>
       <div class="b">
         <div class="c bold">Data Type</div>
         |
-        <div class="c">{{ task.type }}</div>
+        <div class="c">{{ file.type }}</div>
       </div>
       <div class="b">
         <div class="c bold">Episode</div>
         |
-        <div class="c">{{ task.number }}</div>
+        <div class="c">{{ file.number }}</div>
       </div>
       <div class="b" style="width: 30%;">
         <div class="c bold">Period</div>
         |
-        <div class="c">{{ task.start_period }} ~ {{ task.end_period }}</div>
+        <div class="c">{{ file.start_period }} ~ {{ file.end_period }}</div>
       </div>
     </div>
     <hr>
@@ -32,19 +32,42 @@
       <div class="b">
         <div class="c bold">Number of Tuples</div>
         |
-        <div class="c">{{ task.all_tuple_number }}</div>
+        <div class="c">{{ file.all_tuple_number }}</div>
       </div>
       <div class="b">
         <div class="c bold">Number of Duplicates</div>
         |
-        <div class="c">{{ task.duplicated_tuple_number }}</div>
+        <div class="c">{{ file.duplicated_tuple_number }}</div>
+      </div>
+      <div class="b" style="width: 40%;">
+        <div class="c bold">Download Link</div>
+        |
+        <div class="c"><a :href="download_link">Download</a></div>
+      </div>
+      <div class="b" style="width: 90%;">
+        <div class="c bold">Null value Rate</div>
+        <table>
+          <thead>
+            <th v-for="colName in properties" v-bind:key="colName">{{ colName }}</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td v-for="col in file.null_col_rate" :key="Object.keys(col)[0]">{{ col }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr>
+    <div class="a">
+      <div class="b" style="width: 30%">
+        <div class="c bold">Score</div>
+        |
+        <div class="c">
+          <input v-model="score">
+        </div>
       </div>
       <div class="b" style="width: 30%;">
-        <div class="c bold">downloadLink</div>
-        |
-        <div class="c"><a href="">Download</a></div>
-      </div>
-      <div class="b" style="width: 20%;">
         <div class="c bold">Your Evaluation</div>
         |
         <div class="c">
@@ -58,19 +81,6 @@
           <input type="submit" style="margin: 0;">
         </div>
       </div>
-      <div class="b" style="width: 90%;">
-        <div class="c bold">Null value Rate</div>
-        <table>
-          <thead>
-            <th v-for="colName in properties" v-bind:key="colName">{{ colName }}</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td v-for="col in task.nullColRate" :key="Object.keys(col)[0]">{{ col }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
 </template>
@@ -79,17 +89,17 @@
 export default {
   data () {
     return {
-      task: {
+      file: {
         id: 5,
-        taskName: 'android',
-        dataType: 'seoul',
-        episode: 1,
-        start: '2020-11-22',
-        end: '2020-11-23',
-        downloadLink: 'asdfasdfasdf',
-        totalTupleCount: 30,
-        duplicateTupleCount: 0,
-        nullColRate: {
+        tase: 'android',
+        type: 'seoul',
+        number: 1,
+        start_period: '2020-11-22',
+        end_period: '2020-11-23',
+        download_link: '',
+        all_tuple_number: 30,
+        duplicated_tuple_number: 0,
+        null_col_rate: {
           colA: 0,
           colB: 0,
           colC: 0,
@@ -97,20 +107,22 @@ export default {
         }
       },
       properties: '',
-      pass: 'Non-Pass'
+      pass: 'Non-Pass',
+      score: 0
     }
   },
   created () {
     this.$http.get('/api/evaluator/' + this.$route.params.userID + '/' + this.$route.params.taskID)
       .then((res) => {
         console.log(res)
-        this.task = res.data.task
-        // this.taskEval = res.data.taskEval
+        if (Object.keys(res.data.file).length !== 0) {
+          this.file = res.data.file
+        }
       })
       .catch((err) => {
         console.error(err)
       })
-    this.properties = Object.keys(this.taskEval.nullColRate)
+    this.properties = Object.keys(this.file.null_col_rate)
   }
 }
 </script>

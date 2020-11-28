@@ -34,15 +34,6 @@ export default {
       type: String,
       default: 'tableRow'
     }
-  },
-  computed: {
-    // head () {
-    //     var st = '';
-    //     if (this.props.rowType === 'tableHeader') {
-    //         st = 'border-bottom: 1px solid black;';
-    //     }
-    //     return st;
-    // }
   }
 }
 </script>
