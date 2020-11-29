@@ -9,7 +9,11 @@
         "id": "you108401",
         "password": "1234",
         "name": "이예은",
-        "position": "사용자"
+        "position": "사용자",
+        "tasks": [
+            {"task": "task1"},
+            {"task": "task2"}
+        ]
     },
 
     {

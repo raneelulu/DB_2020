@@ -37,7 +37,10 @@ export default {
           .then((res)=>{
             if(res.data.user){
               this.$store.commit("setUser",res.data.user);
-              this.$router.push({name: "IndexPage"});
+              if (res.data.user.position == "사용자") {
+                this.$router.push({name: "Submitter"});
+              }
+              else this.$router.push({name: "IndexPage"});
             }else if (res.data.message){
               alert(res.data.message);
             }
