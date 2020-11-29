@@ -1,24 +1,20 @@
 <template>
-  <div :class="rowType">
+  <div :class="rowType" @click="goTo">
     <div class="tableCell">
-      {{ taskData.id }}
+      {{ fileData.id }}
     </div>
     <div class="tableCell">
-      {{ taskData.task }}
+      {{ fileData.task }}
     </div>
     <div class="tableCell">
-      {{ taskData.type }}
+      {{ fileData.type }}
     </div>
     <div class="tableCell">
-      {{ taskData.number }}
+      {{ fileData.number }}
     </div>
     <div class="tableCell">
-      <span v-if="typeof(taskData.p_np) === 'number'">
-        {{ taskData.p_np === 1 ? 'Pass' : 'Non-Pass' }}
-      </span>
-      <span v-else>
-        {{ taskData.p_np }}
-      </span>
+      {{ fileData.start_period }}
+      <span v-if="fileData.end_period !== ''"> ~ {{ fileData.end_period }}</span>
     </div>
   </div>
 </template>
@@ -26,13 +22,19 @@
 <script>
 export default {
   props: {
-    taskData: {
+    fileData: {
       type: Object,
       required: true
     },
     rowType: {
       type: String,
       default: 'tableRow'
+    }
+  },
+  methods: {
+    goTo () {
+      if (this.fileData.id === 'ID') return
+      this.$router.push(this.$route.path + '/' + this.fileData.id.toString())
     }
   }
 }
@@ -50,8 +52,9 @@ export default {
 .tableCell {
   display: table-cell;
   border-radius: 5px;
-  /* border: 1px solid black; */
+  /* background-color: #96ffff; */
   background-color: rgb(209, 242, 255);
+  /* background-color: rgb(135,206,235); */
   padding: 2px;
   vertical-align: middle;
 }

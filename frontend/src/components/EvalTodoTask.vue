@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin: 10px;">
     <div class="a">
       <div class="b">
         <div class="c bold">Task ID</div>
@@ -42,7 +42,7 @@
       <div class="b" style="width: 40%;">
         <div class="c bold">Download Link</div>
         |
-        <div class="c"><a :href="download_link">Download</a></div>
+        <div class="c"><a :href="file.download_link">Download</a></div>
       </div>
       <div class="b" style="width: 90%;">
         <div class="c bold">Null value Rate</div>
@@ -113,7 +113,7 @@ export default {
     }
   },
   created () {
-    this.$http.get('/api/evaluator/' + this.$route.params.userID + '/' + this.$route.params.taskID)
+    this.$http.get('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.taskID)
       .then((res) => {
         console.log(res)
         if (Object.keys(res.data.file).length !== 0) {
@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     onClickSubmit () {
-      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/' + this.$route.params.taskID, {score: score, p_np: pass}, {"Content-Type": "application-json"})
+      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.taskID, {score: score, p_np: pass}, {"Content-Type": "application-json"})
         .then((res) => {
           // post가 성공하면
           if (res.data.success) {

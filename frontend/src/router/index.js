@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import IndexPage from '@/components/IndexPage'
-import EvalMain from '@/views/EvalMain'
-import EvalTodoTask from '@/views/EvalTodoTask'
+// import EvalMain from '@/views/EvalMain'
+// import EvalTodoTask from '@/views/EvalTodoTask'
+import EvalTodoView from '@/views/TodoListView'
+import EvalEvaluatedView from '@/views/EvaluatedListView'
+import EvalTaskEvalView from '@/views/EvalTaskEvalView'
 import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
 Vue.use(VueRouter)
@@ -17,13 +20,24 @@ const router = new VueRouter({
     },
     {
       path: '/evaluator/:userID',
-      name: 'EvaluatorMainPage',
-      component: EvalMain
+      redirect: '/evaluator/:userID/todo'
+      // name: 'EvaluatorMainPage',
+      // component: EvalTodoView
     },
     {
-      path: '/evaluator/:userID/:taskID',
-      name: 'EvaluateTask',
-      component: EvalTodoTask
+      path: '/evaluator/:userID/todo',
+      name: 'EvaluatorTodoListPage',
+      component: EvalTodoView
+    },
+    {
+      path: '/evaluator/:userID/todo/:fileID',
+      name: 'EvaluateTaskPage',
+      component: EvalTaskEvalView
+    },
+    {
+      path: '/evaluator/:userID/evaluated',
+      name: 'EvaluatorEvaluatedPage',
+      component: EvalEvaluatedView
     },
     {
       path: '/login',
