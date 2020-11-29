@@ -20,9 +20,9 @@ router.get('/:userID', function (req, res, next) {
     res.json(ret)
 });
 
-router.get('/:userID/:taskID', function (req, res, next) {
+router.get('/:userID/:fileID', function (req, res, next) {
     var userID = req.params.userID;
-    var fileID = req.params.taskID;
+    var fileID = req.params.fileID;
 
     
     res.json({
@@ -49,5 +49,20 @@ router.get('/:userID/:taskID', function (req, res, next) {
         file: {}
     })
 });
+
+router.post('/:userID/:fileID', function (req, res, next) {
+    // string 타입
+    var fileID = req.params.fileID;
+    // number 타입
+    var score = req.params.score;
+    // Pass이면 "Pass", Non pass이면 "Non-Pass"라는 string으로 옴
+    var p_np = req.params.p_np;
+
+    // fileID를 ID로 갖는 파싱 데이터 시퀀스 파일에 평가 점수와 P/NP 정보를 저장함.
+
+    // 저장 성공 여부 전송
+    // 성공이면 true, 실패면 false
+    res.json({success: true})
+})
 
 module.exports = router;

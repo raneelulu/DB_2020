@@ -1,6 +1,6 @@
 <template>
   <div class="parent">
-    <div class="half float-left">
+    <div class="half">
       <div v-if ="!allocEmpty" class="table">
         <AllocatedTask :taskData="{id: 'ID', task: 'Task 이름', type: '원본 Data Type', number: '회차', start_period: '기간', end_period: ''}" rowType="tableHeader" />
         <div style="display: table-row">
@@ -13,10 +13,10 @@
         <AllocatedTask v-for="task in allocatedTasks" :key="task.id" :taskData="task" />
       </div>
       <div v-else>
-        <h1>배정된 Task가 없습니다.</h1>
+        <h1 class="no-margin">배정된 Task가 없습니다.</h1>
       </div>
     </div>
-    <div class="half float-left">
+    <div class="half">
       <div v-if="!evalEmpty" class="table">
         <EvaluatedTask :taskData="{id: 'ID', task: 'Task 이름', type: '원본 Data Type', number: '회차', p_np: 'Pass'}" rowType="tableHeader" />
         <div style="display: table-row">
@@ -29,7 +29,7 @@
         <EvaluatedTask v-for="task in evaluatedTasks" :key="task.id" :taskData="task" />
       </div>
       <div v-else>
-        <h1>아직 평가한 Task가 없습니다.</h1>
+        <h1 class="no-margin">아직 평가한 Task가 없습니다.</h1>
       </div>
     </div>
   </div>
@@ -87,14 +87,10 @@ div {
   display: flex;
   align-items: flex-start;
 }
-/* .float-left {
-  float: left;
-} */
 .half {
   background-color: #cccccc;
   margin: 10px;
   padding: 2px;
-  /* border: 1px solid black; */
   width: 100%;
 }
 .table {
@@ -107,5 +103,8 @@ div {
 .table-hr {
   display: table-cell;
   border-bottom: 1px solid black;
+}
+.no-margin {
+  margin: 0;
 }
 </style>

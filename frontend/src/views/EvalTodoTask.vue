@@ -61,10 +61,10 @@
     <hr>
     <div class="a">
       <div class="b" style="width: 30%">
-        <div class="c bold">Score</div>
+        <div class="c bold"><span title="0 ~ 10 사이의 값을 입력하세요">Score</span></div>
         |
         <div class="c">
-          <input v-model="score">
+          <input v-model.number="score" type="number">
         </div>
       </div>
       <div class="b" style="width: 30%;">
@@ -76,9 +76,10 @@
             <option value="non-pass">Non-Pass</option>
           </select>
         </div>
-        |
+      </div>
+      <div class="b">
         <div class="c">
-          <input type="submit" style="margin: 0;">
+          <input type="submit" style="margin: 0;" @click="onClickSubmit">
         </div>
       </div>
     </div>
@@ -123,6 +124,33 @@ export default {
         console.error(err)
       })
     this.properties = Object.keys(this.file.null_col_rate)
+  },
+  methods: {
+    onClickSubmit () {
+      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/' + this.$route.params.taskID, {score: score, p_np: pass}, {"Content-Type": "application-json"})
+        .then((res) => {
+          // post가 성공하면
+          if (res.data.success) {
+            this.$route.push("/evaluator/" + this.$route.params.userID)
+          } else {
+            alert("Wrong data input")
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
+  },
+  watch: {
+    score: function (val) {
+      if (val < 0) {
+        alert("0보다 작은 값이 입력되었습니다.")
+        // val = 0
+      } else if (val > 10) {
+        alert("10보다 큰 값이 입력되었습니다.")
+        // val = 10
+      }
+    }
   }
 }
 </script>
