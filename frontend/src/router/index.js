@@ -8,6 +8,9 @@ import EvalEvaluatedView from '@/views/EvaluatedListView'
 import EvalTaskEvalView from '@/views/EvalTaskEvalView'
 import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
+import AdminMain from '@/components/Admin/AdminMain'
+import ShowTaskInfo from '@/components/Admin/Task/ShowInfo'
+import AdminMember from '@/components/Admin/Member/AdminMember'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -38,6 +41,21 @@ const router = new VueRouter({
       path: '/evaluator/:userID/evaluated',
       name: 'EvaluatorEvaluatedPage',
       component: EvalEvaluatedView
+    },
+    {
+      path: '/administrator',
+      name: 'AdministratorMain',
+      component: AdminMain
+    },
+    {
+      path: '/administrator/task/showall',
+      name: 'ShowTaskInfo',
+      component: ShowTaskInfo
+    },
+    {
+      path: '/administrator/member',
+      name: 'AdministratorMemb',
+      component: AdminMember
     },
     {
       path: '/login',
