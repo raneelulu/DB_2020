@@ -168,6 +168,19 @@ async function user_sign_up(id, password, name, phone_number, birthday, type){
     return stats.SUCCESS;
 }
   
+// 4-1. check_id:
+//      역할: id 중복 체크
+//      파라미터: user id
+//      리턴: 실패/성공 여부 메시지
+async function check_id(id){
+  query = 'select * from user where id = \''+id+'\'';
+  results = await DBConn.MakeQuery(query);
+  if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+  if(results[0] != null) return stats.ERROR_ID_DUPLICATE;
+  
+  return stats.SUCCESS;
+}
+
 // 5. user_authorize:
 //    역할: 유저 로그인 정보를 DB의 USER 테이블과 비교하고 실패/성공 여부를 반환함
 //    파라미터: 유저 아이디, 패스워드
