@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <Menu current="showall"/>
-        <TaskInfo :lists="task_list"/>
+        <TaskInfo :tasks="task_list"/>
     </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
     components: {
         Menu,
         TaskInfo
+    },
+    data() {
+        return {
+            task_list: []
+        }
     },
     created () {
         this.$http.get('/api/task')

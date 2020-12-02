@@ -70,7 +70,7 @@ export default {
 <style scoped>
 div.menu {
     flex-grow: 1;
-    /*width: 30%;*/
+    /*width: 100%;*/
     background-color: #cccccc;
     padding: 5px 20px;
     margin: 10px;

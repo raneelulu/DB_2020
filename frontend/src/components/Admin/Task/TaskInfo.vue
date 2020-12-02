@@ -11,7 +11,7 @@
                 <div class="table-hr"></div>
                 <div class="table-hr"></div>
             </div>
-            <TaskList v-for="task in lists" :key="task.id" :taskData="task" />
+            <TaskList v-for="task in tasks" :key="task.id" :taskData="task" />
         </div>
         <div v-else>
             <h1 class="no-margin">아직 생성된 Task가 없습니다.</h1>
@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import TaskList from './TaskList.vue';
+import TaskList from './Task.vue';
 export default {
     props: {
-        files: {
+        tasks: {
             type: Array,
             required: true
         }
@@ -33,7 +33,7 @@ export default {
     },
     computed: {
         isEmpty() {
-            if (this.lists.length === 0) {
+            if (this.tasks.length === 0) {
                 return true
             } else {
                 return false
