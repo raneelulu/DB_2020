@@ -45,27 +45,31 @@ const router = new VueRouter({
       component: EvalEvaluatedView
     },
     {
-      path: '/administrator',
+      path: '/admin',
       name: 'AdministratorMain',
       component: AdminMain
     },
     {
-      path: '/administrator/task/create',
+      path: '/admin/task/',
+      redirect: '/admin/task/showall'
+    },
+    {
+      path: '/admin/task/create',
       name: 'TaskCreate',
       component: TaskCreate
     },
     {
-      path: '/administrator/task/showall',
+      path: '/admin/task/showall',
       name: 'ShowTaskInfo',
       component: ShowTaskInfo
     },
     {
-      path: '/administrator/task/showall/:taskID',
+      path: '/admin/task/showall/:taskID',
       name: 'ShowTaskDetail',
       component: ShowTaskDetail
     },
     {
-      path: '/administrator/member',
+      path: '/admin/member',
       name: 'AdministratorMemb',
       component: AdminMember
     },

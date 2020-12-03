@@ -25,7 +25,7 @@ export default {
             if(user){
               this.$store.commit("setUser",user);
               if(user.position =="관리자"){
-                this.$router.push({name:"AdministratorMain"});
+                this.$router.push("/admin");
               }
               else if (user.position === "평가자") {
                 this.$router.push("/evaluator/" + user.id)

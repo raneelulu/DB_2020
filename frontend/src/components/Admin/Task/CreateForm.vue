@@ -1,7 +1,6 @@
 <template>
     <div>
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-
             <b-form-group id="input-group-1" label="테스크 이름:" label-for="input-1">
                 <b-form-input
                     id="input-1"
@@ -83,26 +82,40 @@
                 show: true
             }
         },
-    methods: {
-        onSubmit(evt) {
-            evt.preventDefault()
-            alert(JSON.stringify(this.form))
-        },
-        onReset(evt) {
-            evt.preventDefault()
-                // Reset our form values
-                this.form.name = ''
-                this.form.des = ''
-                this.form.upload = ''
-                this.form.table_name = ''
-                this.form.table_schema = ''
-                this.form.data_type = ''
-                // Trick to reset/clear native browser form validation state
-                this.show = false
-                this.$nextTick(() => {
-                this.show = true
-            })
+        methods: {
+            onSubmit(evt) {
+                evt.preventDefault()
+                //alert(JSON.stringify(this.form))
+                this.$http.post('/api/task/create', 
+                {name: this.form.name, des: this.form.des, upload: this.form.upload, table_name: this.form.table_name, table_schema: this.form.table_schema, 
+                data_type: this.form.data_type}, {"Content-Type": "application-json"})
+                    .then((res) => {
+                        // post가 성공하면
+                        if (res.data.success) {
+                            this.$route.push("/admin/task")
+                        } else {
+                            alert("Wrong data input")
+                        }
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
+            },
+            onReset(evt) {
+                evt.preventDefault()
+                    // Reset our form values
+                    this.form.name = ''
+                    this.form.des = ''
+                    this.form.upload = ''
+                    this.form.table_name = ''
+                    this.form.table_schema = ''
+                    this.form.data_type = ''
+                    // Trick to reset/clear native browser form validation state
+                    this.show = false
+                    this.$nextTick(() => {
+                    this.show = true
+                })
+            }
         }
     }
-  }
 </script>

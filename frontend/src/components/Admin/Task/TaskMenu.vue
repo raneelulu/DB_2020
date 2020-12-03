@@ -52,15 +52,15 @@ export default {
     methods: {
         on_click_showall() {
             if (this.current === "showall") return
-            this.$router.push('/administrator/task/showall')
+            this.$router.push('/admin/task/showall')
         },
         on_click_create() {
             if (this.current === "create") return
-            this.$router.push('/administrator/task/create')
-        },
+            this.$router.push('/admin/task/create')
+        }
         /*on_click_manage() {
             if (this.current === "manage") return
-            this.$router.push('/administrator/task/manage')
+            this.$router.push('/admin/task/manage')
         }*/
     }
 }
