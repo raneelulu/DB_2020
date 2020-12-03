@@ -31,7 +31,7 @@
             <em>User</em>
           </template>
           <b-dropdown-item href="http://localhost:3000/#/">Profile</b-dropdown-item>
-          <b-dropdown-item href="http://localhost:3000/#/login">Sign Out</b-dropdown-item>
+          <b-dropdown-item v-on:click="gogo">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>
@@ -41,5 +41,13 @@
 <script>
 export default {
     name : "header",
+    methods:{
+      gogo:function(){
+        this.$http.get("api/logout")
+        this.$store.commit("initdata");
+        this.$router.push({name:"LoginPage"});
+      }
+    },
 }
+
 </script>

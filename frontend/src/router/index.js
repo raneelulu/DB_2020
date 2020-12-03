@@ -10,6 +10,7 @@ import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
 import AdminMain from '@/components/Admin/AdminMain'
 import ShowTaskInfo from '@/components/Admin/Task/ShowInfo'
+import ShowTaskDetail from '@/components/Admin/Task/TaskView'
 import AdminMember from '@/components/Admin/Member/AdminMember'
 Vue.use(VueRouter)
 
@@ -51,6 +52,11 @@ const router = new VueRouter({
       path: '/administrator/task/showall',
       name: 'ShowTaskInfo',
       component: ShowTaskInfo
+    },
+    {
+      path: '/administrator/task/showall/:taskID',
+      name: 'ShowTaskDetail',
+      component: ShowTaskDetail
     },
     {
       path: '/administrator/member',

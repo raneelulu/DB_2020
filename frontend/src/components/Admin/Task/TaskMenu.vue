@@ -1,7 +1,6 @@
 <template>
     <div class="menu">
-        <div :class="create_style">
-        <!-- <div :class="create_style" @click="on_click_create"> -->
+        <div :class="create_style" @click="on_click_create">
             테스크 생성
             <!--1. 이름, 설명, 최소업로드 주기, 데이터 테이블 이름, 데이터 테이블 스키마
                 2. 원본 데이터 타입 -->
@@ -51,11 +50,11 @@ export default {
         }
     },
     methods: {
-        /*on_click_create() {
+        on_click_create() {
             if (this.current === "create") return
             this.$router.push('/administrator/task/create')
         },
-        on_click_manage() {
+        /*on_click_manage() {
             if (this.current === "manage") return
             this.$router.push('/administrator/task/manage')
         },*/

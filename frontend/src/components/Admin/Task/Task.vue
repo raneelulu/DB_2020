@@ -1,6 +1,5 @@
 <template>
-    <div :class="rowType">
-<!--<div :class="rowType" @click="goTo"> -->
+    <div :class="rowType" @click="goTo">
         <div class="tableCell">
             {{ taskData.id }}
         </div>
@@ -37,12 +36,12 @@ export default {
             default: 'tableRow'
         }
     },
-/*    methods: {
+    methods: {
         goTo () {
             if (this.taskData.id === 'ID') return
-            this.$router.push(this.$route.path + '/' + this.fileData.id.toString())
+            this.$router.push(this.$route.path + '/' + this.taskData.id.toString())
         }
-    }*/
+    }
 }
 </script>
 
