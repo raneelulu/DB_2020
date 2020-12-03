@@ -9,6 +9,7 @@ import EvalTaskEvalView from '@/views/EvalTaskEvalView'
 import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
 import AdminMain from '@/components/Admin/AdminMain'
+import TaskCreate from '@/components/Admin/Task/TaskCreate'
 import ShowTaskInfo from '@/components/Admin/Task/ShowInfo'
 import ShowTaskDetail from '@/components/Admin/Task/TaskView'
 import AdminMember from '@/components/Admin/Member/AdminMember'
@@ -47,6 +48,11 @@ const router = new VueRouter({
       path: '/administrator',
       name: 'AdministratorMain',
       component: AdminMain
+    },
+    {
+      path: '/administrator/task/create',
+      name: 'TaskCreate',
+      component: TaskCreate
     },
     {
       path: '/administrator/task/showall',

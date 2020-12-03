@@ -1,31 +1,17 @@
 <template>
     <div class="wrapper">
         <Menu current="create"/>
-        <TaskInfo :tasks="task_list"/>
+        <CreateForm/>
     </div>
 </template>
 
 <script>
 import Menu from '@/components/Admin/Task/TaskMenu.vue';
-import TaskInfo from '@/components/Admin/Task/TaskInfo.vue';
+import CreateForm from '@/components/Admin/Task/CreateForm.vue';
 export default {
     components: {
         Menu,
-        TaskInfo
-    },
-    data() {
-        return {
-            task_list: []
-        }
-    },
-    created () {
-        this.$http.post('/api/task', params)
-            .then((res) => {
-                this.task_list = res.data.task_list
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+        CreateForm
     }
 }
 </script>
