@@ -1,22 +1,10 @@
 <template>
-    <div :class="rowType" @click="goTo">
+    <div :class="rowType">
         <div class="tableCell">
-            {{ taskData.name }}
+            {{ userData.id }}
         </div>
         <div class="tableCell">
-            {{ taskData.des }}
-        </div>
-        <div class="tableCell">
-            {{ taskData.upload }}
-        </div>
-        <div class="tableCell">
-            {{ taskData.table_name }}
-        </div>
-        <div class="tableCell">
-            {{ taskData.table_schema }}
-        </div>
-        <div class="tableCell">
-            {{ taskData.data_type }}
+            {{ userData.name }}
         </div>
     </div>
 </template>
@@ -24,7 +12,7 @@
 <script>
 export default {
     props: {
-        taskData: {
+        userData: {
             type: Object,
             required: true
         },
@@ -32,12 +20,12 @@ export default {
             type: String,
             default: 'tableRow'
         }
-    },
+    },/*<div :class="rowType" @click="goTo">
     methods: {
         goTo () {
-            this.$router.push(this.$route.path + '/' + this.taskData.name.toString())
+            this.$router.push('/admin/' + this.userData.id.toString())
         }
-    }
+    }*/
 }
 </script>
 

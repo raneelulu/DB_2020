@@ -50,13 +50,13 @@ const router = new VueRouter({
       component: AdminMain
     },
     {
-      path: '/admin/task/',
-      redirect: '/admin/task/showall'
-    },
-    {
       path: '/admin/task/create',
       name: 'TaskCreate',
       component: TaskCreate
+    },
+    {
+      path: '/admin/task/',
+      redirect: '/admin/task/showall'
     },
     {
       path: '/admin/task/showall',
@@ -64,7 +64,7 @@ const router = new VueRouter({
       component: ShowTaskInfo
     },
     {
-      path: '/admin/task/showall/:taskID',
+      path: '/admin/task/showall/:taskName',
       name: 'ShowTaskDetail',
       component: ShowTaskDetail
     },
