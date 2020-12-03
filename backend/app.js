@@ -12,7 +12,8 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
-var app = express();
+var loadRouter = require('./upload/add')(app, upload);
+//var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,6 +41,7 @@ app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/api/login',loginRouter);
 app.use('/api/logout',logoutRouter);
+app.use('/api/upload', loadRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -57,4 +59,19 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = () => {
+  const storage = multer.diskStorage({
+    cb(null, './upload/');
+  },
+  filename : (req, file, cb) => {
+    const originalFileName = file.originalname.split('.');
+    let fileName = 'none';
+    if (originalFileName.length > 0)
+    {
+      fileName = '${originalFileName[0]}-${Date.now()}.${orignalFileName[1]}';
+      cb(null, fileName);
+    }
+  });
+  const upload = multer({ storage : storage });
+  const app = express();
+}

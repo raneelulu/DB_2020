@@ -3,17 +3,18 @@
     <h2>TASK 목록</h2>
     <b-table :fields="fields" :items="items">
       <template #cell(name)="data">
-        <!-- `data.value` is the value after formatted by the Formatter -->
-        <a :href="`#${data.value.replace(/[^a-z]+/i,'-').toLowerCase()}`">{{ data.value }}</a>
+        <!-- 테스크 표 테스크 클릭 시 선택 가능 selected 에 저장 -->
+        <b-button size="sm" @click="selectTask(data.value)">{{ data.value }}</b-button>
       </template>
     </b-table>
     <br>
-    <select v-model="selected">
+    <p> Selected Task : {{ selected }} </p>
+    <select v-model="selectedType">
       <option v-for="task in user.tasks" v-bind:key="task.task" v-bind:value="task.task">
         {{ task.task }}
       </option>
     </select>
-    <span>Selected Task : {{ selected }}</span>
+    <span>Selected Task : {{ selectedType }}</span>
     <br>
     <div id="fileBox">
       <b-form-file
@@ -26,7 +27,7 @@
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
     <ul>
       <li>
-        <b-button variant="info">SUBMIT</b-button>
+        <b-button variant="info" @click="upload">SUBMIT</b-button>
       </li>
       <li>
         <b-button variant="info" @click="backPage">BACK</b-button>
@@ -43,38 +44,27 @@ export default {
     data() {
         return {
             selected: '',
+            selectedType: '',
             file: null,
             fields: [
                 {
-                    // A column that needs custom formatting,
-                    // calling formatter 'fullName' in this app
                     key: 'name',
-                    label: 'Full Name',
-                    formatter: 'fullName'
-                },
-                // A regular column
-                'age',
-                {
-                    // A regular column with custom formatter
-                    key: 'sex',
-                    formatter: value => {
-                      return value.charAt(0).toUpperCase()
-                    }
+                    label: 'TASK Name'
                 },
                 {
-                  // A virtual column with custom formatter
-                  key: 'birthYear',
-                  label: 'Calculated Birth Year',
-                  formatter: (value, key, item) => {
-                    return new Date().getFullYear() - item.age
-                  }
+                    key: 'period',
+                    label: 'Period'
+                },
+                {
+                  key: 'description',
+                  label: 'Description',
                 }
             ],
             items: [
-                { name: { first: 'John', last: 'Doe' }, sex: 'Male', age: 42 },
-                { name: { first: 'Jane', last: 'Doe' }, sex: 'Female', age: 36 },
-                { name: { first: 'Rubin', last: 'Kincade' }, sex: 'male', age: 73 },
-                { name: { first: 'Shirley', last: 'Partridge' }, sex: 'female', age: 62 }
+                { name: 'task1', period: 2, description: 'data of school'},
+                { name: 'task2', period: 4, description: 'data of food' },
+                { name: 'task3', period: 1, description: 'data of habit' },
+                { name: 'task4', period: 1, description: 'data of money' }
             ]
         }
     },
@@ -82,8 +72,26 @@ export default {
       backPage() {
         this.$router.push({name: "Submitter"});
       },
-      fullName(value) {
-        return `${value.first} ${value.last}`
+      selectTask(value) {
+        this.selected = value;
+      },
+      async upload() {
+        var fd = new FormData();
+        fd.append('file', this.file)
+
+        this.axios.post('/api/upload',
+            fd, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          ).then( response => {
+            console.log('SUCCESS!!');
+            console.log(response.data)
+          })
+          .catch(function () {
+            console.log('FAILURE!!');
+          });
       }
     },
     computed:{
