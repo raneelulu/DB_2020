@@ -12,8 +12,8 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
-var loadRouter = require('./upload/add')(app, upload);
-//var app = express();
+var loadRouter = require('./routes/upload');
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,19 +59,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = () => {
-  const storage = multer.diskStorage({
-    cb(null, './upload/');
-  },
-  filename : (req, file, cb) => {
-    const originalFileName = file.originalname.split('.');
-    let fileName = 'none';
-    if (originalFileName.length > 0)
-    {
-      fileName = '${originalFileName[0]}-${Date.now()}.${orignalFileName[1]}';
-      cb(null, fileName);
-    }
-  });
-  const upload = multer({ storage : storage });
-  const app = express();
-}
+module.exports = app;

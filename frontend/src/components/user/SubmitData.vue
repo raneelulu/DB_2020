@@ -14,7 +14,7 @@
         {{ task.task }}
       </option>
     </select>
-    <span>Selected Task : {{ selectedType }}</span>
+    <span>Original Data Type : {{ selectedType }}</span>
     <br>
     <div id="fileBox">
       <b-form-file
@@ -79,7 +79,7 @@ export default {
         var fd = new FormData();
         fd.append('file', this.file)
 
-        this.axios.post('/api/upload',
+        this.$http.post('/api/upload',
             fd, {
               headers: {
                 'Content-Type': 'multipart/form-data'
@@ -123,7 +123,7 @@ ul > li {
   margin : 0 80px;
   font-weight : bold;
 }
-p {
+ul > p {
   text-align: center;
   top : 200px;
   bottom : 0;
