@@ -13,7 +13,7 @@ router.get('/', function(req, res, next){
             {name: '류동철', des: '악질 중의 악질', upload: 1, table_name: 'table2', table_schema: 'schema2', data_type: 'origin_data_type2'},
             {name: '유현석', des: '술대장', upload: 1, table_name: 'table3', table_schema: 'schema3', data_type: 'origin_data_type3'},
             {name: '박성현', des: '20년 최고 남친상', upload: 1, table_name: 'table4', table_schema: 'schema4', data_type: 'origin_data_type4'},
-            {name: '서기원', des: '큰일남', upload: 1, table_name: 'table5', table_schema: 'schema5', data_type: 'origin_data_type5'},
+            //{name: '서기원', des: '큰일남', upload: 1, table_name: 'table5', table_schema: 'schema5', data_type: 'origin_data_type5'},
         ]
     };
 
@@ -42,17 +42,20 @@ router.get('/:taskName', function(req, res, next){
 });
 
 router.post('/create', function (req, res, next) {
-    // 스키마랑 원본 데이터 타입은 어떤 식으로 저장되는지 몰라서 일단 string으로 받았어
-    // 형태 정해지면 다시 바꾸면 될 듯
-    // 자동으로 task_Id가 생성되어야 하는데 어케 하지????
     
-    // string 타입
-    var taskName = req.params.name;
-    var taskdes = req.params.des;
-    var taskUpload = req.params.upload;
-    var tableName = req.params.table_name;
-    var tableSchema = req.params.table_schema;
-    var datatpye = req.params.data_type;
+    // Task 정보
+    var task_info = {
+        name: req.params.name,
+        descripotion: req.params.des,
+        start_period: req.params.start_period,
+        end_period: req.params.end_period,
+        min_submit_period: req.params.min_submit_period,
+        standard_of_pass: req.params.standard_of_pass
+    }
+
+    // True이면 SQL 아니면 json파일
+    var use_sql = req.params.use_sql;
+    var taskSchema = req.params.task_schema;
 
     // 저장 성공 여부 전송
     // 성공이면 true, 실패면 false
