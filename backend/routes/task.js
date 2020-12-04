@@ -41,8 +41,22 @@ router.get('/:taskName', function(req, res, next){
     res.json(ret)
 });
 
+router.get('/:taskName/Register', function(req, res, next){
+    var name = req.params.taskName;
+    // 테스크 참가 신청 인원
+    var ret = {
+        register_list: [
+            {id: '2015147531', name: '서기원', score: '100'},
+            {id: '2015147533', name: '유현석', score: '80'},
+            {id: '2015147562', name: '이의동', score: '60'},
+            {id: '2015147563', name: '류동철', score: '20'},
+        ]
+    };
+    res.json(ret)
+});
+
 router.post('/create', function (req, res, next) {
-    
+
     // Task 정보
     var task_info = {
         name: req.params.name,

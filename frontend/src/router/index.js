@@ -12,6 +12,8 @@ import AdminMain from '@/components/Admin/AdminMain'
 import TaskCreate from '@/components/Admin/Task/TaskCreate'
 import ShowTaskInfo from '@/components/Admin/Task/ShowInfo'
 import ShowTaskDetail from '@/components/Admin/Task/TaskView'
+import ManagePage from '@/components/Admin/Task/TaskManage'
+import TaskManage from '@/components/Admin/Task/ManageView'
 import AdminMember from '@/components/Admin/Member/AdminMember'
 Vue.use(VueRouter)
 
@@ -67,6 +69,16 @@ const router = new VueRouter({
       path: '/admin/task/showall/:taskName',
       name: 'ShowTaskDetail',
       component: ShowTaskDetail
+    },
+    {
+      path: '/admin/task/manage',
+      name: 'ManagePage',
+      component: ManagePage
+    },
+    {
+      path: '/admin/task/manage/:taskName',
+      name: 'TaskManage',
+      component: TaskManage
     },
     {
       path: '/admin/member',

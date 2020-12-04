@@ -46,7 +46,7 @@
             <hr>
             <b-form-checkbox
                 id="checkbox-1"
-                v-model="use_sql"
+                v-model="form.use_sql"
                 name="checkbox-1"
                 value=true
                 unchecked-value=false
@@ -58,7 +58,7 @@
             <b-form-group id="input-group-5" label="데이터 테이블 스키마:" label-for="input-5">
                 <b-form-input
                     id="input-5"
-                    v-model="tableSchema"
+                    v-model="form.taskSchema"
                     required
                     placeholder="데이터 테이블의 스키마를 설정해주세요."
                 ></b-form-input>
@@ -72,60 +72,59 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                form: {
-                    name: '',
-                    des: '',
-                    start: '',
-                    end: '',
-                    min_submit_period: '',
-                    standard: ''
-                },
-                show: true,
+export default {
+    data() {
+        return {
+            form: {
+                name: '',
+                des: '',
+                start: '',
+                end: '',
+                min_submit_period: '',
+                standard: '',
                 use_sql: false,
                 taskSchema: ''
-            }
-        },
-        methods: {
-            onSubmit(evt) {
-                evt.preventDefault()
-                //alert(JSON.stringify(this.form))
-                if (!use_sql) {
-                    this.taskSchema = '.'
-                }
-                this.$http.post('/api/task/create', 
-                {name: this.form.name, des: this.form.des, start_period: this.form.start, end_period: this.form.end,
-                min_submit_period: this.form.min_submit_period, standard_of_pass: this.form.standard,
-                use_sql: this.use_sql, task_schema: this.taskSchema}, {"Content-Type": "application-json"})
-                    .then((res) => {
-                        // post가 성공하면
-                        if (res.data.success) {
-                            this.$route.push("/admin/task")
-                        } else {
-                            alert("Wrong data input")
-                        }
-                    })
-                    .catch((err) => {
-                        console.error(err)
-                    })
             },
-            onReset(evt) {
-                evt.preventDefault()
-                    // Reset our form values
-                    this.form.name = ''
-                    this.form.des = ''
-                    this.form.upload = ''
-                    this.form.table_name = ''
-                    this.form.table_schema = ''
-                    this.form.data_type = ''
-                    // Trick to reset/clear native browser form validation state
-                    this.show = false
-                    this.$nextTick(() => {
-                    this.show = true
+            show: true,
+        }
+    },
+    methods: {
+        onSubmit(evt) {
+            evt.preventDefault()
+            //alert(JSON.stringify(this.form))
+            this.$http.post('/api/task/create', 
+            {name: this.form.name, des: this.form.des, start_period: this.form.start, end_period: this.form.end,
+            min_submit_period: this.form.min_submit_period, standard_of_pass: this.form.standard,
+            use_sql: this.form.use_sql, taskSchema: this.form.taskSchema}, {"Content-Type": "application-json"})
+                .then((res) => {
+                    // post가 성공하면
+                    if (res.data.success) {
+                        this.$route.push("/admin/task")
+                    } else {
+                        alert("Wrong data input")
+                    }
                 })
-            }
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
+        onReset(evt) {
+            evt.preventDefault()
+                // Reset our form values
+                this.form.name = ''
+                this.form.des = ''
+                this.form.start = ''
+                this.form.end = ''
+                this.form.min_submit_period = ''
+                this.form.standard = ''
+                this.form.use_sql = false
+                this.form.taskSchema = ''
+                // Trick to reset/clear native browser form validation state
+                this.show = false
+                this.$nextTick(() => {
+                this.show = true
+            })
         }
     }
+}
 </script>
