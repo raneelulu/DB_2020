@@ -99,6 +99,7 @@ export default {
                 .then((res) => {
                     // post가 성공하면
                     if (res.data.success) {
+                        alert('정상적으로 테스크가 생성되었습니다.')
                         this.$route.push("/admin/task")
                     } else {
                         alert("Wrong data input")

@@ -1,5 +1,7 @@
 <template>
     <div class="content">
+        <div> 신청자 명단 </div>
+        <div> 클릭 시 승인 </div>
         <div v-if ="!isEmpty" class="table">
             <UserList :userData="{id: 'ID', name: '신청자 이름', score: '평가 점수'}" rowType="tableHeader"/>
             <div style="display: table-row">
@@ -7,7 +9,7 @@
                 <div class="table-hr"></div>
                 <div class="table-hr"></div>
             </div>
-            <UserList v-for="user in register_list" :key="user.id" :userData="user" />
+            <UserList v-for="user in registers" :key="user.id" :userData="user" />
         </div>
         <div v-else>
             <h1 class="no-margin">아직 참가자가 없습니다.</h1>
@@ -19,7 +21,7 @@
 import UserList from './RegisterUser.vue';
 export default {
     props: {
-        users: {
+        registers: {
             type: Array,
             required: true
         }
@@ -29,7 +31,7 @@ export default {
     },
     computed: {
         isEmpty() {
-            if (this.users.length === 0) {
+            if (this.registers.length === 0) {
                 return true
             } else {
                 return false

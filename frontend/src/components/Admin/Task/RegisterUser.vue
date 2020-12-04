@@ -1,5 +1,5 @@
 <template>
-    <div :class="rowType">
+    <div :class="rowType" @click="approval">
         <div class="tableCell">
             {{ userData.id }}
         </div>
@@ -23,12 +23,27 @@ export default {
             type: String,
             default: 'tableRow'
         }
-    },/*<div :class="rowType" @click="goTo">
+    },
     methods: {
-        goTo () {
-            this.$router.push('/admin/' + this.userData.id.toString())
+        approval(evt) {
+            evt.preventDefault()
+            //alert(JSON.stringify(this.form))
+            this.$http.post('/api/task/' + this.$route.params.taskName + '/Register/' + this.userData.id, 
+            {approval: true}, {"Content-Type": "application-json"})
+                .then((res) => {
+                    // post가 성공하면
+                    if (res.data.success) {
+                        alert('정상적으로 승인되었습니다')
+                        this.$route.push("/admin/task/manage/" + this.$route.params.taskName)
+                    } else {
+                        alert("Wrong data input")
+                    }
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
         }
-    }*/
+    }
 }
 </script>
 

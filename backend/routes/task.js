@@ -45,14 +45,38 @@ router.get('/:taskName/Register', function(req, res, next){
     var name = req.params.taskName;
     // 테스크 참가 신청 인원
     var ret = {
+        task_standard: '7',
         register_list: [
-            {id: '2015147531', name: '서기원', score: '100'},
-            {id: '2015147533', name: '유현석', score: '80'},
-            {id: '2015147562', name: '이의동', score: '60'},
-            {id: '2015147563', name: '류동철', score: '20'},
+            {id: '2015147531', name: '서기원', score: '7'},
+            {id: '2015147533', name: '유현석', score: '6'},
+            {id: '2015147562', name: '이의동', score: '9'},
+            {id: '2015147563', name: '류동철', score: '4'},
         ]
     };
     res.json(ret)
+});
+
+router.post('/:taskName/Register/:userID', function (req, res, next) {
+    var name = req.params.taskName;
+    var id = req.params.userID;
+
+    // 참가 신청 승인
+    var approval = req.params.approval;
+
+    // 저장 성공 여부 전송
+    // 성공이면 true, 실패면 false
+    res.json({success: true})
+});
+
+router.post('/:taskName/resetStandard', function (req, res, next) {
+    var name = req.params.taskName;
+
+    // 테스크 제출 파일 PASS 기준 재설정
+    var pass_standard = req.params.standard;
+
+    // 저장 성공 여부 전송
+    // 성공이면 true, 실패면 false
+    res.json({success: true})
 });
 
 router.post('/create', function (req, res, next) {
@@ -74,6 +98,6 @@ router.post('/create', function (req, res, next) {
     // 저장 성공 여부 전송
     // 성공이면 true, 실패면 false
     res.json({success: true})
-})
+});
 
 module.exports = router;

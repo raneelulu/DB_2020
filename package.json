@@ -9,6 +9,7 @@
   "author": "Euidong Lee",
   "license": "ISC",
   "dependencies": {
+    "bootstrap-vue": "^2.20.1",
     "express": "^4.17.1",
     "mariadb": "^2.4.2"
   }

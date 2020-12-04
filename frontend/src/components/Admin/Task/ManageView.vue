@@ -2,26 +2,31 @@
   <div class="wrapper">
     <Menu current="manage"/>
     <Register :registers="register_list"/>
+    <ResetSt :standard="value"/>
   </div>
 </template>
 
 <script>
 import Menu from '@/components/Admin/Task/TaskMenu.vue';
 import Register from '@/components/Admin/Task/Register.vue';
+import ResetSt from '@/components/Admin/Task/ResetStandard.vue';
 export default {
     components: {
         Menu,
-        Register
+        Register,
+        ResetSt
     },
     data () {
         return {
             register_list: [],
+            value: ''
         }
     },
     created () {
         this.$http.get('/api/task/' + this.$route.params.taskName + '/Register')
             .then((res) => {
                 this.register_list = res.data.register_list
+                this.value = res.data.task_standard
             })
             .catch((err) => {
                 console.error(err)
