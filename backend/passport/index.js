@@ -1,5 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy;
-const users = require('../data/users.json');
+const users = require('../data/users.json'); //여기에서 디비에서 [사용자 id],[사용자 비밀번호],[직책]을 json으로 콜해주세요
+
 
 exports.config=(passport)=>{
 
@@ -8,6 +9,7 @@ exports.config=(passport)=>{
     });
 
     passport.deserializeUser((id,done)=>{
+        
         const result = users.filter((user)=> user.id === id);
         if(result.length>0){
             done(null,result[0]);

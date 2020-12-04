@@ -13,7 +13,7 @@ var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var signUpRouter = require('./routes/sign_up');
 var evaluatorRouter = require('./routes/evaluator');
-
+var adminRouter = require('./routes/admin');
 var logoutRouter = require('./routes/logout');
 var app = express();
 
@@ -46,6 +46,7 @@ app.use('/api/evaluator', evaluatorRouter);
 
 app.use('/api/login',loginRouter);
 app.use('/api/logout',logoutRouter);
+app.use('/api/admin',adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

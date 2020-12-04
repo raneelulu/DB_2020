@@ -8,6 +8,8 @@ import EvalEvaluatedView from '@/views/EvaluatedListView'
 import EvalTaskEvalView from '@/views/EvalTaskEvalView'
 import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
+import AdminPage from '@/components/AdminPage'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -48,6 +50,11 @@ const router = new VueRouter({
       path: '/hi',
       name: 'Hi',
       component: Helloworld
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminPage
     }
   ]
 })
