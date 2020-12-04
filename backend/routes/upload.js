@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
       cb(null, `${file.originalname}-${Date.now()}`);
     }
 })
-const upload = multer({ storage });
+const upload = multer({ storage : storage });
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(express.json());
@@ -18,10 +18,8 @@ router.use(express.static('public'));
 router.get('/', (req, res) => {
     res.sendFile('public/index.html');
 });
-router.post('/', function(req, res) {
+router.post('/', upload.single('file'), function(req, res) {
     console.log(req.file);
 });
-
-//upload.single('file')
 
 module.exports = router;
