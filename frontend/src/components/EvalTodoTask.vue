@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     onClickSubmit () {
-      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.taskID, {score: score, p_np: pass}, {"Content-Type": "application-json"})
+      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.taskID, {score: self.score, p_np: self.pass}, {"Content-Type": "application-json"})
         .then((res) => {
           // post가 성공하면
           if (res.data.success) {
