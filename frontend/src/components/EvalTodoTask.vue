@@ -1,8 +1,8 @@
 <template>
-  <div style="margin: 10px;">
+  <div style="margin: 10px; flex-grow: 3;">
     <div class="a">
       <div class="b">
-        <div class="c bold">Task ID</div>
+        <div class="c bold">File ID</div>
         |
         <div class="c">{{ file.id }}</div>
       </div>
@@ -29,12 +29,12 @@
     </div>
     <hr>
     <div class="a">
-      <div class="b">
+      <div class="b" style="width: 60%;">
         <div class="c bold">Number of Tuples</div>
         |
         <div class="c">{{ file.all_tuple_number }}</div>
       </div>
-      <div class="b">
+      <div class="b" style="width: 60%;">
         <div class="c bold">Number of Duplicates</div>
         |
         <div class="c">{{ file.duplicated_tuple_number }}</div>
@@ -113,7 +113,7 @@ export default {
     }
   },
   created () {
-    this.$http.get('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.taskID)
+    this.$http.get('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.fileID)
       .then((res) => {
         console.log(res)
         if (Object.keys(res.data.file).length !== 0) {
@@ -131,6 +131,7 @@ export default {
         .then((res) => {
           // post가 성공하면
           if (res.data.success) {
+            alert("data submitted successfully")
             this.$router.push("/evaluator/" + this.$route.params.userID)
           } else {
             alert("Wrong data input")
