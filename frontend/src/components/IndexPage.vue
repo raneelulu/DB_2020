@@ -30,6 +30,9 @@ export default {
               else if (user.position === "평가자") {
                 this.$router.push("/evaluator/" + user.id)
               }
+              else if (user.position == "사용자") {
+                this.$router.push("/submitter");
+              }
             }else{
               this.$router.push({name:"LoginPage"});
             }

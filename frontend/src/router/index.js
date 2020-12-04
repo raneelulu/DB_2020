@@ -15,6 +15,9 @@ import ShowTaskDetail from '@/components/Admin/Task/TaskView'
 import ManagePage from '@/components/Admin/Task/TaskManage'
 import TaskManage from '@/components/Admin/Task/ManageView'
 import AdminMember from '@/components/Admin/Member/AdminMember'
+import Submitter from '@/components/user/Submitter'
+import GetTask from '@/components/user/GetTask'
+import SubmitData from '@/components/user/SubmitData'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -94,6 +97,21 @@ const router = new VueRouter({
       path: '/hi',
       name: 'Hi',
       component: Helloworld
+    },
+    {
+      path: '/submitter',
+      name: 'Submitter',
+      component: Submitter
+    },
+    {
+      path: '/submitter/gettask',
+      name: 'GetTask',
+      component: GetTask
+    },
+    {
+      path: '/submitter/submitdata',
+      name: 'SubmitData',
+      component: SubmitData
     }
   ]
 })
