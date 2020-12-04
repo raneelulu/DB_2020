@@ -4,10 +4,10 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, '../upload/')
+      cb(null, '../upload/');
     },
     filename: (req, file, cb) => {
-      cb(null, `${file.originalname}-${+Date.now()}`)
+      cb(null, `${file.originalname}-${Date.now()}`);
     }
 })
 const upload = multer({ storage });
@@ -17,9 +17,11 @@ router.use(express.json());
 router.use(express.static('public'));
 router.get('/', (req, res) => {
     res.sendFile('public/index.html');
-  });
-router.post('/', upload.single('file'), (req, res) => {
-    res.send('file uploaded')
 });
+router.post('/', function(req, res) {
+    console.log(req.file);
+});
+
+//upload.single('file')
 
 module.exports = router;

@@ -85,7 +85,7 @@ export default {
                 'Content-Type': 'multipart/form-data'
               }
             }
-          ).then( response => {
+          ).then(response => {
             console.log('SUCCESS!!');
             console.log(response.data)
           })

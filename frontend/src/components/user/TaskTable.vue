@@ -1,19 +1,61 @@
 <template>
   <div v-if="user">
-    <ul>
-      <li>
+      <h2>
         신청 가능한 Task 목록
-      </li>
-      <li>
+      </h2>
+      
+      <h2>
         신청 대기 중인 목록
-      </li>
-    </ul>
+      </h2>
   </div>
 </template>
 
 <script>
 export default {
   name: 'task',
+  data () {
+      return {
+            selected: '',
+            fields1: [
+                {
+                    key: 'name',
+                    label: 'TASK Name'
+                },
+                {
+                    key: 'period',
+                    label: 'Period'
+                },
+                {
+                    key: 'description',
+                    label: 'Description',
+                }
+            ],
+            fields2: [
+                {
+                    key: 'name',
+                    label: 'TASK Name'
+                },
+                {
+                    key: 'period',
+                    label: 'Period'
+                },
+                {
+                    key: 'description',
+                    label: 'Description',
+                }
+            ],
+            items1: [
+                { name: 'task1', period: 2, description: 'data of school'},
+                { name: 'task2', period: 4, description: 'data of food' },
+                { name: 'task3', period: 1, description: 'data of habit' },
+                { name: 'task4', period: 1, description: 'data of money' }
+            ],
+            items2: [
+                { name: 'task1', period: 2, description: 'data of school'},
+                { name: 'task3', period: 1, description: 'data of habit' },
+            ]
+      }
+  },
   computed:{
      user() {return this.$store.getters.user;}  
   }
