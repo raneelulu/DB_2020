@@ -127,11 +127,11 @@ export default {
   },
   methods: {
     onClickSubmit () {
-      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/todo/' + this.$route.params.taskID, {score: self.score, p_np: self.pass}, {"Content-Type": "application-json"})
+      this.$http.post('/api/evaluator/' + this.$route.params.userID + '/todo/' + String(this.$route.params.fileID), {'score': this.score, 'p_np': this.pass})
         .then((res) => {
           // post가 성공하면
           if (res.data.success) {
-            this.$route.push("/evaluator/" + this.$route.params.userID)
+            this.$router.push("/evaluator/" + this.$route.params.userID)
           } else {
             alert("Wrong data input")
           }

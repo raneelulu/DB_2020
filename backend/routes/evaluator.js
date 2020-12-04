@@ -65,9 +65,13 @@ router.post('/:userID/todo/:fileID', function (req, res, next) {
     // string 타입
     var fileID = req.params.fileID;
     // number 타입
-    var score = req.params.score;
+    var score = req.body.score;
     // Pass이면 "Pass", Non pass이면 "Non-Pass"라는 string으로 옴
-    var p_np = req.params.p_np;
+    var p_np = req.body.p_np;
+
+    console.log(req.body)
+    console.log(score);
+    console.log(p_np);
 
     // fileID를 ID로 갖는 파싱 데이터 시퀀스 파일에 평가 점수와 P/NP 정보를 저장함.
 
