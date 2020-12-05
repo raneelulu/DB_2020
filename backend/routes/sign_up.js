@@ -3,9 +3,15 @@ const router = express.Router();
 const Functions = require('../scripts/Functions')
 
 router.post('/', function(req, res, next){
-    var id = req.body.userid;
+    var id = req.body.id;
     var password = req.body.password;
-    Functions.user_sign_up(id, password, 'test', '0101111111', '1996-01-01', 'evaluator')
+    var name = req.body.name;
+    var phone_number = req.body.phone_number;
+    var address = req.body.address;
+    var birthday = req.body.birthday;
+    var type = req.body.type;
+
+    Functions.user_sign_up(id, password, name, phone_number, birthday, type)
         .then((stat)=>{
             res.json({STAT: stat});
         });

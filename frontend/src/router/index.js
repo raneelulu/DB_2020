@@ -19,6 +19,9 @@ import Submitter from '@/components/user/Submitter'
 import GetTask from '@/components/user/GetTask'
 import SubmitData from '@/components/user/SubmitData'
 Vue.use(VueRouter)
+import SignUpPage from '@/components/SignUpPage'
+import ProfilePage from '@/components/ProfilePage'
+import HelloWorld from '@/components/HelloWorld'
 
 const router = new VueRouter({
   mode: 'history',
@@ -27,6 +30,16 @@ const router = new VueRouter({
       path: '/',
       name: 'IndexPage',
       component: IndexPage
+    },
+    {
+      path: '/sign_up',
+      name: 'SignUpPage',
+      component: SignUpPage
+    },
+    {
+      path: '/profile',
+      name: 'ProfilePage',
+      component: ProfilePage
     },
     {
       path: '/evaluator/:userID',

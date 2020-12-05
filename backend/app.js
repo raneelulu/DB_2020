@@ -18,6 +18,7 @@ var loadRouter = require('./routes/upload');
 var tableRouter = require('./routes/getTable');
 var rTableRouter = require('./routes/getRTable');
 var registerRouter = require('./routes/registerTask');
+var checkIdRouter = require('./routes/check_id');
 
 var logoutRouter = require('./routes/logout');
 var app = express();
@@ -57,6 +58,7 @@ app.use('/api/logout',logoutRouter);
 app.use('/api/getTable', tableRouter);
 app.use('/api/getRTable', rTableRouter);
 app.use('/api/registerTask', registerRouter);
+app.use('/api/check_id', checkIdRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
