@@ -14,12 +14,12 @@
                     <tr v-for="row in attri_info" :key="row.key">
                         <td><b-form-input v-model="row.name" placeholder="이름 입력"></b-form-input></td>
                         <td><b-form-select v-model="row.type" :options="options"></b-form-select></td>
-                        <td><b-button id="reset" variant="danger" v-on:click="resetData">삭제</b-button></td>
                     </tr>
                 </tbody>
             </table>
             <div>
                 <b-button id="add" variant="primary" v-on:click="addRow">속성 추가</b-button>
+                <b-button id="resetRow" variant="danger" v-on:click="resetRow">리셋</b-button>
                 <b-button id="submit" variant="success" v-on:click="onSubmit">타입 생성</b-button>
             </div>
             <hr>
@@ -72,9 +72,9 @@ export default {
             this.attri_info.push({nanme: '', type: '', key: this.field_key})
             this.field_key = this.field_key + 1
         },
-        resetData(row, evt) {
+        resetRow(evt) {
             evt.preventDefault()
-            this.attri_info.$remove(row)
+            this.attri_info = [{name: '', type: '', key: this.field_key}]
         }
     }
 }

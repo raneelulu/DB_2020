@@ -7,7 +7,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item href="#">뭘 넣으면</b-nav-item>
+          <b-nav-item v-on:click="goMain">메인 화면</b-nav-item>
           <b-nav-item href="#" disabled>좋을까?</b-nav-item>
         </b-navbar-nav>
 
@@ -49,6 +49,9 @@ export default {
       },      
       pro:function(){
         this.$router.push({name:"ProfilePage"});
+      },
+      goMain:function(){
+        this.$router.push({name:"IndexPage"});
       }
     },
 }
