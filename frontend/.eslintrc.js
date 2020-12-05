@@ -21,6 +21,18 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    'indent': 'off',
+    'vue/script-indent': ['warn', 2, {
+      'baseIndent': 1
+    }],
+    'overrides': [
+      {
+        'files': ['*.vue'],
+        'rules': {
+          'indent': 'off'
+        }
+      }
+    ],
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development

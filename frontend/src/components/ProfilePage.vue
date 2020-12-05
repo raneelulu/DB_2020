@@ -2,13 +2,11 @@
   <form v-on:submit.prevent="checkForm">
     <div>
       <label for="name">이름 :</label>
-      <input id="name" type="text" v-model="name" />
+      <input id="name" type="text" v-model="name" disabled/>
     </div>
     <div>
       <label for="id">아이디 :</label>
-      <input id="id" type="text" v-on:blur='checkId' v-model="id"/>
-			<small id="id_check" v-bind:class="{red: !rightID, green: rightID}">{{id_check_str}}</small>
-			<!-- <button v-on:click='checkId'>아이디 중복체크</button> -->
+      <input id="id" type="text" v-model="id" disabled/>
     </div>
     <div>
       <label for="password">비밀번호 :</label>
@@ -32,18 +30,13 @@
     </div>
     <div>
       <label for="birthday">생일:</label>
-      <input id="birthday" type="date" min='1900-01-01' v-model="birthday"  />
+      <input id="birthday" type="date" min='1900-01-01' v-model="birthday" disabled/>
     </div>
     <div>
       <label for="type">권한:</label>
-			<fieldset>
-				<input id='type1' class='type' type='radio' value='submitter' v-model='type'/>
-				<label for='type1' class='radio-label'>제출자</label>
-				<input id='type2' class='type' type='radio' value='evaluator' v-model='type'/>
-				<label for='type2' class='radio-label'>평가자</label>
-			</fieldset>
+        <input id='type' class='type' type='text' v-model='type' disabled/>  
 		</div>
-    <button type="submit">회원가입</button>
+    <button type="submit">정보 수정하기</button>
   </form>
 </template>
 
@@ -62,77 +55,40 @@ export default {
 			address:'',
 			birthday:'',
 			type:'',
-			id_check_str:'',
 			rightID:false,
 			// user:null,
 		};
 	},
+	created(){
+		this.$http.get('/api/login')
+		.then((res) => {
+			const user = res.data.user;
+			if(user){
+				this.$store.commit("setUser",user);
+				if(user.position =="관리자"){
+					this.$router.push("/admin");
+				}
+				else if (user.position === "평가자") {
+					this.$router.push("/evaluator/" + user.id)
+				}
+				else if (user.position == "사용자") {
+					this.$router.push("/submitter/" + user.id);
+				}
+			}else{
+				this.$router.push({name:"LoginPage"});
+			}
+		})
+		.catch((err) => {
+				console.error(err);
+		});
+    },
 	methods: {
-	checkId: function()	{
-		var RegExp = /^[a-zA-Z0-9]{4,12}$/; //id와 pwassword 유효성 검사 정규식
-		if(!this.id)	{
-			// alert("아이디를 입력해주세요.");
-			return false;
-		}
-		if(!RegExp.test(this.id)){ //아이디 유효성검사
-			this.id_check_str="아이디는 4~12자의 영문 대소문자와 숫자로만 입력해주세요.";    
-			this.rightID=false;    
-			return false;
-		}
-		var params = {
-			id: this.id
-		}
-		this.$http.post('/api/check_id', params)
-			.then((response)=>{
-				if(response['STAT']==1)	{
-					alert("다시 시도해 주세요.");
-					return false;
-				}
-				if(response['STAT']==2)	{
-					this.id_check_str="이미 존재하는 아이디 입니다.";
-					this.rightID = false;
-					return false;
-				}
-				if(response['STAT']==0)	{
-					this.id_check_str="사용 가능한 아이디 입니다.";
-					this.rightID = true;
-					return true;
-				}
-			})
-			.catch((error)=>{
-				console.log(error);
-			});
-	},
 	checkForm: function()	{
 		console.log("checkForm");
 		var RegExp = /^[a-zA-Z0-9]{4,12}$/; //id와 pwassword 유효성 검사 정규식
 		var n_RegExp = /^[a-zA-Z가-힣]{2,15}$/; //이름 유효성검사 정규식
 		var num_RegExp = /^[0-9]*$/; //숫자 유효성검사 정규식
 
-		// console.log(this.id);
-		// console.log(this.name);
-		// console.log(this.password);
-		// console.log(this.password_check);
-		// console.log(this.phone_number1);
-		// console.log(this.phone_number2);
-		// console.log(this.phone_number3);
-		// console.log(this.address);
-		// console.log(this.birthday);
-		// console.log(this.type);
-		// ================ 이름 유효성검사 ================ //        
-		if(!this.name){
-			alert("이름을 입력해주세요.");
-			return false;
-		}
-		if(!n_RegExp.test(this.name)){
-			alert("유효한 이름을 입력해주세요.");
-			return false;
-		}
-		// ================ ID 유효성검사 ===============//
-		if(!this.rightID)	{
-			alert("유효한 아이디를 입력해주세요.")
-			return false;
-		}
 		// ================ PASSWORD 유효성검사 ===============//
 		if(!this.password){ // 비밀번호 입력여부 검사
 			alert("비밀번호를 입력해주세요.");
@@ -159,16 +115,6 @@ export default {
 		if(!num_RegExp.test(phone_number))	{
 			alert("핸드폰 번호는 숫자만 입력해 주세요.");
 			return false;
-		}
-		// ================ 생년월일 유효성검사 ================ //  
-		if(!this.birthday)	{
-			alert("생일을 입력해주세요.");
-			return false;
-		}
-		// ================ 권한 유효성검사 ================ //  
-		if(!this.type)	{
-			alert("권한을 선택해주세요.");
-			return false;
 		}	
 		this.submitForm();
 	},
@@ -189,28 +135,12 @@ export default {
 				if(response['STAT']==0)	{
 					// 회원가입 성공
 					console.log("success");
-					// this.$router.push({name:"LoginPage"});
 				}
 			})
 			.catch(function(error){
 				console.log(response);
 			});
 	}},
-
-
-
-
-	/*
-	created(){
-			this.$http.get('/api/login')
-			.then((res) => {
-					const user = res.data.user;
-					if(user) this.user = user;
-			})
-			.catch((err) => {
-					console.error(err);
-			});
-	}*/
 }
 </script>
 
