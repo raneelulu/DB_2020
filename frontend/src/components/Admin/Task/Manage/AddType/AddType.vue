@@ -7,7 +7,6 @@
                     <tr>
                         <td><strong>속성 이름</strong></td>
                         <td><strong>속성 타입</strong></td>
-                        <td><strong>스키마 매핑</strong></td>
                         <td></td>
                     </tr>
                 </thead>
@@ -15,13 +14,12 @@
                     <tr v-for="row in attri_info" :key="row.key">
                         <td><b-form-input v-model="row.name" placeholder="이름 입력"></b-form-input></td>
                         <td><b-form-select v-model="row.type" :options="options"></b-form-select></td>
-                        <td><b-form-select v-model="row.schema" :options="schema_options"></b-form-select></td>
+                        <td><b-button id="reset" variant="danger" v-on:click="resetData">삭제</b-button></td>
                     </tr>
                 </tbody>
             </table>
             <div>
                 <b-button id="add" variant="primary" v-on:click="addRow">속성 추가</b-button>
-                <b-button id="resetRow" variant="danger" v-on:click="resetRow">리셋</b-button>
                 <b-button id="submit" variant="success" v-on:click="onSubmit">타입 생성</b-button>
             </div>
             <hr>
@@ -34,7 +32,7 @@ export default {
     data() {
         return {
             attri_info: [
-                {name: '', type: '', schema: '', key: 1},
+                {name: '', type: '', key: 1},
             ],
             options: [
                 {value: "text", text: "text"},
@@ -46,7 +44,6 @@ export default {
                 {value: "time", text: "time"},
                 {value: "datetime", text: "datetime"}
             ],
-            schema_options : [],
             field_key: 2,
             show: true,
         }
@@ -54,10 +51,6 @@ export default {
     methods: {
         onSubmit(evt) {
             evt.preventDefault()
-            if(this.attri_info.length === 0) {
-                alert("데이터 타입 정보를 입력하세요.")
-                return
-            }
             //alert(JSON.stringify(this.form))
             this.$http.post('/api/task/' + this.$route.params.taskName + '/addType', 
             {field_info: this.attri_info}, {"Content-Type": "application-json"})
@@ -76,22 +69,13 @@ export default {
         },
         addRow(evt) {
             evt.preventDefault()
-            this.attri_info.push({nanme: '', type: '', schema: '', key: this.field_key})
+            this.attri_info.push({nanme: '', type: '', key: this.field_key})
             this.field_key = this.field_key + 1
         },
-        resetRow(evt) {
+        resetData(row, evt) {
             evt.preventDefault()
-            this.attri_info = [{name: '', type: '', schema: '', key: this.field_key}]
+            this.attri_info.$remove(row)
         }
-    },
-    created () {
-        this.$http.get('/api/task/' + this.$route.params.taskName)
-            .then((res) => {
-                this.schema_options = res.data.task_schema
-            })
-            .catch((err) => {
-                console.error(err)
-            })
     }
 }
 </script>

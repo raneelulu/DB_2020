@@ -36,13 +36,6 @@ router.get('/:taskName', function(req, res, next){
             {id: '2015147533', name: '유현석'},
             {id: '2015147562', name: '이의동'},
             {id: '2015147563', name: '류동철'},
-        ],
-        task_schema: [                                         // 원본 데이터 타입과 매핑할 테스크 데이터 테이블 스키마 정보
-            {value: '학번', text: '학번'},
-            {value: '이름', text: '이름'},
-            {value: '성별', text: '성별'},
-            {value: '성적', text: '성적'},
-            {value: '연애횟수', text: '연애횟수'},
         ]
     };
     res.json(ret)
@@ -90,7 +83,7 @@ router.post('/:taskName/addType', function (req, res, next) {
     var name = req.params.taskName;
 
     // 원본 데이터 타입 추가
-    var field_info = req.params.field_info;                 // [{속성 nanme, 속성 변수 type, 매핑할 schema 이름}, ]
+    var field_info = req.params.field_info;
 
     // 저장 성공 여부 전송
     // 성공이면 true, 실패면 false
@@ -100,8 +93,6 @@ router.post('/:taskName/addType', function (req, res, next) {
 router.post('/create', function (req, res, next) {
 
     // Task 정보
-    // 혹시 입력한 테스크 이름이 중복되는지 안되는지 체크 가능?
-    // 중복되면 success: false만 리턴해주면 알아서 경고창 뜨게 설정은 해놨음
     var task_info = {
         name: req.params.name,
         descripotion: req.params.des,
@@ -113,9 +104,8 @@ router.post('/create', function (req, res, next) {
 
     // True이면 SQL
     var use_sql = req.params.use_sql;
-    var taskSchema = req.params.taskSchema;                 // sql "string 데이터"
-    var field_info = req.params.field_info;                 // [{속성 nanme, 속성 변수 type}, ]
-    var mapping_info = req.params.map_info;                 // [{속성 nanme, 속성 변수 type, 매핑할 schema 이름}, ]
+    var taskSchema = req.params.taskSchema;
+    var field_info = req.params.field_info;
 
     // 저장 성공 여부 전송
     // 성공이면 true, 실패면 false
