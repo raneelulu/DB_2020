@@ -3,15 +3,15 @@
     <h1>{{ msg }}</h1>
     <h2>[직책에 맞는 아이디로 로그인 부탁드립니다]</h2>
       <br>
-    <form v-on:submit.prevent="onSubmit">
+    <form v-on:submit.prevent="login">
       <div>
        <label for="id">id:</label>
        <input name="id" type="text" v-model="id" />
        <label for="password">PW:</label>
        <input name="password" type="password" v-model="password"  />
       </div>
-      <button>로그인</button>
-      <button type="newregister" onClick="location.href='http://localhost:3000/#/'">회원가입</button>
+      <button type="login" v-on:click="login">로그인</button>
+      <button type="newregister" v-on:click="newone">회원가입</button>
     </form>
     <ul>
       <p>© ED's DBD</p>
@@ -29,7 +29,7 @@ export default {
         }
     },
     methods:{
-      onSubmit(){
+      login:function(){
         const id = this.id;
         const password = this.password;
         this.$http.post("api/login",{id,password, },
@@ -45,6 +45,9 @@ export default {
           .catch((err)=>{
               console.error(err);
           });
+      },
+      newone:function(){
+        this.$router.push({name:"SignUpPage"});
       }
     }
 }

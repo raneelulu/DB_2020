@@ -30,7 +30,7 @@
           <template #button-content>
             <em>User</em>
           </template>
-          <b-dropdown-item href="http://localhost:3000/profile">Profile</b-dropdown-item>
+          <b-dropdown-item href="http://localhost:3000/#/profile">Profile</b-dropdown-item>
           <b-dropdown-item v-on:click="gogo">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>

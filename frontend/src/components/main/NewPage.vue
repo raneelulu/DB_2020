@@ -12,7 +12,7 @@
       </div>
     </form>
     <button type="login">로그인</button>
-    <button type="newregister" onClick="location.href='http://localhost:3000/#/sign_up'">회원가입</button>
+    <button type="newregister" v-on:click="newone">회원가입</button>
     <ul>
       <p>© ED's DBD</p>
     </ul>
@@ -25,7 +25,12 @@ export default {
         return {
             msg: 'Welcome! ED\'s DBD에 오신걸 환영합니다',
         };
-    }
+    },
+    methods:{
+      newone:function(){
+        this.$router.push({name:"SignUpPage"});
+      }
+    },
 };
 </script>
 
