@@ -48,3 +48,10 @@ export default {
 }
 
 </script>
+
+<style scoped>
+  img {
+    width : 50px;
+    height : auto;
+  }
+</style>
