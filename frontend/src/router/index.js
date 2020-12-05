@@ -101,6 +101,11 @@ const router = new VueRouter({
       component: GetTask
     },
     {
+      path: '/submitter/:userID/submitdata',
+      name: 'SubmitData',
+      component: SubmitData
+    },
+    {
       path: '/admin',
       name: 'AdministratorMain',
       component: AdminMain

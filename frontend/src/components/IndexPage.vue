@@ -23,8 +23,6 @@ export default {
         .then((res) => {
             const user = res.data.user;
             if(user){
-              this_id =this.$$store.commit("user");
-              console.log(this_id);
               this.$store.commit("setUser",user);
               if(user.position =="관리자"){
                 this.$router.push("/admin");
