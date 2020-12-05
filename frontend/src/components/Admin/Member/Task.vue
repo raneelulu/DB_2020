@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         goTo () {
-            this.$router.push('admin/task/showall/' + this.taskData.name.toString())
+            this.$router.push('/admin/task/showall/' + this.taskData.name.toString())
         }
     }
 }

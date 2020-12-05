@@ -5,11 +5,11 @@ import EvalTodoView from '@/views/TodoListView'
 import EvalEvaluatedView from '@/views/EvaluatedListView'
 import EvalTaskEvalView from '@/views/EvalTaskEvalView'
 import LoginPage from '@/components/main/Home'
-import AdminMain from '@/components/Admin/AdminMain'
-import AdminMember from '@/components/Admin/Member/AdminMember'
 import Submitter from '@/components/user/Submitter'
 import GetTask from '@/components/user/GetTask'
 import SubmitData from '@/components/user/SubmitData'
+// 관리자 페이지
+import AdminMain from '@/components/Admin/AdminMain'
 import TaskCreate from '@/components/Admin/Task/Create/TaskCreate'
 import ShowTaskInfo from '@/components/Admin/Task/Stat/ShowInfo'
 import ShowTaskDetail from '@/components/Admin/Task/Stat/TaskView'
@@ -62,30 +62,6 @@ const router = new VueRouter({
       component: EvalEvaluatedView
     },
     {
-      path: '/admin',
-      name: 'AdministratorMain',
-      component: AdminMain
-    },
-    {
-      path: '/admin/task/create',
-      name: 'TaskCreate',
-      component: TaskCreate
-    },
-    {
-      path: '/admin/task/',
-      redirect: '/admin/task/showall'
-    },
-    {
-      path: '/admin/task/showall',
-      name: 'ShowTaskInfo',
-      component: ShowTaskInfo
-    },
-    {
-      path: '/admin/member',
-      name: 'AdministratorMemb',
-      component: AdminMember
-    },
-    {
       path: '/login',
       name: 'LoginPage',
       component: LoginPage
@@ -105,6 +81,7 @@ const router = new VueRouter({
       name: 'SubmitData',
       component: SubmitData
     },
+    // 관리자 페이지 시작
     {
       path: '/admin',
       name: 'AdministratorMain',
@@ -158,6 +135,7 @@ const router = new VueRouter({
       name: 'UserInfo',
       component: UserInfo
     }
+    // 관리자 페이지 끝
   ]
 })
 export default router;
