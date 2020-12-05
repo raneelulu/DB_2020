@@ -4,14 +4,11 @@ const Functions = require('../scripts/Functions')
 
 router.post('/', function(req, res, next){
     var id = req.body.id;
-    var password = req.body.password;
-    var name = req.body.name;
+    var password = req.body.new_password;
     var phone_number = req.body.phone_number;
     var address = req.body.address;
-    var birthday = req.body.birthday;
-    var type = req.body.type;
 
-    Functions.user_sign_up(id, password, name, phone_number, address, birthday, type)
+    Functions.user_edit(id, password, phone_number,address)
         .then((stat)=>{
             res.json({STAT: stat});
         });
