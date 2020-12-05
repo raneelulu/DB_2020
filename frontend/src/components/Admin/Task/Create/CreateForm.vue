@@ -78,15 +78,41 @@
                         <tr v-for="row in attri_info" :key="row.key">
                             <td><b-form-input v-model="row.name" placeholder="이름 입력"></b-form-input></td>
                             <td><b-form-select v-model="row.type" :options="options"></b-form-select></td>
-                            <td><b-button id="delete" variant="danger" v-on:click="deleteRow(row)">삭제</b-button></td>
                         </tr>
                     </tbody>
                 </table>
-                <div><b-button id="add" variant="primary" v-on:click="addRow">속성 추가</b-button></div>
+                <div>
+                    <b-button id="add" variant="primary" v-on:click="addRow">속성 추가</b-button>
+                    <b-button id="resetRow" variant="danger" v-on:click="resetRow">리셋</b-button>
+                </div>
             <hr>
 
-            <b-button type="submit" variant="success">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <div><strong>원본 데이터 타입 설정</strong></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td><strong>속성 이름</strong></td>
+                            <td><strong>속성 타입</strong></td>
+                            <td><strong>스키마 매핑</strong></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in schema_info" :key="row.key">
+                            <td><b-form-input v-model="row.name" placeholder="이름 입력"></b-form-input></td>
+                            <td><b-form-select v-model="row.type" :options="options"></b-form-select></td>
+                            <td><b-form-input v-model="row.schema" placeholder="매핑할 스키마 입력"></b-form-input></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <b-button id="addSchema" variant="primary" v-on:click="addSchema">속성 추가</b-button>
+                    <b-button id="resetSchema" variant="danger" v-on:click="resetSchema">리셋</b-button>
+                </div>
+            <hr>
+
+            <b-button type="submit" variant="success">테스크 생성</b-button>
+            <b-button type="reset" variant="danger">내용 리셋</b-button>
         </b-form>      
     </div>
 </template>
@@ -106,9 +132,8 @@ export default {
                 taskSchema: ''
             },
             show: true,
-            attri_info: [
-                {name: '', type: '', key: 1},
-            ],
+            attri_info: [],
+            schema_info: [],
             options: [
                 {value: "text", text: "text"},
                 {value: "discrete", text: "discrete"},
@@ -119,7 +144,8 @@ export default {
                 {value: "time", text: "time"},
                 {value: "datetime", text: "datetime"}
             ],
-            field_key: 2
+            field_key: 1,
+            schema_key: 1
         }
     },
     methods: {
@@ -138,22 +164,27 @@ export default {
                 return
             }
             if(!this.form.use_sql) {
-                if(attri_info[0].name.length === 0) {
+                if(this.attri_info.length === 0) {
                     alert("데이터 테이블 스키마를 설정하세요.")
                     return
                 }
             }
+            if(this.schema_info.length === 0) {
+                alert("원본 데이터 타입을 설정하세요.")
+                return
+            }
             this.$http.post('/api/task/create', 
             {name: this.form.name, des: this.form.des, start_period: this.form.start, end_period: this.form.end,
             min_submit_period: this.form.min_submit_period, standard_of_pass: this.form.standard,
-            use_sql: this.form.use_sql, taskSchema: this.form.taskSchema, field_info: this.attri_info}, {"Content-Type": "application-json"})
+            use_sql: this.form.use_sql, taskSchema: this.form.taskSchema, field_info: this.attri_info,
+            map_info: this.schema_info}, {"Content-Type": "application-json"})
                 .then((res) => {
                     // post가 성공하면
                     if (res.data.success) {
                         alert('정상적으로 테스크가 생성되었습니다.')
                         this.$route.push("/admin/task")
                     } else {
-                        alert("Wrong data input")
+                        alert("테스크 생성에 오류가 발생하였습니다.")
                     }
                 })
                 .catch((err) => {
@@ -171,7 +202,8 @@ export default {
                 this.form.standard = ''
                 this.form.use_sql = false
                 this.form.taskSchema = ''
-                this.attri_info = [{name: '', type: '', key: this.field_key}]
+                this.attri_info = []
+                this.schema_info = []
                 // Trick to reset/clear native browser form validation state
                 this.show = false
                 this.$nextTick(() => {
@@ -180,13 +212,22 @@ export default {
         },
         addRow(evt) {
             evt.preventDefault()
-            this.attri_info.push({nanme: '', type: '', key: this.field_key})
+            this.attri_info.push({name: '', type: '', key: this.field_key})
             this.field_key = this.field_key + 1
         },
-        deleteRow(row, evt) {
+        resetRow(evt) {
             evt.preventDefault()
-            this.attri_info.$remove(row)
-        }
+            this.attri_info = []
+        },
+        addSchema(evt) {
+            evt.preventDefault()
+            this.schema_info.push({name: '', type: '', schema: '', key: this.schema_key})
+            this.schema_key = this.schema_key + 1
+        },
+        resetSchema(evt) {
+            evt.preventDefault()
+            this.schema_info = []
+        },
     }
 }
 </script>
