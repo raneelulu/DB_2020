@@ -101,7 +101,17 @@ export default {
           .catch((err) => {
             console.error(err)
           })
-        }
+
+        // 테이블 다시 리로드
+        this.$http.post('/api/getRTable', this.$route.params.userID)
+          .then((res) => {
+              this.rTask = res.data.rTask;
+              this.wTask = res.data.wTask;
+          })
+          .catch((err) => {
+              console.error(err)
+          })
+      }
       else {
         if (this.selected == '') {
           alert("선택된 TASK가 없습니다.");
