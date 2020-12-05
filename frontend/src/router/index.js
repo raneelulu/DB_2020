@@ -6,7 +6,6 @@ import IndexPage from '@/components/IndexPage'
 import EvalTodoView from '@/views/TodoListView'
 import EvalEvaluatedView from '@/views/EvaluatedListView'
 import EvalTaskEvalView from '@/views/EvalTaskEvalView'
-import Helloworld from '@/components/Helloworld'
 import LoginPage from '@/components/main/Home'
 import AdminMain from '@/components/Admin/AdminMain'
 import TaskCreate from '@/components/Admin/Task/TaskCreate'
@@ -21,7 +20,6 @@ import SubmitData from '@/components/user/SubmitData'
 Vue.use(VueRouter)
 import SignUpPage from '@/components/SignUpPage'
 import ProfilePage from '@/components/ProfilePage'
-import HelloWorld from '@/components/HelloWorld'
 
 const router = new VueRouter({
   mode: 'history',
@@ -105,11 +103,6 @@ const router = new VueRouter({
       path: '/login',
       name: 'LoginPage',
       component: LoginPage
-    },
-    {
-      path: '/hi',
-      name: 'Hi',
-      component: Helloworld
     },
     {
       path: '/submitter/:userID',

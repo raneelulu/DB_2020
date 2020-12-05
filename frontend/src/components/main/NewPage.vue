@@ -12,7 +12,7 @@
       </div>
     </form>
     <button type="login">로그인</button>
-    <button type="newregister" onClick="location.href='http://localhost:3000/#/ip'">회원가입</button>
+    <button type="newregister" onClick="location.href='http://localhost:3000/#/sign_up'">회원가입</button>
     <ul>
       <p>© ED's DBD</p>
     </ul>
