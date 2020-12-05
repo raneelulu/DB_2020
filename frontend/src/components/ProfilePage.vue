@@ -66,6 +66,11 @@ export default {
 		};
 	},  
 	created(){
+		if(!this.$store.getters.user)	{
+			alert("로그인 해주세요.");
+			this.$router.push({name:"LoginPage"});
+			return false;
+		}
 		this.id = this.$store.getters.user.id;
 		this.old_password_check = this.$store.getters.user.password;
 		this.name = this.$store.getters.user.name;
