@@ -13,12 +13,14 @@ var indexRouter = require('./routes/index');
 var memberRouter = require('./routes/member');
 var loginRouter = require('./routes/login');
 var signUpRouter = require('./routes/sign_up');
+var profileRouter = require('./routes/profile');
 var evaluatorRouter = require('./routes/evaluator');
 var taskRouter = require('./routes/task');
 var tableRouter = require('./routes/getTable');
 var rTableRouter = require('./routes/getRTable');
 var registerRouter = require('./routes/registerTask');
-
+var checkIdRouter = require('./routes/check_id');
+var withdrawRouter = require('./routes/withdraw');
 var logoutRouter = require('./routes/logout');
 var app = express();
 
@@ -50,6 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/member', memberRouter);
 app.use('/api/sign_up', signUpRouter);
+app.use('/api/profile', profileRouter);
 app.use('/api/evaluator', evaluatorRouter);
 app.use('/api/task', taskRouter);
 
@@ -59,7 +62,8 @@ app.use('/api/logout',logoutRouter);
 app.use('/api/getTable', tableRouter);
 app.use('/api/getRTable', rTableRouter);
 app.use('/api/registerTask', registerRouter);
-
+app.use('/api/check_id', checkIdRouter);
+app.use('/api/withdraw', withdrawRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

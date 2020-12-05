@@ -32,15 +32,16 @@
       <label for="address">주소:</label>
       <input id="address" type="text" v-model="address"  />
     </div>
-    <div>
+    <!-- <div>
       <label for="birthday">생일:</label>
       <input id="birthday" type="date" min='1900-01-01' v-model="birthday" disabled/>
-    </div>
+    </div> -->
     <div>
       <label for="type">권한:</label>
         <input id='type' class='type' type='text' v-model='type' disabled/>  
 		</div>
     <button type="submit">정보 수정하기</button>
+    <button class='red' v-on:click="withdraw">탈퇴하기</button>
   </form>
 </template>
 
@@ -64,34 +65,32 @@ export default {
 			// user:null,
 		};
 	},  
-	// computed:{
-    // 	user() {return this.$store.getters.user;}  
-  	// },
 	created(){
-		alert("created");
-		// this_id = this.$store.getters.user;
-		// alert(this_id);
-    //  	user(){return this.$store.getters.user;}  
-	// 	.then((res) => {
-	// 		const user = res.data.user;
-	// 		alert(user);
-	// 		if(user){
-	// 			this.name= user.name;
-	// 			this.id = user.id;
-	// 			this.old_password_check = user.password;
-	// 			this.phonenumber1 = user.phone_number.substr(0,3);
-	// 			this.phonenumber2 = user.phone_number.substr(3,4);
-	// 			this.phonenumber2 = user.phone_number.substring(7,);
-	// 			this.address = user.address;
-	// 			this.birthday = user.birthday;
-	// 			this.type = user.type;
-	// 		}else{
-	// 			// this.$router.push({name:"LoginPage"});
-	// 		}
-	// 	})
-	// 	.catch((err) => {
-	// 			console.error(err);
-	// 	});
+		this.id = this.$store.getters.user.id;
+		this.old_password_check = this.$store.getters.user.password;
+		this.name = this.$store.getters.user.name;
+		this.type = this.$store.getters.user.position;
+		// console.log(this.$store.getters.user);
+		// .then((res) => {
+		// 	const user = res.data.user;
+		// 	alert(user);
+		// 	if(user){
+		// 		this.name= user.name;
+		// 		this.id = user.id;
+		// 		this.old_password_check = user.password;
+		// 		this.phonenumber1 = user.phone_number.substr(0,3);
+		// 		this.phonenumber2 = user.phone_number.substr(3,4);
+		// 		this.phonenumber2 = user.phone_number.substring(7,);
+		// 		this.address = user.address;
+		// 		this.birthday = user.birthday;
+		// 		this.type = user.type;
+		// 	}else{
+		// 		// this.$router.push({name:"LoginPage"});
+		// 	}
+		// })
+		// .catch((err) => {
+		// 		console.error(err);
+		// });
     },
 	methods: {
 	checkForm: function()	{
@@ -105,11 +104,20 @@ export default {
 			return false;
 		}		
 		if(this.old_password!=this.old_password_check){
+			console.log(old_password_check);
+			alert("기존 비밀번호가 틀립니다.")
+			return false;
+		}		
+		if(this.old_password!=this.old_password_check){
 			alert("기존 비밀번호가 틀립니다.")
 			return false;
 		}
 		if(!this.new_password){
 			alert("새로운 비밀번호를 입력해주세요.");
+			return false;			
+		}
+		if(this.new_password!=this.new_password_check){
+			alert("새로운 비밀번호가 틀립니다.");
 			return false;			
 		}
 		if(!RegExp.test(this.new_password)){ //패스워드 유효성검사
@@ -134,6 +142,11 @@ export default {
 			alert("핸드폰 번호는 숫자만 입력해 주세요.");
 			return false;
 		}	
+		// ================ 주소 유효성검사 ===============//
+		if(!this.address)	{
+			alert("주소를 입력하세요.");
+			return false;
+		}
 		this.submitForm();
 	},
 	submitForm: function(){
@@ -147,6 +160,7 @@ export default {
 			.then((response)=>{
 				if(response['STAT']==0)	{
 					// 수정성공
+					alert("회원정보가 수정되었습니다.");
 					console.log("success");
 				}
 			})
@@ -154,6 +168,28 @@ export default {
 				console.log(response);
 			});
 	}},
+	withdraw: function()	{
+
+		var this_id = this.$store.getters.user.id;
+		var this_password = this.$store.getters.user.password;
+
+		if(!old_password)	{
+			alert("탈퇴를 위해 기존 비밀번호를 입력하세요");
+			return false;
+		}
+		if(old_password == this_password)	{
+			this.$http.post('/api/withdraw', id)
+				.then((response)=>{
+					if(response['STAT']==0)	{
+						// 삭제 성공
+						alert("회원 탈퇴 되었습니다.");
+						console.log("success");
+					}
+				})
+				.catch(function(error){
+					console.log(response);
+				});	}
+		}
 }
 </script>
 

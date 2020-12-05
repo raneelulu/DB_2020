@@ -160,6 +160,11 @@ export default {
 			alert("핸드폰 번호는 숫자만 입력해 주세요.");
 			return false;
 		}
+		// ================ 주소 유효성검사 ===============//
+		if(!this.address)	{
+			alert("주소를 입력하세요.");
+			return false;
+		}
 		// ================ 생년월일 유효성검사 ================ //  
 		if(!this.birthday)	{
 			alert("생일을 입력해주세요.");
