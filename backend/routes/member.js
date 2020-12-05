@@ -18,6 +18,10 @@ router.get('/', function(req, res, next){
 router.get('/:userID', function(req, res, next){
   var user_id = req.params.userID;
   // 회원 상세 정보
+  // 참여자이면 참여 task_info를 받아서 전달, 평가자이면 평가한 file_info를 받아서 전달
+  // 참여자이면 file_info에 빈칸 전달
+  // 평가자이면 task_info에 빈칸 전달
+  // 빈칸 전달하면 알아서 처리됨 ㅇㅇ
     var ret = {
       user_info: [{id: '2015147531', name: '서기원', role: '제출자', gender: 'm', taskList: ['1','2']}],
       task_info: [

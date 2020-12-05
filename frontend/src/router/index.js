@@ -21,6 +21,7 @@ import UserInfo from '@/components/Admin/Member/UserInfo'
 Vue.use(VueRouter)
 import SignUpPage from '@/components/SignUpPage'
 import ProfilePage from '@/components/ProfilePage'
+import IntroPage from '@/components/Intro'
 
 const router = new VueRouter({
   mode: 'history',
@@ -134,8 +135,13 @@ const router = new VueRouter({
       path: '/admin/:userID',
       name: 'UserInfo',
       component: UserInfo
-    }
+    },
     // 관리자 페이지 끝
+    {
+      path: '/intro',
+      name: 'Intro',
+      component: IntroPage
+    }
   ]
 })
 export default router;
