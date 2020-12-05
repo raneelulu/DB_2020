@@ -1,0 +1,192 @@
+<template>
+    <div>
+        <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+            <b-form-group id="input-group-1" label="테스크 이름:" label-for="input-1">
+                <b-form-input
+                    id="input-1"
+                    v-model="form.name"
+                    required
+                    placeholder="테스크 이름을 입력하세요."
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group id="input-group-2" label="테스크 설명:" label-for="input-2">
+                <b-form-input
+                    id="input-2"
+                    v-model="form.des"
+                    required
+                    placeholder="테스크에 대한 간략한 설명을 써주세요."
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group id="input-group-3" label="최소 업로드 주기:" label-for="input-3">
+                <b-form-input
+                    id="input-3"
+                    v-model="form.min_submit_period"
+                    required
+                    placeholder="테스크에 제출할 파일의 최소 업로드 주기를 입력하세요."
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group id="input-group-4" label="제출 파일 PASS 기준:" label-for="input-4">
+                <b-form-input
+                    id="input-4"
+                    v-model="form.standard"
+                    required
+                    placeholder="제출 파일이 PASS 되는 기준 점수를 입력하세요."
+                ></b-form-input>
+            </b-form-group>
+
+            <label for="example-datepicker1">데이터 수집 시작 날짜</label>
+            <b-form-datepicker id="example-datepicker" v-model="form.start" class="mb-2"></b-form-datepicker>
+
+            <label for="example-datepicker2">데이터 수집 종료 날짜</label>
+            <b-form-datepicker id="example-datepicker2" v-model="form.end" class="mb-2"></b-form-datepicker>
+
+            <hr>
+            <b-form-checkbox
+                id="checkbox-1"
+                v-model="form.use_sql"
+                name="checkbox-1"
+                value=true
+                unchecked-value=false
+                >
+                데이터 테이블 스키마 정의 SQL 사용 여부
+            </b-form-checkbox>
+
+            <hr>
+            <b-form-group id="input-group-5" label="데이터 테이블 스키마:" label-for="input-5" v-if="form.use_sql">
+                <b-form-input
+                    id="input-5"
+                    v-model="form.taskSchema"
+                    required
+                    placeholder="데이터 테이블의 스키마를 설정해주세요."
+                ></b-form-input>
+            </b-form-group>
+            <hr>
+
+            <div><strong>데이터 테이블 스키마 설정</strong></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td><strong>속성 이름</strong></td>
+                            <td><strong>속성 타입</strong></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in attri_info" :key="row.key">
+                            <td><b-form-input v-model="row.name" placeholder="이름 입력"></b-form-input></td>
+                            <td><b-form-select v-model="row.type" :options="options"></b-form-select></td>
+                            <td><b-button id="delete" variant="danger" v-on:click="deleteRow(row)">삭제</b-button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div><b-button id="add" variant="primary" v-on:click="addRow">속성 추가</b-button></div>
+            <hr>
+
+            <b-button type="submit" variant="success">Submit</b-button>
+            <b-button type="reset" variant="danger">Reset</b-button>
+        </b-form>      
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            form: {
+                name: '',
+                des: '',
+                start: '',
+                end: '',
+                min_submit_period: '',
+                standard: '',
+                use_sql: false,
+                taskSchema: ''
+            },
+            show: true,
+            attri_info: [
+                {name: '', type: '', key: 1},
+            ],
+            options: [
+                {value: "text", text: "text"},
+                {value: "discrete", text: "discrete"},
+                {value: "integer", text: "integer"},
+                {value: "big integer", text: "big integer"},
+                {value: "float", text: "float"},
+                {value: "date", text: "date"},
+                {value: "time", text: "time"},
+                {value: "datetime", text: "datetime"}
+            ],
+            field_key: 2
+        }
+    },
+    methods: {
+        onSubmit(evt) {
+            evt.preventDefault()
+            if(this.form.start === '') {
+                alert("데이터 수집 시작 날짜를 정하세요.")
+                return
+            }
+            if(this.form.end === '') {
+                alert("데이터 수집 종료 날짜를 정하세요.")
+                return
+            }
+            else if (this.form.end < this.form.start) {
+                alert("데이터 수집 기간을 잘못 설정했습니다.")
+                return
+            }
+            if(!this.form.use_sql) {
+                if(attri_info[0].name.length === 0) {
+                    alert("데이터 테이블 스키마를 설정하세요.")
+                    return
+                }
+            }
+            this.$http.post('/api/task/create', 
+            {name: this.form.name, des: this.form.des, start_period: this.form.start, end_period: this.form.end,
+            min_submit_period: this.form.min_submit_period, standard_of_pass: this.form.standard,
+            use_sql: this.form.use_sql, taskSchema: this.form.taskSchema, field_info: this.attri_info}, {"Content-Type": "application-json"})
+                .then((res) => {
+                    // post가 성공하면
+                    if (res.data.success) {
+                        alert('정상적으로 테스크가 생성되었습니다.')
+                        this.$route.push("/admin/task")
+                    } else {
+                        alert("Wrong data input")
+                    }
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
+        onReset(evt) {
+            evt.preventDefault()
+                // Reset our form values
+                this.form.name = ''
+                this.form.des = ''
+                this.form.start = ''
+                this.form.end = ''
+                this.form.min_submit_period = ''
+                this.form.standard = ''
+                this.form.use_sql = false
+                this.form.taskSchema = ''
+                this.attri_info = [{name: '', type: '', key: this.field_key}]
+                // Trick to reset/clear native browser form validation state
+                this.show = false
+                this.$nextTick(() => {
+                this.show = true
+            })
+        },
+        addRow(evt) {
+            evt.preventDefault()
+            this.attri_info.push({nanme: '', type: '', key: this.field_key})
+            this.field_key = this.field_key + 1
+        },
+        deleteRow(row, evt) {
+            evt.preventDefault()
+            this.attri_info.$remove(row)
+        }
+    }
+}
+</script>

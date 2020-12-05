@@ -30,7 +30,7 @@ export default {
             this.$router.push({name:"ShowTaskInfo"});
         },
         to_memb() {
-            this.$router.push({name:"AdministratorMemb"});
+            this.$router.push({name:"ShowMember"});
         }
     },
     computed: {

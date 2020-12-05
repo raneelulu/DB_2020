@@ -13,7 +13,7 @@ router.get('/', function(req, res, next){
             {name: '류동철', des: '악질 중의 악질', upload: 1, table_name: 'table2', table_schema: 'schema2', data_type: 'origin_data_type2'},
             {name: '유현석', des: '술대장', upload: 1, table_name: 'table3', table_schema: 'schema3', data_type: 'origin_data_type3'},
             {name: '박성현', des: '20년 최고 남친상', upload: 1, table_name: 'table4', table_schema: 'schema4', data_type: 'origin_data_type4'},
-            //{name: '서기원', des: '큰일남', upload: 1, table_name: 'table5', table_schema: 'schema5', data_type: 'origin_data_type5'},
+            {name: '서기원', des: '큰일남', upload: 1, table_name: 'table5', table_schema: 'schema5', data_type: 'origin_data_type5'},
         ]
     };
 
@@ -41,18 +41,53 @@ router.get('/:taskName', function(req, res, next){
     res.json(ret)
 });
 
-router.get('/:taskName/Register', function(req, res, next){
+router.get('/:taskName/manage', function(req, res, next){
     var name = req.params.taskName;
     // 테스크 참가 신청 인원
     var ret = {
+        task_standard: '7',
         register_list: [
-            {id: '2015147531', name: '서기원', score: '100'},
-            {id: '2015147533', name: '유현석', score: '80'},
-            {id: '2015147562', name: '이의동', score: '60'},
-            {id: '2015147563', name: '류동철', score: '20'},
+            {id: '2015147531', name: '서기원', score: '7'},
+            {id: '2015147533', name: '유현석', score: '6'},
+            {id: '2015147562', name: '이의동', score: '9'},
+            {id: '2015147563', name: '류동철', score: '4'},
         ]
     };
     res.json(ret)
+});
+
+router.post('/:taskName/Register/:userID', function (req, res, next) {
+    var name = req.params.taskName;
+    var id = req.params.userID;
+
+    // 참가 신청 승인
+    var approval = req.params.approval;
+
+    // 저장 성공 여부 전송
+    // 성공이면 true, 실패면 false
+    res.json({success: true})
+});
+
+router.post('/:taskName/resetStandard', function (req, res, next) {
+    var name = req.params.taskName;
+
+    // 테스크 제출 파일 PASS 기준 재설정
+    var pass_standard = req.params.standard;
+
+    // 저장 성공 여부 전송
+    // 성공이면 true, 실패면 false
+    res.json({success: true})
+});
+
+router.post('/:taskName/addType', function (req, res, next) {
+    var name = req.params.taskName;
+
+    // 원본 데이터 타입 추가
+    var field_info = req.params.field_info;
+
+    // 저장 성공 여부 전송
+    // 성공이면 true, 실패면 false
+    res.json({success: true})
 });
 
 router.post('/create', function (req, res, next) {
@@ -67,13 +102,14 @@ router.post('/create', function (req, res, next) {
         standard_of_pass: req.params.standard_of_pass
     }
 
-    // True이면 SQL 아니면 json파일
+    // True이면 SQL
     var use_sql = req.params.use_sql;
-    var taskSchema = req.params.task_schema;
+    var taskSchema = req.params.taskSchema;
+    var field_info = req.params.field_info;
 
     // 저장 성공 여부 전송
     // 성공이면 true, 실패면 false
     res.json({success: true})
-})
+});
 
 module.exports = router;
