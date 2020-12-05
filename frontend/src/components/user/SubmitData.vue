@@ -1,30 +1,50 @@
 <template>
   <div v-if="user">
-    <h2>TASK 목록</h2>
+    <p>{{user.name}}님의 평가 점수 : {{score}}</p>
+    <br>
+    <h3>TASK 목록</h3>
     <b-table :fields="fields" :items="items">
       <template #cell(name)="data">
         <!-- 테스크 표 테스크 클릭 시 선택 가능 selected 에 저장 -->
         <b-button size="sm" @click="selectTask(data.value)">{{ data.value }}</b-button>
       </template>
     </b-table>
-    <br>
+
     <p> Selected Task : {{ selected }} </p>
-    <select v-model="selectedType">
-      <option v-for="task in user.tasks" v-bind:key="task.task" v-bind:value="task.task">
-        {{ task.task }}
+
+    <br>
+
+    <select v-model="selectedType" @change="changeType()">
+      <option v-for="type in dataType" v-bind:key="type.typeName" v-bind:value="type.typeName">
+        {{type.typeName}}
       </option>
     </select>
     <span>Original Data Type : {{ selectedType }}</span>
+
     <br>
+
+    <b-table :fields="dFields" :items="submitFiles"></b-table>
+
+    <br>
+
+    <p> 제출한 총 파일 수 : {{ subFileNum }} </p>
+    <p> PASS된 총 tuple 수 : {{ tupleNum }} </p>
+
     <div id="fileBox">
       <b-form-file
           v-model="file"
+          name="file"
           :state="Boolean(file)"
           placeholder="Choose a file or drop it here..."
           drop-placeholder="Drop file here..."
       ></b-form-file>
     </div>
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+
+    <b-form-input v-model="subNum" placeholder="회차를 입력하시오"></b-form-input>
+    <b-form-input v-model="period" placeholder="기간을 입력하시오"></b-form-input>
+    <br>
+
     <ul>
       <li>
         <b-button variant="info" @click="upload">SUBMIT</b-button>
@@ -41,57 +61,104 @@
 
 <script>
 export default {
+    created() {
+        this.$http.post('/api/getTable', this.$route.params.userID)
+            .then((res) => {
+                this.items = res.data.items;
+                this.score = res.data.score;
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+    },
     data() {
         return {
             selected: '',
             selectedType: '',
             file: null,
             fields: [
-                {
-                    key: 'name',
-                    label: 'TASK Name'
-                },
-                {
-                    key: 'period',
-                    label: 'Period'
-                },
-                {
-                  key: 'description',
-                  label: 'Description',
-                }
+              {key: 'name', label: 'TASK 이름'},
+              {key: 'period', label: '최소 업로드 주기'},
+              {key: 'description', label: '설명'}
             ],
-            items: [
-                { name: 'task1', period: 2, description: 'data of school'},
-                { name: 'task2', period: 4, description: 'data of food' },
-                { name: 'task3', period: 1, description: 'data of habit' },
-                { name: 'task4', period: 1, description: 'data of money' }
-            ]
+            items: [],
+            dataType: [],
+            submitFiles: [],
+            score: 0,
+            subFileNum: null,
+            tupleNum: null,
+            dFields: [
+              {key: 'filename', label: '제출된 파일 이름'},
+              {key: 'subNum', label: '회차'},
+              {key: 'isPass', label: 'PASS 여부'}
+            ],
+            subNum: '',
+            period: '',
+            complete: false
         }
     },
     methods: {
+      checkInput() {
+        if (this.period != '' && this.subNum != '' && this.selected != '' && this.selectedType != '' && this.file != null) this.complete = true;
+        else this.complete = false; 
+      },
       backPage() {
         this.$router.push({name: "Submitter"});
       },
+      changeType() {
+        this.$http.post('/api/getTable/' + this.selected + '/' + this.selectedType)
+          .then((res) => {
+                this.submitFiles = res.data.submitFiles;
+                this.subFileNum = res.data.subFileNum;
+                this.tupleNum = res.data.tupleNum;
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+      },
+      removeTask() {
+        this.selected = '';
+        this.dataType = [];
+        this.subFileNum = 0;
+        this.tupleNum = 0;  
+      },
       selectTask(value) {
         this.selected = value;
+        this.$http.post('/api/getTable/' + this.selected)
+          .then((res) => {
+                this.dataType = res.data.type;
+            })
+            .catch((err) => {
+                console.error(err)
+            })
       },
       async upload() {
-        var fd = new FormData();
-        fd.append('file', this.file)
+        this.checkInput();
+        if (this.complete == true) {
+          var fd = new FormData();
+          fd.append('file', this.file);
+          fd.append('subNum', this.subNum);
+          fd.append('period', this.period);
+          fd.append('taskName', this.selected);
+          fd.append('dataType', this.selectedType);
 
-        this.$http.post('/api/upload',
-            fd, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
+          this.$http.post('/api/upload',
+              fd, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
               }
-            }
-          ).then(response => {
-            console.log('SUCCESS!!');
-            console.log(response.data)
-          })
-          .catch(function () {
-            console.log('FAILURE!!');
-          });
+            ).then(response => {
+              console.log('SUCCESS!!');
+              console.log(response.data)
+            })
+            .catch(function () {
+              console.log('FAILURE!!');
+            });
+        }
+        else {
+          alert("입력되지 않은 정보가 존재합니다.");
+        }
       }
     },
     computed:{

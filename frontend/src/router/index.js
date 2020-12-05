@@ -99,17 +99,17 @@ const router = new VueRouter({
       component: Helloworld
     },
     {
-      path: '/submitter',
+      path: '/submitter/:userID',
       name: 'Submitter',
       component: Submitter
     },
     {
-      path: '/submitter/gettask',
+      path: '/submitter/:userID/gettask',
       name: 'GetTask',
       component: GetTask
     },
     {
-      path: '/submitter/submitdata',
+      path: '/submitter/:userID/submitdata',
       name: 'SubmitData',
       component: SubmitData
     }

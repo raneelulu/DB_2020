@@ -31,7 +31,7 @@ export default {
                 this.$router.push("/evaluator/" + user.id)
               }
               else if (user.position == "사용자") {
-                this.$router.push("/submitter");
+                this.$router.push("/submitter/" + user.id);
               }
             }else{
               this.$router.push({name:"LoginPage"});

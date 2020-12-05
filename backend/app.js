@@ -14,6 +14,10 @@ var loginRouter = require('./routes/login');
 var signUpRouter = require('./routes/sign_up');
 var evaluatorRouter = require('./routes/evaluator');
 var taskRouter = require('./routes/task');
+var loadRouter = require('./routes/upload');
+var tableRouter = require('./routes/getTable');
+var rTableRouter = require('./routes/getRTable');
+var registerRouter = require('./routes/registerTask');
 
 var logoutRouter = require('./routes/logout');
 var app = express();
@@ -37,6 +41,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/api/upload', loadRouter);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -48,6 +53,10 @@ app.use('/api/task', taskRouter);
 
 app.use('/api/login',loginRouter);
 app.use('/api/logout',logoutRouter);
+
+app.use('/api/getTable', tableRouter);
+app.use('/api/getRTable', rTableRouter);
+app.use('/api/registerTask', registerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
