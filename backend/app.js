@@ -10,10 +10,11 @@ require('./passport').config(passport);
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
+var memberRouter = require('./routes/member');
 var loginRouter = require('./routes/login');
 var signUpRouter = require('./routes/sign_up');
 var evaluatorRouter = require('./routes/evaluator');
+var taskRouter = require('./routes/task');
 
 var logoutRouter = require('./routes/logout');
 var app = express();
@@ -44,9 +45,10 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+app.use('/api/member', memberRouter);
 app.use('/api/sign_up', signUpRouter);
 app.use('/api/evaluator', evaluatorRouter);
+app.use('/api/task', taskRouter);
 
 app.use('/api/login',loginRouter);
 app.use('/api/logout',logoutRouter);
