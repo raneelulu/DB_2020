@@ -27,7 +27,6 @@ export default {
     methods: {
         approval(evt) {
             evt.preventDefault()
-            //alert(JSON.stringify(this.form))
             this.$http.post('/api/task/' + this.$route.params.taskName + '/Register/' + this.userData.id, 
             {approval: true}, {"Content-Type": "application-json"})
                 .then((res) => {
@@ -36,7 +35,7 @@ export default {
                         alert('정상적으로 승인되었습니다')
                         this.$route.push("/admin/task/manage/" + this.$route.params.taskName)
                     } else {
-                        alert("Wrong data input")
+                        alert("승인 과정에서 오류가 발생하였습니다.")
                     }
                 })
                 .catch((err) => {

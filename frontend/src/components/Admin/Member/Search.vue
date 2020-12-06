@@ -4,7 +4,7 @@
         <div class="column">
             <div id="taskSearch">
                 <b-col sm="2">
-                    <label for="TaskName">테스크 이름:</label>
+                    <label for="TaskName">TASK 이름:</label>
                 </b-col>
                 <b-col sm="10">
                     <b-form-input id="TaskName" size="lg" v-model="SearchData.taskName"></b-form-input>

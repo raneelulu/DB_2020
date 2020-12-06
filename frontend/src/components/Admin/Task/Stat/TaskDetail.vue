@@ -9,7 +9,7 @@
                 <div class="c">{{ task.name }}</div>
             </div>
             <div class="b">
-                <div class="c bold">테스크 설명</div>
+                <div class="c bold">TASK 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
             </div>
@@ -22,7 +22,7 @@
                 <div class="c">{{ task.all_file_number }}</div>
             </div>
             <div class="b">
-                <div class="c bold">통과된 튜플 개수</div>
+                <div class="c bold">PASS 튜플 개수</div>
                 |
                 <div class="c">{{ task.pass_tuple_number }}</div>
             </div>

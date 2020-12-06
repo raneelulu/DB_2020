@@ -13,7 +13,6 @@ export default {
     methods: {
         resetStandard(evt) {
             evt.preventDefault()
-            //alert(JSON.stringify(this.form))
             this.$http.post('/api/task/' + this.$route.params.taskName + '/resetStandard', {standard: this.standard}, {"Content-Type": "application-json"})
                 .then((res) => {
                     // post가 성공하면
@@ -21,7 +20,7 @@ export default {
                         alert('정상적으로 수정되었습니다.')
                         this.$route.push("/admin/task/manage/" + this.$route.params.taskName)
                     } else {
-                        alert("Wrong data input")
+                        alert("수정 과정에서 오류가 발생하였습니다.")
                     }
                 })
                 .catch((err) => {
