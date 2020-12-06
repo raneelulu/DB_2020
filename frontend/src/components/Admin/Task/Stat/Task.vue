@@ -13,9 +13,6 @@
             {{ taskData.table_name }}
         </div>
         <div class="tableCell">
-            {{ taskData.table_schema }}
-        </div>
-        <div class="tableCell">
             {{ taskData.data_type }}
         </div>
     </div>

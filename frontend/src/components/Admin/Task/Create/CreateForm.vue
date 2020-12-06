@@ -50,6 +50,7 @@
                 name="checkbox-1"
                 value=true
                 unchecked-value=false
+                v-on:click="checksql"
                 >
                 데이터 테이블 스키마 정의 SQL 사용 여부
             </b-form-checkbox>
@@ -228,6 +229,12 @@ export default {
             evt.preventDefault()
             this.schema_info = []
         },
+        checksql(evt) {
+            evt.preventDefault()
+            if(use_sql) {
+                alert("SQL 사용시 'file_id'라는 키를 명시해주세요.")
+            }
+        }
     }
 }
 </script>

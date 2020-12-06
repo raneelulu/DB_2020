@@ -4,12 +4,12 @@
     <div style="margin: 10px;">
         <div class="a">
             <div class="b">
-                <div class="c bold">Name</div>
+                <div class="c bold">테스크 이름</div>
                 |
                 <div class="c">{{ task.name }}</div>
             </div>
             <div class="b" style="width: 30%;">
-                <div class="c bold">Description</div>
+                <div class="c bold">테스크 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
             </div>
@@ -17,24 +17,44 @@
         <hr>
         <div class="a">
             <div class="b">
-                <div class="c bold">Number of Files</div>
+                <div class="c bold">제출 파일 개수</div>
                 |
                 <div class="c">{{ task.all_file_number }}</div>
             </div>
-        </div>
-        <hr>
-        <div class="a">
             <div class="b">
-                <div class="c bold">Number of Passed Tuples</div>
+                <div class="c bold">통과된 튜플 개수</div>
                 |
                 <div class="c">{{ task.pass_tuple_number }}</div>
             </div>
             <div class="b">
-                <div class="c bold">Number of Tuples in data type level</div>
+                <div class="c bold">원본 데이터 타입 수준 튜플 수</div>
                 |
                 <div class="c">{{ task.data_type_level_tuple_number }}</div>
             </div>
         </div>
+        <hr>
+        <div class="a">
+            다운로드 버튼 생성할것
+        </div>
+        <hr>
+
+        <div class="a">
+            <div class="b">
+                <div class="c bold">테스크 스키마</div>
+                |
+                <div class="c" v-for="attribute in table_Schema" :key="attribute.a">{{ attribute.a }} /</div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="a" v-for="data_type in originData_type" :key="data_type.id">
+            <div class="b">
+                <div class="c bold">원본 데이터 타입</div>
+                |
+                <div class="c" v-for="attribute in data_type" :key="attribute.a">{{attribute.a}} /</div>
+            </div>
+        </div>
+        
         <hr>
         <UserView :users="user_list"/>
     </div>
@@ -50,6 +70,8 @@ export default {
         return {
             task: {},
             user_list: [],
+            table_Schema: [],
+            originData_type: []
         }
     },
     created () {
@@ -57,6 +79,8 @@ export default {
             .then((res) => {
                 this.task = res.data.task
                 this.user_list = res.data.user_list
+                this.table_Schema = res.data.tableSchema
+                this.originData_type = res.data.originData_type
             })
             .catch((err) => {
                 console.error(err)
