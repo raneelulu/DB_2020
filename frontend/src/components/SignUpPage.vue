@@ -194,16 +194,13 @@ export default {
 				if(response['STAT']==0)	{
 					// 회원가입 성공
 					console.log("success");
-					// this.$router.push({name:"LoginPage"});
+					this.$router.push({name:"LoginPage"});
 				}
 			})
 			.catch(function(error){
 				console.log(response);
 			});
 	}},
-
-
-
 
 	/*
 	created(){
