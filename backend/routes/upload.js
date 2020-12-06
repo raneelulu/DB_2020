@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, './upload/');
+      cb(null, './upload/');      // 업로드 위치
     },
     filename: (req, file, cb) => {
       cb(null, `${file.originalname}`);

@@ -90,17 +90,13 @@ export default {
     },
     registerTask() {
       if (this.selected != '' && this.status == 'true') {
-        var fd = new FormData();
-        fd.append('taskName', this.selected);
-        fd.append('userID', this.$route.params.userID)
-
-        this.$http.post('/api/registerTask', fd)
+        this.$http.post('/api/registerTask', {taskName: this.selected, userID: this.$route.params.userID})
           .then((res) => {
-            console.log("register Task");
+            console.log("register Task")
           })
           .catch((err) => {
             console.error(err)
-          })
+          });
 
         // 테이블 다시 리로드
         this.$http.post('/api/getRTable', this.$route.params.userID)
@@ -110,14 +106,14 @@ export default {
           })
           .catch((err) => {
               console.error(err)
-          })
+          });
       }
       else {
         if (this.selected == '') {
           alert("선택된 TASK가 없습니다.");
         }
         else {
-          alert("개인정보 이용동의를 하십시오.")
+          alert("개인정보 이용동의를 하십시오.");
         }
       } 
     }
