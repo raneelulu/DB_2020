@@ -59,16 +59,18 @@ export default {
 
 <style scoped>
 div.menu {
-  float:left;
-  width: 300px!important;
+  width: 800px;
   background-color: #cccccc;
   padding: 5px 20px;
-  margin: 10px;
+  margin: 35px;
 }
 
 div.list {
-  margin: 10px 0px;
-  padding: 4px 0px;
+  display: inline-block;
+  width:225px;
+  height:50px;
+  margin: 10px;
+  padding: 14px 0px;
   background-color:  #f2f2f2;
 }
 
