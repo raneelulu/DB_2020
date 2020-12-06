@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <td><strong>속성 이름</strong></td>
-                        <td><strong>속성 타입</strong></td>
+                        <td><strong>변수 타입</strong></td>
                         <td><strong>스키마 매핑</strong></td>
                         <td></td>
                     </tr>
@@ -46,7 +46,6 @@ export default {
             ],
             options: [
                 {value: "text", text: "text"},
-                {value: "discrete", text: "discrete"},
                 {value: "integer", text: "integer"},
                 {value: "big integer", text: "big integer"},
                 {value: "float", text: "float"},

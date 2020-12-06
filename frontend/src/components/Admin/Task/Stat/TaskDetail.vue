@@ -40,9 +40,9 @@
 
         <div class="a">
             <div class="b">
-                <div class="c bold">테스크 스키마</div>
+                <div class="c bold">TASK 스키마</div>
                 |
-                <div class="c" v-for="attribute in table_Schema" :key="attribute.a">{{ attribute.a }} /</div>
+                <div class="c" v-for="attribute in table_Schema" :key="attribute.a">{{ attribute.a }}</div>
             </div>
         </div>
         <hr>
@@ -51,7 +51,7 @@
             <div class="b">
                 <div class="c bold">원본 데이터 타입</div>
                 |
-                <div class="c" v-for="attribute in data_type" :key="attribute.a">{{attribute.a}} /</div>
+                <div class="c" v-for="attribute in data_type" :key="attribute.a">{{attribute.a}}</div>
             </div>
         </div>
         
