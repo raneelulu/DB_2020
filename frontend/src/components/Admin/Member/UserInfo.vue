@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <Menu current="show"/>
-    <div style="margin: 10px;">
+    <div style="margin: 10px; flex-grow: 3;">
         <div class="a">
             <div class="b">
                 <div class="c bold">ID</div>
@@ -70,6 +70,7 @@ div.wrapper {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  flex-flow: row wrap;
 }
 .a {
     background-color: #cccccc;

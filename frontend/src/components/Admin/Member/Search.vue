@@ -103,5 +103,9 @@ div.wrapper {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-flow: row wrap;
+}
+div.column {
+    flex-grow: 3;
 }
 </style>

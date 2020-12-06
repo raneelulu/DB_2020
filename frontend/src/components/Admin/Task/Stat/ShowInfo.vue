@@ -35,5 +35,6 @@ div.wrapper {
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    flex-flow: row wrap;
 }
 </style>

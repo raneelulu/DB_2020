@@ -1,14 +1,14 @@
 <template>
 <!--2. 참여 중인 제출자들의 목록
         - 제출자 선택 시 참여 중인 테스크 확인 -->
-    <div style="margin: 10px;">
+    <div style="margin: 10px; flex-grow: 3;">
         <div class="a">
             <div class="b">
                 <div class="c bold">테스크 이름</div>
                 |
                 <div class="c">{{ task.name }}</div>
             </div>
-            <div class="b" style="width: 30%;">
+            <div class="b">
                 <div class="c bold">테스크 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
@@ -102,7 +102,6 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: #fff;
-    width: 15%;
     border-radius: 4px;
     padding: 4px;
     margin: 3px 3px;

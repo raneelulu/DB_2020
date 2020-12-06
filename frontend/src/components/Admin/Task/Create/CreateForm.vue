@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="flex-grow: 3;">
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
             <b-form-group id="input-group-1" label="TASK 이름:" label-for="input-1">
                 <b-form-input

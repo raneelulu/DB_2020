@@ -57,9 +57,11 @@ div.wrapper {
   align-items: flex-start;
 }
 div.content {
-    flex-grow: 3;
     background-color: #cccccc;
     padding: 5px;
     margin: 10px;
+}
+div.column {
+    flex-grow: 3;
 }
 </style>
