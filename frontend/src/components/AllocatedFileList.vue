@@ -12,7 +12,7 @@
       <AllocatedFile v-for="file in files" :key="file.id" :fileData="file" />
     </div>
     <div v-else>
-      <h1 class="no-margin">아직 평가한 Task가 없습니다.</h1>
+      <h1 class="no-margin">할당된 파일이 없습니다.</h1>
     </div>
   </div>
 </template>
