@@ -34,7 +34,14 @@
         </div>
         <hr>
         <div class="a">
-            다운로드 버튼 생성할것
+            <ul>
+                <li>
+                    <b-button variant="info" @click="CreateFile" type="file">파일 생성</b-button>
+                </li>
+                <li>
+                    <b-button variant="info" @click="Download" type="file">다운로드</b-button>
+                </li>
+            </ul>
         </div>
         <hr>
 
@@ -71,7 +78,9 @@ export default {
             task: {},
             user_list: [],
             table_Schema: [],
-            originData_type: []
+            originData_type: [],
+            fileName: '',
+            status: false
         }
     },
     created () {
@@ -81,10 +90,43 @@ export default {
                 this.user_list = res.data.user_list
                 this.table_Schema = res.data.tableSchema
                 this.originData_type = res.data.originData_type
+                this.fileName = res.data.fileName
             })
             .catch((err) => {
                 console.error(err)
             })
+    },
+    methods: {
+        CreateFile() {
+            this.$http.get('/api/createFile/' + this.task.name)
+                .then((res) => {
+                    console.log("create success")
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
+        Download() {
+            this.$http.get('/api/download/' + this.fileName)
+                .then((res) => {
+                    if (res.data != "해당 파일이 없습니다.") {
+                        console.log("download success")
+                        const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', this.fileName);
+                        document.body.appendChild(link);
+                        link.click();
+                    }
+                    else {
+                        alert("해당 파일이 없습니다.");
+                    }
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        }
     }
 }
 </script>
@@ -140,5 +182,11 @@ table tbody tr:last-child td:first-child {
 }
 table tbody tr:last-child td:last-child {
     border-radius: 0 0 5px 0;
+}
+ul > li {
+  font-size : large;
+  display : inline-block;
+  margin : 0 80px;
+  font-weight : bold;
 }
 </style>
