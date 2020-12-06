@@ -49,6 +49,10 @@ export default {
 .tableRow {
   display: table-row;
 }
+.tableRow:hover > .tableCell {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
 .tableCell {
   display: table-cell;
   border-radius: 5px;
