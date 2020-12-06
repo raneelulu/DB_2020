@@ -9,11 +9,11 @@ router.get('/', function(req, res, next){
         // task_list
         // 현재 서버 내에 관리자가 생성한 테스크 정보
         task_list: [
-            {name: '이의동', des: '코로나도 피해감', upload: 1, table_name: 'table1', table_schema: 'schema1', data_type: 'origin_data_type1'},
-            {name: '류동철', des: '악질 중의 악질', upload: 1, table_name: 'table2', table_schema: 'schema2', data_type: 'origin_data_type2'},
-            {name: '유현석', des: '술대장', upload: 1, table_name: 'table3', table_schema: 'schema3', data_type: 'origin_data_type3'},
-            {name: '박성현', des: '20년 최고 남친상', upload: 1, table_name: 'table4', table_schema: 'schema4', data_type: 'origin_data_type4'},
-            {name: '서기원', des: '큰일남', upload: 1, table_name: 'table5', table_schema: 'schema5', data_type: 'origin_data_type5'},
+            {name: '이의동', des: '코로나도 피해감', upload: 1, table_name: 'table1', table_schema: 'schema1', data_type: [{name:'o1'},{name:'o2'},{name:'o3'}]},
+            {name: '류동철', des: '악질 중의 악질', upload: 1, table_name: 'table2', table_schema: 'schema2', data_type: [{name:'a1'},{name:'a2'},{name:'a3'}]},
+            {name: '유현석', des: '술대장', upload: 1, table_name: 'table3', table_schema: 'schema3', data_type: [{name:'c'},{name:'d'},{name:'e'}]},
+            {name: '박성현', des: '20년 최고 남친상', upload: 1, table_name: 'table4', table_schema: 'schema4', data_type: [{name:'f'},{name:'g'},{name:'h'}]},
+            {name: '서기원', des: '큰일남', upload: 1, table_name: 'table5', table_schema: 'schema5', data_type: [{name:'1'},{name:'2'},{name:'3'}]},
         ]
     };
 
@@ -102,6 +102,7 @@ router.post('/:taskName/addType', function (req, res, next) {
     var name = req.params.taskName;
 
     // 원본 데이터 타입 추가
+    var data_type_name = req.params.dName;                  // 'string' // 원본 데이터 타입 이름
     var field_info = req.params.field_info;                 // [{속성 nanme, 속성 변수 type, 매핑할 schema 이름}, ]
 
     // 저장 성공 여부 전송
@@ -127,6 +128,7 @@ router.post('/create', function (req, res, next) {
     var use_sql = req.params.use_sql;
     var taskSchema = req.params.taskSchema;                 // sql "string 데이터"
     var field_info = req.params.field_info;                 // [{속성 nanme, 속성 변수 type}, ]
+    var data_type_name = req.params.dName;                  // 'string' 원본 데이터 타입 이름
     var mapping_info = req.params.map_info;                 // [{속성 nanme, 속성 변수 type, 매핑할 schema 이름}, ]
 
     // 저장 성공 여부 전송

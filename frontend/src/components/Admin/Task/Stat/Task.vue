@@ -13,7 +13,7 @@
             {{ taskData.table_name }}
         </div>
         <div class="tableCell">
-            {{ taskData.data_type }}
+            <div v-for="type in taskData.data_type" :key="type.name">{{type.name}}</div>
         </div>
     </div>
 </template>
