@@ -98,6 +98,8 @@ export default {
             console.error(err)
           });
 
+        alert(this.selected + " 가 신청되었습니다.");
+
         // 테이블 다시 리로드
         this.$http.post('/api/getRTable', this.$route.params.userID)
           .then((res) => {
