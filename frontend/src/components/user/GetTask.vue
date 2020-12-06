@@ -8,7 +8,7 @@
     <b-table :fields="fields" :items="rTask">
       <template #cell(name)="data">
       <!-- 테스크 표 테스크 클릭 시 선택 가능 selected 에 저장 -->
-      <b-button size="sm" @click="selectTask(data.value)">{{ data.value }}</b-button>
+      <b-button size="sm" variant="info" @click="selectTask(data.value)">{{ data.value }}</b-button>
     </b-table>
 
     <p> Selected Task : {{ selected }} </p>
@@ -31,7 +31,7 @@
     >
       개인정보 이용동의서에 동의하신다면 체크하십시오.(필수)  
     </b-form-checkbox>
-    <b-button v-b-toggle.collapse-1 variant="info">자세히</b-button>
+      <b-button v-b-toggle.collapse-1 variant="info">자세히</b-button>
     <b-collapse id="collapse-1" class="mt-2">
       <b-card>
         <p class="card-text">
@@ -44,10 +44,10 @@
 
     <ul>
       <li>
-        <b-button @click="registerTask">TASK 신청</b-button>
+        <button type="submit" @click="registerTask">TASK 신청</button>
       </li>
       <li>
-        <b-button @click="backPage">뒤로 가기</b-button>
+        <button type="submit" class="red" @click="backPage">뒤로 가기</button>
       </li>
     </ul>
     <ul>
@@ -156,4 +156,8 @@ ul > p {
   padding-bottom : 40px;
   font-size : small;
 }
+.red{background-color: tomato!important;}
+.red:hover{background-color: rgba(255, 99, 71, 0.849)!important;}
+button[type=submit]{background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
+button[type=submit]:hover{background-color: #257e70ad;}
 </style>

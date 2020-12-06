@@ -117,12 +117,12 @@ export default {
         console.log(res)
         if (Object.keys(res.data.file).length !== 0) {
           this.file = res.data.file
+          this.properties = Object.keys(this.file.null_col_rate)
         }
       })
       .catch((err) => {
         console.error(err)
       })
-    this.properties = Object.keys(this.file.null_col_rate)
   },
   methods: {
     onClickSubmit () {

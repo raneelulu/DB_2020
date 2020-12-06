@@ -13,7 +13,10 @@
             {{ taskData.table_name }}
         </div>
         <div class="tableCell">
-            <div v-for="type in taskData.data_type" :key="type.name">{{type.name}}</div>
+            <div v-if="typeof(taskData.data_type)==='string'">
+                {{ taskData.data_type}}
+            </div>
+            <div v-else v-for="type in taskData.data_type" :key="type.name">{{type.name}}</div>
         </div>
     </div>
 </template>

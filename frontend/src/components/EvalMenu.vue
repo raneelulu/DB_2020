@@ -46,8 +46,8 @@ export default {
 
 <style scoped>
 div.menu {
-  flex-grow: 1;
-  /* width: 100%; */
+  float:left;
+  width: 300px!important;
   background-color: #cccccc;
   padding: 5px 20px;
   margin: 10px;
@@ -56,20 +56,21 @@ div.menu {
 div.list {
   margin: 10px 0px;
   padding: 4px 0px;
-  background-color:  rgb(209, 242, 255);
+  background-color:  #f2f2f2;
 }
 
 div.list:hover:not(.current) {
-  background-color: #dddddd;
+  background-color: #257e70ad;
   font-weight: bold;
+  cursor: pointer;
 }
 
 div.list:active:not(.current) {
-  background-color: #cccccc;
+  background-color: #f2f2f2;
 }
 
 div.current {
-  background-color: rgb(59, 82, 211);
+  background-color: #247e70;
   color: white;
   font-weight: bold;
 }

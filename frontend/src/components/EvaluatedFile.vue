@@ -51,7 +51,7 @@ export default {
   display: table-cell;
   border-radius: 5px;
   /* border: 1px solid black; */
-  background-color: rgb(209, 242, 255);
+  background-color:white;
   padding: 2px;
   vertical-align: middle;
 }
