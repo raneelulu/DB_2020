@@ -154,7 +154,7 @@ export default {
                 console.log('SUCCESS!!');
                 console.log(response.data)
 
-                alert(this.file + " 파일이 제출되었습니다. ");
+                alert(this.file.name + " 파일이 제출되었습니다. ");
 
                 // 다시 제출한 파일 이름, 총 파일 수, 튜플 수 리로드
                 this.$http.post('/api/getTable/' + this.selected + '/' + this.selectedType)
