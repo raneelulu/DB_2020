@@ -29,6 +29,8 @@ router.get('/:userID/evaluated', function (req, res, next) {
             { id: 7, task: 'windows10', type: 'type', number: 1, p_np: true},
         ]
     };
+
+    res.json(ret)
 });
 
 router.get('/:userID/todo/:fileID', function (req, res, next) {
