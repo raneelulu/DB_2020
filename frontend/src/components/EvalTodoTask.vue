@@ -141,7 +141,7 @@ export default {
         })
     },
     Download() {
-      this.$http.post('/api/download/' + this.file.id)
+      this.$http.post('/api/download/' + this.file.id + "/" + this.file.task)
           .then((res) => {
               if (res.data != "해당 파일이 없습니다.") {
                   console.log("download success")
