@@ -5,7 +5,7 @@
         <br>
       <ul>
         <li>
-          <b-button v-on:click = to_task()>테스크</b-button>
+          <b-button v-on:click = to_task()>TASK</b-button>
         </li>
         <li>
           <b-button v-on:click = to_memb()>회원관리</b-button>

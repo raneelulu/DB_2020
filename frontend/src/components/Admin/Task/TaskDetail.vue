@@ -1,15 +1,15 @@
 <template>
 <!--2. 참여 중인 제출자들의 목록
         - 제출자 선택 시 참여 중인 테스크 확인 -->
-    <div style="margin: 10px;">
+    <div style="margin: 10px; flex-grow: 3;">
         <div class="a">
             <div class="b">
-                <div class="c bold">Name</div>
+                <div class="c bold">TASK 이름</div>
                 |
                 <div class="c">{{ task.name }}</div>
             </div>
-            <div class="b" style="width: 30%;">
-                <div class="c bold">Description</div>
+            <div class="b">
+                <div class="c bold">테스크 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
             </div>
@@ -17,31 +17,58 @@
         <hr>
         <div class="a">
             <div class="b">
-                <div class="c bold">Number of Files</div>
+                <div class="c bold">제출 파일 개수</div>
                 |
                 <div class="c">{{ task.all_file_number }}</div>
             </div>
-        </div>
-        <hr>
-        <div class="a">
             <div class="b">
-                <div class="c bold">Number of Passed Tuples</div>
+                <div class="c bold">통과된 파일 개수</div>
                 |
                 <div class="c">{{ task.pass_tuple_number }}</div>
             </div>
             <div class="b">
-                <div class="c bold">Number of Tuples in data type level</div>
+                <div class="c bold">원본 데이터 타입 수준 튜플 수</div>
                 |
                 <div class="c">{{ task.data_type_level_tuple_number }}</div>
             </div>
         </div>
+        <hr>
+        <div class="a">
+            <ul>
+                <li>
+                    <b-button variant="info" @click="CreateFile" type="file">파일 생성</b-button>
+                </li>
+                <li>
+                    <b-button variant="info" @click="Download" type="file">다운로드</b-button>
+                </li>
+            </ul>
+        </div>
+        <hr>
+
+        <div class="a">
+            <div class="b">
+                <div class="c bold">태스크 스키마</div>
+                |
+                <div class="c" v-for="attribute in table_Schema" :key="attribute.a">{{ attribute.a }}</div>
+            </div>
+        </div>
+        <hr>
+
+        <div class="a" v-for="data_type in originData_type" :key="data_type.id">
+            <div class="b">
+                <div class="c bold">원본 데이터 타입</div>
+                |
+                <div class="c" v-for="attribute in data_type" :key="attribute.a">{{attribute.a}}</div>
+            </div>
+        </div>
+        
         <hr>
         <UserView :users="user_list"/>
     </div>
 </template>
 
 <script>
-import UserView from '@/components/Admin/Task/UserView.vue';
+import UserView from '@/components/Admin/Task/Stat/UserView.vue';
 export default {
     components: {
         UserView
@@ -50,6 +77,10 @@ export default {
         return {
             task: {},
             user_list: [],
+            table_Schema: [],
+            originData_type: [],
+            fileName: '',
+            status: false
         }
     },
     created () {
@@ -57,10 +88,48 @@ export default {
             .then((res) => {
                 this.task = res.data.task
                 this.user_list = res.data.user_list
+                this.table_Schema = res.data.tableSchema
+                this.originData_type = res.data.originData_type
+                this.fileName = res.data.fileName
             })
             .catch((err) => {
                 console.error(err)
             })
+    },
+    methods: {
+        CreateFile() {
+            this.$http.get('/api/createFile/' + this.task.name)
+                .then((res) => {
+                    if(res.data.stat == 0){
+                        alert('파일이 성공적으로 생성되었습니다.');
+                    } else {
+                        alert('다시 시도해주세요.');
+                    }
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
+        Download() {
+            this.$http.get('/api/download/' + this.task.name)
+                .then((res) => {
+                    if (res.data != "해당 파일이 없습니다.") {
+                        console.log("download success")
+                        const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', this.fileName);
+                        document.body.appendChild(link);
+                        link.click();
+                    }
+                    else {
+                        alert("해당 파일이 없습니다.");
+                    }
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        }
     }
 }
 </script>
@@ -78,7 +147,6 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: #fff;
-    width: 15%;
     border-radius: 4px;
     padding: 4px;
     margin: 3px 3px;
@@ -117,5 +185,11 @@ table tbody tr:last-child td:first-child {
 }
 table tbody tr:last-child td:last-child {
     border-radius: 0 0 5px 0;
+}
+ul > li {
+  font-size : large;
+  display : inline-block;
+  margin : 0 80px;
+  font-weight : bold;
 }
 </style>

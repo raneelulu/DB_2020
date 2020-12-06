@@ -35,7 +35,6 @@ router.get('/:userID/evaluated', function (req, res, next) {
     Functions.get_evaluated(id)
     .then((results)=>{
         ret.evaluated_list = results.evaluated_list;
-        console.log(ret);
         res.json(ret);
     });
 });
@@ -71,28 +70,20 @@ router.get('/:userID/todo/:fileID', function (req, res, next) {
     ret = {};
     Functions.get_parsing_data_info(fileID)
     .then((results)=>{
-        ret.file = results.fileinfo[0];
-        var tablename = ret.file.task;
-        /*
-        Functions.get_columns(tablename)
+        ret.file = results[0];
+        table_name = results[0].table_name;
+        var columns = [];
+        Functions.get_columns(table_name)
         .then((results)=>{
-            var columns = results.columns;
-            var null_col_rate = {};
-            var _promise = function(){
-                return new Promise(function(resolve, reject){
-                    bb = false;
-                    for(var i = 0; i < columns.length; i ++){
-                        attr = columns[i].column_name;
-                        Functions.get_null_values(tablename, attr)
-                        .then((results)=>{
-                            null_col_rate.attr = results[0]['count(*)'];
-                            ret.file.null_col_rate = null_col_rate;
-                        });
-                    }
-                });
-            };
-        });*/
-        res.json(ret);
+            for(i = 0; i < results.columns.length; i ++){
+                columns.push(results.columns[i].column_name);
+            }
+            Functions.get_null_values(fileID, table_name, columns)
+            .then((results)=>{
+                ret.file.null_col_rate = results;
+                res.json(ret);
+            })
+        });
     });
 });
 
@@ -105,10 +96,38 @@ router.post('/:userID/todo/:fileID', function (req, res, next) {
     var p_np = req.body.p_np;
 
     // fileID를 ID로 갖는 파싱 데이터 시퀀스 파일에 평가 점수와 P/NP 정보를 저장함.
-    Functions.evaluate(fileID, score, p_np)
-    .then((stat)=>{
-        res.json({stat:stat});
-    })
+
+    if(p_np == 'pass'){
+        Functions.evaluate(fileID, score, p_np);
+        Functions.get_mapping_schema(fileID)
+        .then((results)=>{
+            schema_info = JSON.parse(results[0].schema_info);
+            table_name = results[0].table_name;
+            task_name = results[0].task_name;
+            task_table_name = results[0].task_table_name;
+            var columns = [];
+            Functions.get_columns(table_name)
+            .then((results)=>{
+                for(i = 0; i < results.columns.length; i ++){
+                    columns.push(results.columns[i].column_name);
+                }
+                Functions.get_file(fileID, table_name)
+                .then((results)=>{
+                    var tuples = results;
+                    Functions.put_into_task_table(task_table_name, tuples, columns, schema_info)
+                    .then((stat)=>{
+                        console.log(stat);
+                        res.json({stat:stat});
+                    })
+                });
+            });
+        })
+    } else {
+        Functions.evaluate(fileID, score, p_np)
+        .then((stat)=>{
+            res.json({stat:0});
+        });
+    }
 
     // 저장 성공 여부 전송
     // 성공이면 true, 실패면 false

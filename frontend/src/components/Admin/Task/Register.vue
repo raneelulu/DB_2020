@@ -10,7 +10,7 @@
             <UserList v-for="user in register_list" :key="user.id" :userData="user" />
         </div>
         <div v-else>
-            <h1 class="no-margin">아직 참가자가 없습니다.</h1>
+            <h1 class="no-margin">아직 신청 대기중인 회원이 없습니다.</h1>
         </div>
     </div>
 </template>

@@ -106,7 +106,7 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
     fields = mapping_info;
     save_schema = {};
     query = 'create table '+data_type_name.split(' ').join('')+'(';
-    query += 'file_id varchar(30) not null unique primary key,';
+    query += 'file_id varchar(30) not null,';
       for(f = 0; f < fields.length; f ++){
         save_schema[fields[f]['name']] = fields[f]['schema'];
         query += fields[f]['name'] + ' ';
@@ -146,7 +146,7 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
 
-      query = 'insert into source_data_type values(\''+ task_name +'\',\''+data_type_name+'\',\''+JSON.stringify(save_schema)+'\')';
+      query = 'insert into source_data_type values(\''+ task_name +'\',\''+data_type_name.split(' ').join('')+'\',\''+JSON.stringify(save_schema)+'\')';
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
       return stats.SUCCESS;
@@ -156,7 +156,7 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
     fields = field_info;
     save_schema = {};
     query = 'create table '+data_type_name.split(' ').join('')+'(';
-    query += 'file_id varchar(30) not null unique primary key,';
+    query += 'file_id varchar(30) not null,';
       for(f = 0; f < fields.length; f ++){
         save_schema[fields[f]['name']] = fields[f]['schema'];
         query += fields[f]['name'] + ' ';
@@ -196,7 +196,7 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
 
-      query = 'insert into source_data_type values(\''+ taskname +'\',\''+data_type_name+'\',\''+JSON.stringify(save_schema)+'\')';
+      query = 'insert into source_data_type values(\''+ taskname +'\',\''+data_type_name.split(' ').join('')+'\',\''+JSON.stringify(save_schema)+'\')';
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
       return stats.SUCCESS;
@@ -318,7 +318,7 @@ async function get_user_tasks_and_score(id){
 
 async function get_task_source_data_types(name){
   res = {};
-  query = 'select table_name as typeName from source_data_type, task where name=task_name';
+  query = 'select table_name as typeName from source_data_type, task where name=task_name and name=\''+name+'\'';
   results = await DBConn.MakeQuery(query);
   res.type = results;
   return res;
@@ -360,7 +360,7 @@ async function get_columns_and_eval(tablename){
   query = 'select column_name, data_type from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\' and column_name != \'FILE_ID\'';
   results = await DBConn.MakeQuery(query);
   res.columns = results;
-  query = 'select evaluator_id, min(cnt) from (select evaluator_id, count(*) cnt from parsing_data_sequence_file group by evaluator_id) t';
+  query = 'select evaluator_id from (select evaluator_id, count(*) cnt from parsing_data_sequence_file group by evaluator_id) t order by cnt';
   results = await DBConn.MakeQuery(query);
   res.eval = results;
   return res;
@@ -413,11 +413,9 @@ async function add_file(filename, subNum, start_period, end_period, filetype, ta
 }
 
 async function get_parsing_data_info(fileID){
-  res = {};
-  query = 'select p.file_id as id, p.type, s.table_name as task, f.number, f.start_period, f.end_period, p.all_tuple_number, p.duplicated_tuple_number from parsing_data_sequence_file p, source_data_type s, file f where p.file_id = \''+fileID+'\' and p.file_id = f.id and s.table_name = f.table_name';
+  query = 'select p.file_id as id, p.type, s.table_name as task, f.number, f.start_period, f.end_period, p.all_tuple_number, p.duplicated_tuple_number, f.table_name from parsing_data_sequence_file p, source_data_type s, file f where p.file_id = \''+fileID+'\' and p.file_id = f.id and s.table_name = f.table_name';
   results = await DBConn.MakeQuery(query);
-  res.fileinfo = results;
-  return res;
+  return results;
 }
 
 async function get_columns(tablename){
@@ -428,10 +426,14 @@ async function get_columns(tablename){
   return res;
 }
 
-async function get_null_values(tablename, attr){
-  query = 'select count(*) from '+tablename+' where '+attr+' is null';
-  results = await DBConn.MakeQuery(query);
-  return results;
+async function get_null_values(filename, tablename, attr){
+  res = {};
+  for(i = 0; i < attr.length; i ++){
+    query = 'select count(*) from '+tablename+' where file_id=\''+filename+'\' and '+attr[i]+' is null';
+    results = await DBConn.MakeQuery(query);
+    res[attr[i]] = results[0]['count(*)'];
+  }
+  return res;
 }
 
 async function evaluate(fileID, score, p_np){
@@ -523,8 +525,60 @@ async function check_member_type(user_id){
   return results;
 }
 
-async function get_participating_tasks(id){
-  query = 'select task_name'
+async function get_mapping_schema(filename){
+  query = 'select schema_info, f.table_name, s.task_name, t.data_table_name as task_table_name from source_data_type s, file f, task t where id = \''+filename+'\' and f.table_name = s.table_name and s.task_name = t.name';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function get_file(fileID, table_name){
+  query = 'select * from '+table_name+' where file_id=\''+fileID+'\'';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function get_file2(table_name){
+  query = 'select * from '+table_name;
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function put_into_task_table(task_table_name, tuples, columns, schema_info){
+  for(i = 0; i < tuples.length; i ++){
+    var task_attrs = '(';
+    var sd_values = '(';
+    for(j = 0; j < columns.length; j ++){
+      sd_value = tuples[i][columns[j]];
+      task_attr = schema_info[columns[j]];
+      sd_values += sd_value;
+      task_attrs += task_attr;
+      if(j != columns.length - 1){
+        task_attrs += ',';
+        sd_values += ',';
+      }
+    }
+    task_attrs += ')';
+    sd_values += ')';
+    query = 'insert into '+task_table_name +task_attrs+' values'+sd_values;
+    results = await DBConn.MakeQuery(query);
+    if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+  }
+  return stats.SUCCESS;
+}
+
+async function make_file(task_name){
+  var filepath = (__dirname + '\\' + task_name + '.csv').replace(/\\/gi, '/');
+  console.log(filepath);
+  table_name = task_name.split(' ').join('');
+  query = 'select * from '+table_name+' into outfile \''+filepath+'\' fields enclosed by \"\" escaped by \"\" terminated by \',\' lines terminated by \'\\r\\n\'';
+  await DBConn.MakeQuery(query);
+  return stats.SUCCESS;
+}
+
+async function get_table_name(task_name){
+  query = 'select data_table_name as table_name from task where name = \''+task_name+'\'';
+  results = await DBConn.MakeQuery(query);
+  return results;
 }
 
 module.exports = {
@@ -563,5 +617,10 @@ module.exports = {
     get_members: get_members,
     check_member_type: check_member_type,
     add_source_data_type: add_source_data_type,
-
+    get_mapping_schema: get_mapping_schema,
+    get_file: get_file,
+    put_into_task_table: put_into_task_table,
+    make_file: make_file,
+    get_file2: get_file2,
+    get_table_name: get_table_name,
 }

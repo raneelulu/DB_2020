@@ -1,22 +1,22 @@
 <template>
-  <form v-on:submit.prevent="checkForm">
+  <form v-on:submit.prevent="submit">
     <div>
       <label for="name">이름 :</label>
-      <input id="name" type="text" v-model="name" disabled/>
+      <input id="name" type="text" v-model="name" disabled />
     </div>
     <div>
       <label for="id">아이디 :</label>
-      <input id="id" type="text" v-model="id" disabled/>
+      <input id="id" type="text" v-model="id" disabled />
     </div>
     <div>
       <label for="old_password">기존 비밀번호 :</label>
-      <input id="old_password" type="password" v-model="old_password"  />
+      <input id="old_password" type="password" v-model="old_password" />
     </div>
     <div>
       <label for="new_password">새로운 비밀번호 :</label>
       <input id="new_password" type="password" v-model="new_password"  />
     </div>
-		    <div>
+		<div>
       <label for="password_check">비밀번호 확인 :</label>
       <input id="password_check" type="password" v-model="new_password_check"  />
     </div>
@@ -38,17 +38,17 @@
     </div> -->
     <div>
       <label for="type">권한:</label>
-        <input id='type' class='type' type='text' v-model='type' disabled/>  
+      <input id='type' class='type' type='text' v-model='type' disabled/>  
 		</div>
-    <button type="submit">정보 수정하기</button>
-    <button class='red' v-on:click="withdraw">탈퇴하기</button>
+    <button type="submit" v-on:click="submit(1)">정보 수정하기</button>
+    <button type="submit" class='red' v-on:click="submit(2)">탈퇴하기</button>
   </form>
 </template>
 
 <script>
 import '@/style/base.css'
 export default {
-	data: function() {
+	data () {
 		return {
 			id:'',
 			old_password:'',
@@ -65,7 +65,7 @@ export default {
 			// user:null,
 		};
 	},  
-	created(){
+	created () {
 		if(!this.$store.getters.user)	{
 			alert("로그인 해주세요.");
 			this.$router.push({name:"LoginPage"});
@@ -75,7 +75,7 @@ export default {
 		this.old_password_check = this.$store.getters.user.password;
 		this.name = this.$store.getters.user.name;
 		this.type = this.$store.getters.user.position;
-		// console.log(this.$store.getters.user);
+		console.log(this.$store.getters.user);
 		// .then((res) => {
 		// 	const user = res.data.user;
 		// 	alert(user);
@@ -96,10 +96,15 @@ export default {
 		// .catch((err) => {
 		// 		console.error(err);
 		// });
-    },
+  },
 	methods: {
+	submit: function(cnt)	{
+		if(cnt==1)	{this.checkForm();}
+		if(cnt==2)	{this.withdraw();}
+		return true;
+	},
 	checkForm: function()	{
-		console.log("checkForm");
+		console.log(this.data);
 		var RegExp = /^[a-zA-Z0-9]{4,12}$/; //id와 pwassword 유효성 검사 정규식
 		var num_RegExp = /^[0-9]*$/; //숫자 유효성검사 정규식
 
@@ -109,24 +114,15 @@ export default {
 			return false;
 		}		
 		if(this.old_password!=this.old_password_check){
-			console.log(old_password_check);
 			alert("기존 비밀번호가 틀립니다.")
 			return false;
 		}		
-		if(this.old_password!=this.old_password_check){
-			alert("기존 비밀번호가 틀립니다.")
-			return false;
-		}
 		if(!this.new_password){
 			alert("새로운 비밀번호를 입력해주세요.");
 			return false;			
 		}
-		if(this.new_password!=this.new_password_check){
-			alert("새로운 비밀번호가 틀립니다.");
-			return false;			
-		}
 		if(!RegExp.test(this.new_password)){ //패스워드 유효성검사
-			alert("비밀번호는 4~12자의 영문 대소문자와 숫자로만 입력해주세요.");
+			alert("새로운 비밀번호는 4~12자의 영문 대소문자와 숫자로만 입력해주세요.");
 			return false;
 		}
 		if(this.id==this.new_password){ //패스워드와 ID가 동일한지 검사
@@ -134,7 +130,7 @@ export default {
 			return false;
 		}
 		if(this.new_password!=this.new_password_check){ //비밀번호와 비밀번호확인이 동일한지 검사
-			alert("비밀번호가 틀립니다. 다시 확인하여 입력해주세요.");
+			alert("새로운 비밀번호가 틀립니다. 다시 확인하여 입력해주세요.");
 			return false;
 		}        
 		// ================ 전화번호 유효성검사 ================ //  
@@ -167,34 +163,37 @@ export default {
 					// 수정성공
 					alert("회원정보가 수정되었습니다.");
 					console.log("success");
+					this.$router.push({name:"LoginPage"});
 				}
 			})
 			.catch(function(error){
 				console.log(response);
 			});
-	}},
+	},
 	withdraw: function()	{
 
 		var this_id = this.$store.getters.user.id;
 		var this_password = this.$store.getters.user.password;
 
-		if(!old_password)	{
+		if(!this.old_password)	{
 			alert("탈퇴를 위해 기존 비밀번호를 입력하세요");
 			return false;
 		}
-		if(old_password == this_password)	{
+		if(this.old_password == this_password)	{
 			this.$http.post('/api/withdraw', id)
 				.then((response)=>{
 					if(response.data['STAT']==0)	{
 						// 삭제 성공
 						alert("회원 탈퇴 되었습니다.");
 						console.log("success");
+						this.$router.push({name:"LoginPage"});
 					}
 				})
 				.catch(function(error){
 					console.log(response);
 				});	}
 		}
+	}
 }
 </script>
 

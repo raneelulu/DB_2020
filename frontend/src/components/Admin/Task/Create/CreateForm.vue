@@ -1,30 +1,30 @@
 <template>
     <div>
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
-            <b-form-group id="input-group-1" label="테스크 이름:" label-for="input-1">
+            <b-form-group id="input-group-1" label="TASK 이름:" label-for="input-1">
                 <b-form-input
                     id="input-1"
                     v-model="form.name"
                     required
-                    placeholder="테스크 이름을 입력하세요."
+                    placeholder="TASK 이름을 입력하세요."
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group id="input-group-2" label="테스크 설명:" label-for="input-2">
+            <b-form-group id="input-group-2" label="TASK 설명:" label-for="input-2">
                 <b-form-input
                     id="input-2"
                     v-model="form.des"
                     required
-                    placeholder="테스크에 대한 간략한 설명을 써주세요."
+                    placeholder="TASK에 대한 간략한 설명을 써주세요."
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group id="input-group-3" label="최소 업로드 주기:" label-for="input-3">
+            <b-form-group id="input-group-3" label="최소업로드 주기:" label-for="input-3">
                 <b-form-input
                     id="input-3"
                     v-model="form.min_submit_period"
                     required
-                    placeholder="테스크에 제출할 파일의 최소 업로드 주기를 입력하세요."
+                    placeholder="TASK에 제출할 파일의 최소업로드 주기를 입력하세요."
                 ></b-form-input>
             </b-form-group>
 
@@ -37,10 +37,10 @@
                 ></b-form-input>
             </b-form-group>
 
-            <label for="example-datepicker1">데이터 수집 시작 날짜</label>
+            <label for="example-datepicker1">DATA 수집 시작 날짜</label>
             <b-form-datepicker id="example-datepicker" v-model="form.start" class="mb-2"></b-form-datepicker>
 
-            <label for="example-datepicker2">데이터 수집 종료 날짜</label>
+            <label for="example-datepicker2">DATA 수집 종료 날짜</label>
             <b-form-datepicker id="example-datepicker2" v-model="form.end" class="mb-2"></b-form-datepicker>
 
             <hr>
@@ -51,26 +51,26 @@
                 value=true
                 unchecked-value=false
                 >
-                데이터 테이블 스키마 정의 SQL 사용 여부
+                DATA TABLE 스키마 정의 SQL 사용 여부
             </b-form-checkbox>
 
             <hr>
-            <b-form-group id="input-group-5" label="데이터 테이블 스키마:" label-for="input-5" v-if="form.use_sql">
+            <b-form-group id="input-group-5" label="DATA 테이블 스키마:" label-for="input-5" v-if="form.use_sql">
                 <b-form-input
                     id="input-5"
                     v-model="form.taskSchema"
                     required
-                    placeholder="데이터 테이블의 스키마를 설정해주세요."
+                    placeholder="DATA 테이블의 스키마를 설정해주세요."
                 ></b-form-input>
             </b-form-group>
             <hr>
 
-            <div><strong>데이터 테이블 스키마 설정</strong></div>
+            <div><strong>DATA TABLE 스키마 설정</strong></div>
                 <table class="table">
                     <thead>
                         <tr>
                             <td><strong>속성 이름</strong></td>
-                            <td><strong>속성 타입</strong></td>
+                            <td><strong>변수 타입</strong></td>
                             <td></td>
                         </tr>
                     </thead>
@@ -119,7 +119,7 @@
                 </div>
             <hr>
 
-            <b-button type="submit" variant="success">테스크 생성</b-button>
+            <b-button type="submit" variant="success">TASK 생성</b-button>
             <b-button type="reset" variant="danger">내용 리셋</b-button>
         </b-form>      
     </div>
@@ -144,7 +144,6 @@ export default {
             schema_info: [],
             options: [
                 {value: "text", text: "text"},
-                {value: "discrete", text: "discrete"},
                 {value: "integer", text: "integer"},
                 {value: "big integer", text: "big integer"},
                 {value: "float", text: "float"},

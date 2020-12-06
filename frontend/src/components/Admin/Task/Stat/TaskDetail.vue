@@ -1,14 +1,14 @@
 <template>
 <!--2. 참여 중인 제출자들의 목록
         - 제출자 선택 시 참여 중인 테스크 확인 -->
-    <div style="margin: 10px;">
+    <div style="margin: 10px; flex-grow: 3;">
         <div class="a">
             <div class="b">
-                <div class="c bold">테스크 이름</div>
+                <div class="c bold">태스크 이름</div>
                 |
                 <div class="c">{{ task.name }}</div>
             </div>
-            <div class="b" style="width: 30%;">
+            <div class="b">
                 <div class="c bold">테스크 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
@@ -34,15 +34,22 @@
         </div>
         <hr>
         <div class="a">
-            다운로드 버튼 생성할것
+            <ul>
+                <li>
+                    <b-button variant="info" @click="CreateFile" type="file">파일 생성</b-button>
+                </li>
+                <li>
+                    <b-button variant="info" @click="Download" type="file">다운로드</b-button>
+                </li>
+            </ul>
         </div>
         <hr>
 
         <div class="a">
             <div class="b">
-                <div class="c bold">테스크 스키마</div>
+                <div class="c bold">태스크 스키마</div>
                 |
-                <div class="c" v-for="attribute in table_Schema" :key="attribute.a">{{ attribute.a }} /</div>
+                <div class="c" v-for="attribute in table_Schema" :key="attribute.a">{{ attribute.a }}</div>
             </div>
         </div>
         <hr>
@@ -51,7 +58,7 @@
             <div class="b">
                 <div class="c bold">원본 데이터 타입</div>
                 |
-                <div class="c" v-for="attribute in data_type" :key="attribute.a">{{attribute.a}} /</div>
+                <div class="c" v-for="attribute in data_type" :key="attribute.a">{{attribute.a}}</div>
             </div>
         </div>
         
@@ -71,7 +78,9 @@ export default {
             task: {},
             user_list: [],
             table_Schema: [],
-            originData_type: []
+            originData_type: [],
+            fileName: '',
+            status: false
         }
     },
     created () {
@@ -81,10 +90,40 @@ export default {
                 this.user_list = res.data.user_list
                 this.table_Schema = res.data.tableSchema
                 this.originData_type = res.data.originData_type
+                this.fileName = res.data.fileName
             })
             .catch((err) => {
                 console.error(err)
             })
+    },
+    methods: {
+        CreateFile() {
+            this.$http.get('/api/createFile/' + this.task.name)
+                .then((res) => {
+                    console.log("create success")
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.error(err)
+                })
+        },
+        Download() {
+            this.$http.get('/api/download/' + this.fileName)
+                .then((res) => {
+                    console.log("download success")
+                    console.log(res)
+                    const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', this.fileName);
+                    document.body.appendChild(link);
+                    link.click();
+                    })
+                .catch((err) => {
+                    console.error(err)
+                })
+        }
+
     }
 }
 </script>
@@ -102,7 +141,6 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: #fff;
-    width: 15%;
     border-radius: 4px;
     padding: 4px;
     margin: 3px 3px;
@@ -141,5 +179,11 @@ table tbody tr:last-child td:first-child {
 }
 table tbody tr:last-child td:last-child {
     border-radius: 0 0 5px 0;
+}
+ul > li {
+  font-size : large;
+  display : inline-block;
+  margin : 0 80px;
+  font-weight : bold;
 }
 </style>

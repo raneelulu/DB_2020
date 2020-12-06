@@ -188,21 +188,19 @@ export default {
 			type: this.type,
 			score: 0
 		}
+		console.log(data);
 		this.$http.post('/api/sign_up', data)
 			.then((response)=>{
 				if(response.data['STAT']==0)	{
 					// 회원가입 성공
-					alert('회원가입이 완료되었습니다.')
-					// this.$router.push({name:"LoginPage"});
+					console.log("success");
+					this.$router.push({name:"LoginPage"});
 				}
 			})
 			.catch(function(error){
 				console.log(response);
 			});
 	}},
-
-
-
 
 	/*
 	created(){

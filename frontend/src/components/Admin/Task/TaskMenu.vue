@@ -1,13 +1,13 @@
 <template>
     <div class="menu">
         <div :class="showall_style" @click="on_click_showall">
-            테스크 통계
+            TASK 통계
         </div>
         <div :class="create_style" @click="on_click_create">
-            테스크 생성
+            TASK 생성
         </div>
         <div :class="manage_style" @click="on_click_manage">
-            테스크 관리
+            TASK 관리
         </div>
     </div>
 </template>

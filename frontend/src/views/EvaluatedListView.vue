@@ -15,12 +15,17 @@ export default {
   },
   data() {
     return {
-      evaluatedFiles: [
-        { id: 1, task: 'android', type: 'seoul', number: 1, p_np: true},
-        { id: 3, task: 'ios', type: 'incheon', number: 1, p_np: false},
-        { id: 7, task: 'windows10', type: 'incheon', number: 1, p_np: true},
-      ]
+      evaluatedFiles: []
     }
+  },
+  created() {
+    this.$http.get('/api/evaluator/' + this.$route.params.userID + '/evaluated')
+      .then((res) => {
+        this.evaluatedFiles = res.data.evaluated_list
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 }
 </script>

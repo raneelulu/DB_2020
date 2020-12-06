@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <td><strong>속성 이름</strong></td>
-                        <td><strong>속성 타입</strong></td>
+                        <td><strong>변수 타입</strong></td>
                         <td><strong>스키마 매핑</strong></td>
                         <td></td>
                     </tr>
@@ -46,7 +46,6 @@ export default {
             ],
             options: [
                 {value: "text", text: "text"},
-                {value: "discrete", text: "discrete"},
                 {value: "integer", text: "integer"},
                 {value: "big integer", text: "big integer"},
                 {value: "float", text: "float"},
@@ -76,11 +75,11 @@ export default {
             {field_info: this.attri_info, dName: this.data_type_name}, {"Content-Type": "application-json"})
                 .then((res) => {
                     // post가 성공하면
-                    if (res.data.success) {
+                    if (res.data.stat == 0) {
                         alert('정상적으로 추가되었습니다.')
                         this.$route.push("/admin/task/manage/" + this.$route.params.taskName)
                     } else {
-                        alert("Wrong data input")
+                        alert("입력을 확인해주세요.")
                     }
                 })
                 .catch((err) => {

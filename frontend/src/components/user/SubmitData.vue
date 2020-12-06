@@ -28,7 +28,7 @@
     <br>
 
     <p> 제출한 총 파일 수 : {{ subFileNum }} </p>
-    <p> PASS된 총 tuple 수 : {{ tupleNum }} </p>
+    <p> 제출한 총 tuple 수 : {{ tupleNum }} </p>
 
     <div id="fileBox">
       <b-form-file

@@ -42,7 +42,7 @@
       <div class="b" style="width: 40%;">
         <div class="c bold">Download Link</div>
         |
-        <div class="c"><a :href="file.download_link">Download</a></div>
+        <div class="c"><b-button variant="info" @click="Download" type="file">Download</b-button></div>
       </div>
       <div class="b" style="width: 90%;">
         <div class="c bold">Null value Rate</div>
@@ -97,7 +97,6 @@ export default {
         number: 1,
         start_period: '2020-11-22',
         end_period: '2020-11-23',
-        download_link: '',
         all_tuple_number: 30,
         duplicated_tuple_number: 0,
         null_col_rate: {
@@ -109,7 +108,7 @@ export default {
       },
       properties: '',
       pass: 'Non-Pass',
-      score: 0
+      score: 0,
     }
   },
   created () {
@@ -118,12 +117,12 @@ export default {
         console.log(res)
         if (Object.keys(res.data.file).length !== 0) {
           this.file = res.data.file
+          this.properties = Object.keys(this.file.null_col_rate)
         }
       })
       .catch((err) => {
         console.error(err)
       })
-    this.properties = Object.keys(this.file.null_col_rate)
   },
   methods: {
     onClickSubmit () {
@@ -140,6 +139,26 @@ export default {
         .catch((err) => {
           console.error(err)
         })
+    },
+    Download() {
+      this.$http.post('/api/download/' + this.file.id)
+          .then((res) => {
+              if (res.data != "해당 파일이 없습니다.") {
+                  console.log("download success")
+                  const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.setAttribute('download', this.file.id + "." + this.file.type);       // fileID.fileType으로 다운로드 됨
+                  document.body.appendChild(link);
+                  link.click();
+              }
+              else {
+                  alert("해당 파일이 없습니다.");
+              }
+          })
+          .catch((err) => {
+              console.error(err)
+          })
     }
   },
   watch: {

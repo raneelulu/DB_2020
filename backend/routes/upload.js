@@ -7,7 +7,7 @@ let {PythonShell} = require('python-shell');
 var date = new Date();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, './upload/');
+      cb(null, './upload/');      // 업로드 위치
     },
     filename: (req, file, cb) => {
       cb(null, `${req.user.id}-${date.getMonth()+1}-${date.getDay()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`);
@@ -42,6 +42,7 @@ router.post('/', upload.single('file'), function(req, res) {
   .then((results)=>{
     var columns = results.columns;
     var eval = results.eval[0].evaluator_id;
+    console.log(eval);
     
     for(var i = 0; i < columns.length; i ++){
       attrs.push(columns[i].column_name);
@@ -55,17 +56,20 @@ router.post('/', upload.single('file'), function(req, res) {
       scriptPath: '',
       args: [filename, attrs, types]
     };
+    var valid = 0;
+    
     PythonShell.run('./scripts/parse_csv.py', options, function(err, results){
       if(err) throw err;
       if(results[0] == '1'){
-        res.json({stat:1});
-        return;
+        valid = 1;
       }
+      
       else if(results[1] == '1'){
-        res.json({stat:2});
-        return;
+        valid = 2;
       }
 
+      if(valid == 0){
+      
       type_sql = 'insert into '+tablename+'(file_id,';
       for(var i = 0; i < types.length; i ++){
         type_sql += attrs[i];
@@ -94,6 +98,7 @@ router.post('/', upload.single('file'), function(req, res) {
           sql += ',';
         }
       }
+      
       var currentdate = date.getFullYear().toString()+'-'+(date.getMonth()+1).toString() +'-'+date.getDate().toString();
       Functions.get_duplicates_and_sums(filename, tablename)
       .then((results)=>{
@@ -104,9 +109,11 @@ router.post('/', upload.single('file'), function(req, res) {
       });
       Functions.add_file(filename, subNum, start_period, end_period, filetype, tablename);
       Functions.submit_file(req.user.id, filename);
-      });
+      console.log(valid);
+      }
+      res.json({stat:valid});
+    });
   });
-  res.json({stat:0});
 });
 
 module.exports = router;

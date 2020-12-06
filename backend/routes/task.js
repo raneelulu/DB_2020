@@ -43,11 +43,23 @@ router.get('/:taskName', function(req, res, next){
             {id: '2015147563', name: '류동철'},
         ],
         task_schema: [                                         // 원본 데이터 타입과 매핑할 테스크 데이터 테이블 스키마 정보
-            {value: '학번', text: '학번'},
+            {value: '학번', text: '학번'},                      // option을 저렇게 넣어줘야 창이 제대로 뜸
             {value: '이름', text: '이름'},
             {value: '성별', text: '성별'},
             {value: '성적', text: '성적'},
             {value: '연애횟수', text: '연애횟수'},
+        ],
+        tableSchema: [                                           // 테스크 테이블 스키마 정보
+            {a:'학번'},
+            {a:'이름'},
+            {a:'성별'},
+            {a:'성적'},
+            {a:'연애횟수'}
+        ],
+        originData_type: [                                  // 원본 데이터 타입
+            [{id: 1}, {a:'이름'}, {a:'학교'}, {a:'나이'}, {a:'생일'}, {a:'성적'}],
+            [{id: 2}, {a:'이름'}, {a:'학번'}, {a:'학교'}, {a:'주소'}, {a:'이성친구 유무'}],
+            [{id: 3}, {a:'이름'}, {a:'월급'}, {a:'성적'}, {a:'생일'}, {a:'주소'}]
         ]
         originData_type: [                                  // 원본 데이터 타입
             [{id: 1}, {a:'이름'}, {a:'학교'}, {a:'나이'}, {a:'생일'}, {a:'성적'}],
@@ -71,8 +83,6 @@ router.get('/:taskName', function(req, res, next){
             Functions.get_columns2(tablename)
             .then((results)=>{
                 ret.task_schema = results;
-                console.log(ret);
-
                 res.json(ret);
             });
         });
@@ -126,7 +136,6 @@ router.post('/:taskName/addType', function (req, res, next) {
 
     Functions.add_source_data_type(name, data_type_name, field_info)
     .then((stat)=>{
-        console.log(stat);
         res.json({stat:stat});
     });
 });
