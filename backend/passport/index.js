@@ -1,5 +1,8 @@
 const LocalStrategy = require('passport-local').Strategy;
-const users = require('../data/users.json');
+const Functions = require('../scripts/Functions');
+var users;
+Functions.get_users()
+.then((res)=>{ users = res; });
 
 exports.config=(passport)=>{
 

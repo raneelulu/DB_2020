@@ -2,6 +2,14 @@
     <div>
         <b-form v-if="show">
             <div><strong>원본 데이터 타입 추가 생성</strong></div>
+            <b-row class="my-1">
+                <b-col sm="2">
+                    <label for="DName">원본 데이터 타입 이름:</label>
+                </b-col>
+                <b-col sm="10">
+                    <b-form-input id="DName" v-model="data_type_name" placeholder="원본 데이터 타입 이름을 입력해주세요."></b-form-input>
+                </b-col>
+            </b-row>
             <table class="table">
                 <thead>
                     <tr>
@@ -47,6 +55,7 @@ export default {
                 {value: "datetime", text: "datetime"}
             ],
             schema_options : [],
+            data_type_name : '',
             field_key: 2,
             show: true,
         }
@@ -54,13 +63,17 @@ export default {
     methods: {
         onSubmit(evt) {
             evt.preventDefault()
+            if(this.data_type_name.length === 0) {
+                alert("원본 데이터 타입 이름을 입력하세요.")
+                return
+            }
             if(this.attri_info.length === 0) {
                 alert("데이터 타입 정보를 입력하세요.")
                 return
             }
             //alert(JSON.stringify(this.form))
             this.$http.post('/api/task/' + this.$route.params.taskName + '/addType', 
-            {field_info: this.attri_info}, {"Content-Type": "application-json"})
+            {field_info: this.attri_info, dName: this.data_type_name}, {"Content-Type": "application-json"})
                 .then((res) => {
                     // post가 성공하면
                     if (res.data.success) {

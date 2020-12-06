@@ -88,6 +88,14 @@
             <hr>
 
             <div><strong>원본 데이터 타입 설정</strong></div>
+                <b-row class="my-1">
+                    <b-col sm="2">
+                        <label for="DName">원본 데이터 타입 이름:</label>
+                    </b-col>
+                    <b-col sm="10">
+                        <b-form-input id="DName" v-model="data_type_name" placeholder="원본 데이터 타입 이름을 입력해주세요."></b-form-input>
+                    </b-col>
+                </b-row>
                 <table class="table">
                     <thead>
                         <tr>
@@ -145,7 +153,8 @@ export default {
                 {value: "datetime", text: "datetime"}
             ],
             field_key: 1,
-            schema_key: 1
+            schema_key: 1,
+            data_type_name: ''
         }
     },
     methods: {
@@ -169,6 +178,10 @@ export default {
                     return
                 }
             }
+            if(this.data_type_name.length === 0) {
+                alert("원본 데이터 타입 이름을 입력하세요.")
+                return
+            }
             if(this.schema_info.length === 0) {
                 alert("원본 데이터 타입을 설정하세요.")
                 return
@@ -176,15 +189,17 @@ export default {
             this.$http.post('/api/task/create', 
             {name: this.form.name, des: this.form.des, start_period: this.form.start, end_period: this.form.end,
             min_submit_period: this.form.min_submit_period, standard_of_pass: this.form.standard,
-            use_sql: this.form.use_sql, taskSchema: this.form.taskSchema, field_info: this.attri_info,
+            use_sql: this.form.use_sql, taskSchema: this.form.taskSchema, field_info: this.attri_info, dName:this.data_type_name,
             map_info: this.schema_info}, {"Content-Type": "application-json"})
                 .then((res) => {
                     // post가 성공하면
-                    if (res.data.success) {
+                    if (res.data.stat == 0) {
                         alert('정상적으로 테스크가 생성되었습니다.')
                         this.$route.push("/admin/task")
-                    } else {
-                        alert("테스크 생성에 오류가 발생하였습니다.")
+                    } else if (res.data.stat == -1) {
+                        alert("다시 시도해 주세요.")
+                    } else if (res.data.stat == 6) {
+                        alert("같은 이름의 태스크 또는 원본 데이터 타입이 이미 존재합니다.");
                     }
                 })
                 .catch((err) => {
@@ -203,6 +218,7 @@ export default {
                 this.form.use_sql = false
                 this.form.taskSchema = ''
                 this.attri_info = []
+                this.data_type_name = ''
                 this.schema_info = []
                 // Trick to reset/clear native browser form validation state
                 this.show = false
@@ -226,8 +242,9 @@ export default {
         },
         resetSchema(evt) {
             evt.preventDefault()
+            this.data_type_name = ''
             this.schema_info = []
-        },
+        }
     }
 }
 </script>

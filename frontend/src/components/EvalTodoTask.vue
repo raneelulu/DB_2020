@@ -130,11 +130,11 @@ export default {
       this.$http.post('/api/evaluator/' + this.$route.params.userID + '/todo/' + String(this.$route.params.fileID), {'score': this.score, 'p_np': this.pass})
         .then((res) => {
           // post가 성공하면
-          if (res.data.success) {
-            alert("data submitted successfully")
+          if (res.data.stat == 0) {
+            alert("평가가 완료되었습니다.")
             this.$router.push("/evaluator/" + this.$route.params.userID)
           } else {
-            alert("Wrong data input")
+            alert("입력값을 확인해주세요.")
           }
         })
         .catch((err) => {

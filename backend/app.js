@@ -22,6 +22,7 @@ var registerRouter = require('./routes/registerTask');
 var checkIdRouter = require('./routes/check_id');
 var withdrawRouter = require('./routes/withdraw');
 var logoutRouter = require('./routes/logout');
+var loadRouter = require('./routes/upload');
 var app = express();
 
 // view engine setup
@@ -64,6 +65,7 @@ app.use('/api/getRTable', rTableRouter);
 app.use('/api/registerTask', registerRouter);
 app.use('/api/check_id', checkIdRouter);
 app.use('/api/withdraw', withdrawRouter);
+app.use('/api/upload', loadRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

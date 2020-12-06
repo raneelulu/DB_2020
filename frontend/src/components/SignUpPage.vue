@@ -84,16 +84,16 @@ export default {
 		}
 		this.$http.post('/api/check_id', params)
 			.then((response)=>{
-				if(response['STAT']==1)	{
+				if(response.data['STAT']==1)	{
 					alert("다시 시도해 주세요.");
 					return false;
 				}
-				if(response['STAT']==2)	{
+				if(response.data['STAT']==2)	{
 					this.id_check_str="이미 존재하는 아이디 입니다.";
 					this.rightID = false;
 					return false;
 				}
-				if(response['STAT']==0)	{
+				if(response.data['STAT']==0)	{
 					this.id_check_str="사용 가능한 아이디 입니다.";
 					this.rightID = true;
 					return true;
@@ -188,12 +188,11 @@ export default {
 			type: this.type,
 			score: 0
 		}
-		console.log(data);
 		this.$http.post('/api/sign_up', data)
 			.then((response)=>{
-				if(response['STAT']==0)	{
+				if(response.data['STAT']==0)	{
 					// 회원가입 성공
-					console.log("success");
+					alert('회원가입이 완료되었습니다.')
 					// this.$router.push({name:"LoginPage"});
 				}
 			})

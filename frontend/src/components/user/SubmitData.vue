@@ -42,7 +42,8 @@
     <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
 
     <b-form-input v-model="subNum" placeholder="회차를 입력하시오"></b-form-input>
-    <b-form-input v-model="period" placeholder="기간을 입력하시오"></b-form-input>
+    <b-form-input v-model="start_period" placeholder="시작기간을 입력하시오"></b-form-input>
+    <b-form-input v-model="end_period" placeholder="종료기간을 입력하시오"></b-form-input>
     <br>
 
     <ul>
@@ -62,7 +63,7 @@
 <script>
 export default {
     created() {
-        this.$http.post('/api/getTable', this.$route.params.userID)
+        this.$http.post('/api/getTable', this.$store.getters.user)
             .then((res) => {
                 this.items = res.data.items;
                 this.score = res.data.score;
@@ -99,7 +100,7 @@ export default {
     },
     methods: {
       checkInput() {
-        if (this.period != '' && this.subNum != '' && this.selected != '' && this.selectedType != '' && this.file != null) this.complete = true;
+        if (this.start_period != '' && this.end_period != '' && this.subNum != '' && this.selected != '' && this.selectedType != '' && this.file != null) this.complete = true;
         else this.complete = false; 
       },
       backPage() {
@@ -138,7 +139,8 @@ export default {
           var fd = new FormData();
           fd.append('file', this.file);
           fd.append('subNum', this.subNum);
-          fd.append('period', this.period);
+          fd.append('start_period', this.start_period);
+          fd.append('end_period', this.end_period);
           fd.append('taskName', this.selected);
           fd.append('dataType', this.selectedType);
 
@@ -149,8 +151,15 @@ export default {
                 }
               }
             ).then(response => {
-                console.log('SUCCESS!!');
-                console.log(response.data)
+                if(response.data.stat == 0){
+                  alert("파일 제출 성공");
+                } else if(response.data.stat == -1){
+                  alert('회차와 수집기간의 입력값을 확인하세요.');
+                } else if(response.data.stat == 1){
+                  alert('제출한 데이터의 컬럼 이름이 원본 데이터 타입과 일치하지 않습니다.');
+                } else if(response.data.stat == 2){
+                  alert('제출한 데이터의 자료형이 원본 데이터 타입과 일치하지 않습니다.');
+                }
 
                 // 다시 제출한 파일 이름, 총 파일 수, 튜플 수 리로드
                 this.$http.post('/api/getTable/' + this.selected + '/' + this.selectedType)

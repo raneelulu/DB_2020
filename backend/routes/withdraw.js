@@ -3,7 +3,7 @@ const router = express.Router();
 const Functions = require('../scripts/Functions')
 
 router.post('/', function(req, res, next){
-    var id = req.body.id;
+    var id = req.user.id;
     Functions.withdraw(id)
         .then((stat)=>{
             res.json({STAT: stat});

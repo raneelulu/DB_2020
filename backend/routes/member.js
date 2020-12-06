@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-// const Functions = require('../scripts/Functions')
+const Functions = require('../scripts/Functions')
 
 router.get('/', function(req, res, next){
   // 회원 정보
+  /*
     var ret = {
       member_list: [                                            // 참여자 리스트
           {id: '2015147531', name: '서기원', role: 'evaluator', gender: 'm', taskList:['1','2']},
@@ -11,8 +12,14 @@ router.get('/', function(req, res, next){
           {id: '2015147562', name: '이의동', role: 'user', gender: 'm', taskList:['9','8']},
           {id: '2015147563', name: '류동철', role: 'user', gender: 'm', taskList:['4','3']},
         ]
-    };
-    res.json(ret)
+    };*/
+    
+    var ret = {};
+    Functions.get_members()
+    .then((results=>{
+      ret.member_list = results;
+      res.json(ret);
+    }));
 });
 
 router.get('/:userID', function(req, res, next){
@@ -22,6 +29,7 @@ router.get('/:userID', function(req, res, next){
   // 참여자이면 file_info에 빈칸 전달
   // 평가자이면 task_info에 빈칸 전달
   // 빈칸 전달하면 알아서 처리됨 ㅇㅇ
+  /*
     var ret = {
       user_info: [{id: '2015147531', name: '서기원', role: '제출자', gender: 'm', taskList: ['1','2']}],
       task_info: [
@@ -38,7 +46,17 @@ router.get('/:userID', function(req, res, next){
         {id: '4', score: '1', pnp: 'non-pass'},
       ]
     };
-    res.json(ret)
+    res.json(ret)*/
+    var ret = {};
+    Functions.check_member_type(user_id)
+    .then((results)=>{
+      if(results[0].type == 'submitter'){
+        
+
+      } else if(results[0].type == 'evaluator'){
+
+      }
+    })
 });
 
 router.post('/search', function (req, res, next) {

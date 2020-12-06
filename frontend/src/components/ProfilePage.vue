@@ -163,7 +163,7 @@ export default {
 		console.log(data);
 		this.$http.post('/api/profile', data)
 			.then((response)=>{
-				if(response['STAT']==0)	{
+				if(response.data['STAT']==0)	{
 					// 수정성공
 					alert("회원정보가 수정되었습니다.");
 					console.log("success");
@@ -185,7 +185,7 @@ export default {
 		if(old_password == this_password)	{
 			this.$http.post('/api/withdraw', id)
 				.then((response)=>{
-					if(response['STAT']==0)	{
+					if(response.data['STAT']==0)	{
 						// 삭제 성공
 						alert("회원 탈퇴 되었습니다.");
 						console.log("success");

@@ -25,9 +25,9 @@ const stats = require('./Stats.js');
 //      use_sql: true 일시 테이블 정의 sql문 사용, false 일시 json 딕셔너리 사용
 //
 //    리턴: 실패/성공 여부 메시지
-async function parse_and_create_new_task(task_info, task_schema, use_sql){
-    task_name = task_info['name'];
-    table_name = task_schema['name'];
+async function parse_and_create_new_task(task_info, field_info, task_schema, use_sql, data_type_name, mapping_info){
+    task_name = task_info.name;
+    table_name = task_info.name.split(' ').join('');
   
     query = 'select name from task where name = \''+task_name+'\'';
     results = await DBConn.MakeQuery(query);
@@ -37,15 +37,15 @@ async function parse_and_create_new_task(task_info, task_schema, use_sql){
     query = 'select * from information_schema.tables where table_name = \''+table_name+'\'';
     results = await DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
-    if(results[0] != null) return stats.ERROR_TASK_DATA_TABLE_NAME_DUPLICATE;
+    if(results[0] != null) return stats.ERROR_TASK_NAME_DUPLICATEE;
   
     if(use_sql){
       results = DBConn.MakeQuery(task_schema);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
     } else {
-      fields = task_schema['fields'];
+      fields = field_info;
       query = 'create table '+table_name+'(';
-      query += 'task_data_id varchar(10) not null unique primary key,';
+      //query += 'file_id varchar(30) not null unique primary key,';
       for(f = 0; f < fields.length; f ++){
         query += fields[f]['name'] + ' ';
         
@@ -53,21 +53,11 @@ async function parse_and_create_new_task(task_info, task_schema, use_sql){
           query += 'text';
         }
   
-        if(fields[f]['type'] == 'discrete') {
-          query += 'enum(';
-          num_elements = fields['elements'].length;
-          for(e = 0; e < num_elements; e++){
-            query += ('\''+fields['elements'][e]+'\'');
-            if(e != num_elements - 1) query += ',';
-          }
-          query += ')';
-        }
-  
         if(fields[f]['type'] == 'integer') {
           query += 'int';
         }
   
-        if(fields[f]['type'] == 'big_integer') {
+        if(fields[f]['type'] == 'big integer') {
           query += 'bigint';
         }
   
@@ -107,9 +97,110 @@ async function parse_and_create_new_task(task_info, task_schema, use_sql){
               +end_period+'\','+min_submit_period+', '+standard_of_pass+', \''+data_table_name+'\')';
     results = DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+
+    query = 'select * from source_data_type where table_name = \''+data_type_name+'\'';
+    results = await DBConn.MakeQuery(query);
+    if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+    if(results[0] != null) return stats.ERROR_TASK_NAME_DUPLICATE;
+
+    fields = mapping_info;
+    save_schema = {};
+    query = 'create table '+data_type_name.split(' ').join('')+'(';
+    query += 'file_id varchar(30) not null unique primary key,';
+      for(f = 0; f < fields.length; f ++){
+        save_schema[fields[f]['name']] = fields[f]['schema'];
+        query += fields[f]['name'] + ' ';
+        
+        if(fields[f]['type'] == 'text') {
+          query += 'text';
+        }
   
-    return stats.SUCCESS;
-}
+        if(fields[f]['type'] == 'integer') {
+          query += 'int';
+        }
+  
+        if(fields[f]['type'] == 'big integer') {
+          query += 'bigint';
+        }
+  
+        if(fields[f]['type'] == 'float') {
+          query += 'float';
+        }
+  
+        if(fields[f]['type'] == 'date') {
+          query += 'date';
+        }
+  
+        if(fields[f]['type'] == 'time') {
+          query += 'time';
+        }
+  
+        if(fields[f]['type'] == 'datetime'){
+          query += 'datetime';
+        }
+  
+        if(f != fields.length - 1) query += ',';
+      }
+      query += ');'
+  
+      results = await DBConn.MakeQuery(query);
+      if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+
+      query = 'insert into source_data_type values(\''+ task_name +'\',\''+data_type_name+'\',\''+JSON.stringify(save_schema)+'\')';
+      results = await DBConn.MakeQuery(query);
+      if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+      return stats.SUCCESS;
+  }
+
+  async function add_source_data_type(taskname, data_type_name, field_info){
+    fields = field_info;
+    save_schema = {};
+    query = 'create table '+data_type_name.split(' ').join('')+'(';
+    query += 'file_id varchar(30) not null unique primary key,';
+      for(f = 0; f < fields.length; f ++){
+        save_schema[fields[f]['name']] = fields[f]['schema'];
+        query += fields[f]['name'] + ' ';
+        
+        if(fields[f]['type'] == 'text') {
+          query += 'text';
+        }
+  
+        if(fields[f]['type'] == 'integer') {
+          query += 'int';
+        }
+  
+        if(fields[f]['type'] == 'big integer') {
+          query += 'bigint';
+        }
+  
+        if(fields[f]['type'] == 'float') {
+          query += 'float';
+        }
+  
+        if(fields[f]['type'] == 'date') {
+          query += 'date';
+        }
+  
+        if(fields[f]['type'] == 'time') {
+          query += 'time';
+        }
+  
+        if(fields[f]['type'] == 'datetime'){
+          query += 'datetime';
+        }
+  
+        if(f != fields.length - 1) query += ',';
+      }
+      query += ');'
+  
+      results = await DBConn.MakeQuery(query);
+      if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+
+      query = 'insert into source_data_type values(\''+ taskname +'\',\''+data_type_name+'\',\''+JSON.stringify(save_schema)+'\')';
+      results = await DBConn.MakeQuery(query);
+      if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+      return stats.SUCCESS;
+  }
   
 // 2. user_apply_task:
 //    역할: 제출자 태스크 신청 정보를 DB의 APPLY 테이블에 저장함
@@ -155,13 +246,13 @@ async function user_participate_task(user_id, task_name){
 //    역할: 유저 회원가입 정보를 DB의 USER 테이블에 저장함
 //    파라미터: 유저 정보들
 //    리턴: 실패/성공 여부 메시지
-async function user_sign_up(id, password, name, phone_number, birthday, type){
+async function user_sign_up(id, password, name, phone_number, address, birthday, type){
     query = 'select * from user where id = \''+id+'\'';
     results = await DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
     if(results[0] != null) return stats.ERROR_ID_DUPLICATE;
   
-    query = 'insert into user(id, password, name, phone_number, birthday, type) values(\''+id+'\', \''+password+'\', \''+name+'\', \''+phone_number+'\', \''+birthday+'\', \''+type+'\')';
+    query = 'insert into user values(\''+id+'\', \''+name+'\', \''+password+'\', \''+phone_number+'\', \''+address+'\',\''+birthday+'\', \''+type+'\',0)';
     results = await DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
   
@@ -181,6 +272,20 @@ async function check_id(id){
   return stats.SUCCESS;
 }
 
+async function user_edit(id, password, phone_number,address){
+  query = 'update user set password=\''+password+'\',phone_number=\''+phone_number+'\',address=\''+address+'\' where id=\''+id+'\'';
+  results = await DBConn.MakeQuery(query);
+  if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+  return stats.SUCCESS;
+}
+
+async function withdraw(id){
+  query = 'delete from user where id = \''+id+'\'';
+  results = await DBConn.MakeQuery(query);
+  if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+  return stats.SUCCESS;
+}
+
 // 5. user_authorize:
 //    역할: 유저 로그인 정보를 DB의 USER 테이블과 비교하고 실패/성공 여부를 반환함
 //    파라미터: 유저 아이디, 패스워드
@@ -194,10 +299,269 @@ async function user_authorize(id, password){
     return stats.SUCCESS;
 }
 
+async function get_users(){
+  query = 'select id, password, name, type as position from user';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function get_user_tasks_and_score(id){
+  res = {};
+  query = 'select name, description, start_period, end_period, min_submit_period as period from task, participate where participant_id = \''+id+'\' and name=task_name';
+  results = await DBConn.MakeQuery(query);
+  res.items = results;
+  query = 'select score from user where id=\''+id+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.score = results;
+  return res;
+}
+
+async function get_task_source_data_types(name){
+  res = {};
+  query = 'select table_name as typeName from source_data_type, task where name=task_name';
+  results = await DBConn.MakeQuery(query);
+  res.type = results;
+  return res;
+}
+
+async function get_source_data_type_info(name){
+  res = {};
+  query = 'select id as filename, number as subNum, p_np as isPass from file, parsing_data_sequence_file where table_name = \''+name+'\' and id = file_id';
+  results = await DBConn.MakeQuery(query);
+  res.submitFiles = results;
+  query = 'select count(*) from file where table_name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.subFileNum = results;
+  query = 'select count(*) from '+name;
+  results = await DBConn.MakeQuery(query);
+  res.tupleNum = results;
+  return res;
+}
+
+async function get_appliable_tasks(id){
+  res = {};
+  query = 'select name, description, start_period, end_period, min_submit_period as period from task where name not in(select task_name from apply where applicant_id = \''+id+'\' union select task_name from participate where participant_id = \''+id+'\')';
+  results = await DBConn.MakeQuery(query);
+  res.rTask = results;
+  query = 'select name, description, start_period, end_period, min_submit_period as period from task, apply where applicant_id=\''+id+'\' and name=task_name';
+  results = await DBConn.MakeQuery(query);
+  res.wTask = results;
+  return res;
+}
+
+async function user_apply_task(id, taskname){
+  query = 'insert into apply values(\''+id+'\', \''+taskname+'\')';
+  results = await DBConn.MakeQuery(query);
+  return stats.SUCCESS;
+}
+
+async function get_columns_and_eval(tablename){
+  res = {};
+  query = 'select column_name, data_type from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\' and column_name != \'FILE_ID\'';
+  results = await DBConn.MakeQuery(query);
+  res.columns = results;
+  query = 'select evaluator_id, min(cnt) from (select evaluator_id, count(*) cnt from parsing_data_sequence_file group by evaluator_id) t';
+  results = await DBConn.MakeQuery(query);
+  res.eval = results;
+  return res;
+}
+
+async function insert_tuple(sql){
+  results = await DBConn.MakeQuery(sql);
+}
+
+async function submit_file(id, filename){
+  query = 'insert into submit values(\''+id+'\', \''+filename+'\')';
+  await DBConn.MakeQuery(query);
+}
+
+async function get_duplicates_and_sums(fileid, tablename){
+  res = {};
+  query = 'select count(*) from '+tablename+' where file_id=\''+fileid+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.all_tuples = results;
+  query = 'select count(*) from (select distinct * from '+tablename+' where file_id=\''+fileid+'\') t';
+  results = await DBConn.MakeQuery(query);
+  res.duplicates = results;
+  return res;
+}
+
+async function parse_file(fileid, type, duplicates, submit_time, all_tuples, evaluator_id){
+  query = 'insert into parsing_data_sequence_file(file_id, type, duplicated_tuple_number, submit_time, all_tuple_number, evaluator_id) values(\''+fileid+'\',\''+type+'\','+duplicates+',\''+submit_time+'\','+all_tuples+',\''+evaluator_id+'\')';
+  await DBConn.MakeQuery(query);
+}
+
+async function get_not_evaluated(id){
+  res = {};
+  query = 'select f.id, s.task_name as task, s.table_name as type, f.number, f.start_period, f.end_period from parsing_data_sequence_file p, source_data_type s, file f where p.evaluator_id = \''+id+'\' and p.file_id = f.id and f.table_name = s.table_name and p.p_np = \'empty\'';
+  results = await DBConn.MakeQuery(query);
+  res.todo_list = results;
+  return res;
+}
+
+async function get_evaluated(id){
+  res = {};
+  query = 'select f.id, s.task_name as task, s.table_name as type, f.number, p.p_np from parsing_data_sequence_file p, source_data_type s, file f where p.evaluator_id = \''+id+'\' and p.file_id = f.id and f.table_name = s.table_name and p.p_np != \'empty\'';
+  results = await DBConn.MakeQuery(query);
+  res.evaluated_list = results;
+  return res;
+}
+
+async function add_file(filename, subNum, start_period, end_period, filetype, tablename){
+  query = 'insert into file values(\''+filename+'\','+subNum+',\''+start_period+'\',\''+end_period+'\',\''+filetype+'\',\''+tablename+'\')';
+  await DBConn.MakeQuery(query);
+}
+
+async function get_parsing_data_info(fileID){
+  res = {};
+  query = 'select p.file_id as id, p.type, s.table_name as task, f.number, f.start_period, f.end_period, p.all_tuple_number, p.duplicated_tuple_number from parsing_data_sequence_file p, source_data_type s, file f where p.file_id = \''+fileID+'\' and p.file_id = f.id and s.table_name = f.table_name';
+  results = await DBConn.MakeQuery(query);
+  res.fileinfo = results;
+  return res;
+}
+
+async function get_columns(tablename){
+  res = {};
+  query = 'select column_name, data_type from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\' and column_name != \'FILE_ID\'';
+  results = await DBConn.MakeQuery(query);
+  res.columns = results;
+  return res;
+}
+
+async function get_null_values(tablename, attr){
+  query = 'select count(*) from '+tablename+' where '+attr+' is null';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function evaluate(fileID, score, p_np){
+  if(p_np == 'non-pass') p_np = 'nonpass';
+  query = 'update parsing_data_sequence_file set score='+score+',p_np=\''+p_np+'\' where file_id=\''+fileID+'\'';
+  await DBConn.MakeQuery(query);
+  return stats.SUCCESS;
+}
+
+// ============== ADMIN ============ //
+async function get_task_status(){
+  query = 'select name, description as des, min_submit_period as upload, data_table_name as table_name from task';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function get_task_info(name){
+  res = {};
+  query = 'select name, description as des, data_table_name from task where name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.info1 = results;
+  query = 'select count(*) from file f, source_data_type s where f.table_name = s.table_name and s.task_name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.info2 = results;
+  query = 'select count(*) from parsing_data_sequence_file p, source_data_type s, file f where p.file_id = f.id and f.table_name = s.table_name and s.task_name = \''+name+'\' and p.p_np = \'PASS\'';
+  results = await DBConn.MakeQuery(query);
+  res.info3 = results;
+  query = 'select p.participant_id as id, u.name from participate p, user u where u.id = p.participant_id and p.task_name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.info4 = results;
+  query = 'select table_name from task, source_data_type where task_name = name and name =\''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.info5 = results;
+
+  return res;
+}
+
+async function get_participants(name){
+  res = {};
+  query = 'select a.applicant_id as id, u.name from apply a, user u where u.id = a.applicant_id and a.task_name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.register_list = results;
+  query = 'select standard_of_pass from task where name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.task_standard = results;
+  return res;
+}
+
+async function confirm_apply(name, id){
+  query = 'insert into participate values(\''+id+'\',\''+name+'\')';
+  results = await DBConn.MakeQuery(query);
+  query = 'delete from apply where applicant_id=\''+id+'\' and task_name=\''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  return stats.SUCCESS;
+}
+
+async function reset_standard(name, pass_standard){
+  query = 'update task set standard_of_pass='+pass_standard+' where name = \''+name+'\'';
+  results = await DBConn.MakeQuery(query);
+  return stats.SUCCESS;
+}
+
+async function get_columns2(tablename){
+  query = 'select column_name as value, column_name as text from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\'';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function compute_data_type_tuple_num(name, source_data_types){
+  var res = 0;
+  for(var i = 0; i < source_data_types.length; i ++){
+    source_data_type = source_data_types[i].table_name;
+    query = 'select count(*) from '+source_data_type;
+    results = await DBConn.MakeQuery(query);
+    res += results[0]['count(*)'];
+  }
+  return res;
+}
+
+async function get_members(){
+  query = 'select id, name, type as role from user';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function check_member_type(user_id){
+  query = 'select type from user where id = \''+user_id+'\'';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function get_participating_tasks(id){
+  query = 'select task_name'
+}
+
 module.exports = {
     parse_and_create_new_task: parse_and_create_new_task,
     user_apply_task: user_apply_task,
     user_participate_task: user_participate_task,
     user_sign_up: user_sign_up,
-    user_authorize: user_authorize
+    user_authorize: user_authorize,
+    get_users: get_users,
+    get_user_tasks_and_score: get_user_tasks_and_score,
+    get_task_source_data_types: get_task_source_data_types,
+    get_source_data_type_info: get_source_data_type_info,
+    get_appliable_tasks: get_appliable_tasks,
+    get_columns_and_eval: get_columns_and_eval,
+    insert_tuple: insert_tuple,
+    submit_file: submit_file,
+    parse_file: parse_file,
+    add_file: add_file,
+    get_duplicates_and_sums: get_duplicates_and_sums,
+    get_not_evaluated: get_not_evaluated,
+    get_evaluated: get_evaluated,
+    get_parsing_data_info: get_parsing_data_info,
+    get_columns: get_columns,
+    get_null_values: get_null_values,
+    evaluate:  evaluate,
+    check_id: check_id,
+    user_edit:user_edit,
+    withdraw: withdraw,
+    get_task_info: get_task_info,
+    get_task_status: get_task_status,
+    get_participants: get_participants,
+    confirm_apply: confirm_apply,
+    reset_standard: reset_standard,
+    get_columns2: get_columns2,
+    compute_data_type_tuple_num: compute_data_type_tuple_num,
+    get_members: get_members,
+    check_member_type: check_member_type,
+    add_source_data_type: add_source_data_type,
+
 }

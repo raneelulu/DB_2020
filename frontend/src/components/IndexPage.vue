@@ -24,13 +24,13 @@ export default {
             const user = res.data.user;
             if(user){
               this.$store.commit("setUser",user);
-              if(user.position =="관리자"){
+              if(user.position =="ADMINISTRATOR"){
                 this.$router.push("/admin");
               }
-              else if (user.position === "평가자") {
+              else if (user.position === "EVALUATOR") {
                 this.$router.push("/evaluator/" + user.id)
               }
-              else if (user.position == "사용자") {
+              else if (user.position == "SUBMITTER") {
                 this.$router.push("/submitter/" + user.id);
               }
             }else{
