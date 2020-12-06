@@ -4,12 +4,12 @@
     <div style="margin: 10px;">
         <div class="a">
             <div class="b">
-                <div class="c bold">테스크 이름</div>
+                <div class="c bold">TASK 이름</div>
                 |
                 <div class="c">{{ task.name }}</div>
             </div>
             <div class="b" style="width: 30%;">
-                <div class="c bold">테스크 설명</div>
+                <div class="c bold">TASK 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
             </div>
