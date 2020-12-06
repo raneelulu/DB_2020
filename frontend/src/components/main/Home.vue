@@ -60,7 +60,7 @@ export default {
 <style scoped>
 .hello{float: left;padding-left: 100px;}
 .form{width:50%;float:right;border-radius: 5px;background-color: #f2f2f2;margin: 20px;padding:20px;}
-label{width: 70px; text-align: right;}
+label{width: 80px; text-align: right;}
 button{width: 150px;background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
 button:hover{background-color: #257e70ad;}
 input, select {width: 250px;padding: 12px 20px;margin: 8px 0;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;}
