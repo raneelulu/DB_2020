@@ -4,7 +4,7 @@
     <div style="margin: 10px; flex-grow: 3;">
         <div class="a">
             <div class="b">
-                <div class="c bold">테스크 이름</div>
+                <div class="c bold">TASK 이름</div>
                 |
                 <div class="c">{{ task.name }}</div>
             </div>
