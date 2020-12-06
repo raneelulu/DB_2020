@@ -41,9 +41,7 @@
 export default {
     data() {
         return {
-            attri_info: [
-                {name: '', type: '', schema: '', key: 1},
-            ],
+            attri_info: [],
             options: [
                 {value: "text", text: "text"},
                 {value: "integer", text: "integer"},
