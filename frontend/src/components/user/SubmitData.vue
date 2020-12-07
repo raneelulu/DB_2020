@@ -43,8 +43,23 @@
     </div>
     <div class="mt-3">필수 입력 사항</div>
 
-    <b-form-input v-model="subNum" placeholder="회차를 입력하시오"></b-form-input>
-    <b-form-input v-model="period" placeholder="기간을 입력하시오"></b-form-input>
+    <b-col sm="5">
+      <b-form-input v-model="subNum" placeholder="회차를 입력하시오"></b-form-input>
+    </b-col>
+    <b-row class="period">
+      <b-col sm="1">
+        <label class="sss">시작 날짜 : </label>
+      </b-col>
+      <b-col sm="3">
+        <b-form-input v-model="start_period" type="date"></b-form-input>
+      </b-col>
+      <b-col sm="1">
+        <label class="sss">종료 날짜 : </label>
+      </b-col>
+      <b-col sm="3">
+        <b-form-input v-model="end_period" type="date"></b-form-input>
+      </b-col>
+    </b-row>
     <br>
 
     <ul>
@@ -64,7 +79,7 @@
 <script>
 export default {
     created() {
-        this.$http.post('/api/getTable', this.$route.params.userID)
+        this.$http.post('/api/getTable', this.$store.getters.user)
             .then((res) => {
                 this.items = res.data.items;
                 this.score = res.data.score;
@@ -95,13 +110,14 @@ export default {
               {key: 'isPass', label: 'PASS 여부'}
             ],
             subNum: '',
-            period: '',
+            start_period: '',
+            end_period: '',
             complete: false
         }
     },
     methods: {
       checkInput() {
-        if (this.period != '' && this.subNum != '' && this.selected != '' && this.selectedType != '' && this.file != null) this.complete = true;
+        if (this.start_period != '' && this.end_period != '' && this.subNum != '' && this.selected != '' && this.selectedType != '' && this.file != null) this.complete = true;
         else this.complete = false; 
       },
       backPage() {
@@ -140,7 +156,8 @@ export default {
           var fd = new FormData();
           fd.append('file', this.file);
           fd.append('subNum', this.subNum);
-          fd.append('period', this.period);
+          fd.append('start_period', this.start_period);
+          fd.append('end_period', this.end_period);
           fd.append('taskName', this.selected);
           fd.append('dataType', this.selectedType);
 
@@ -150,11 +167,16 @@ export default {
                   'Content-Type': 'multipart/form-data'
                 }
               }
-            ).then((response) => {
-                console.log('SUCCESS!!');
-                console.log(response.data)
-
-                alert(this.file.name + " 파일이 제출되었습니다. ");
+            ).then(response => {
+                if(response.data.stat == 0){
+                  alert("파일 제출 성공");
+                } else if(response.data.stat == -1){
+                  alert('회차와 수집기간의 입력값을 확인하세요.');
+                } else if(response.data.stat == 1){
+                  alert('제출한 데이터의 컬럼 이름이 원본 데이터 타입과 일치하지 않습니다.');
+                } else if(response.data.stat == 2){
+                  alert('제출한 데이터의 자료형이 원본 데이터 타입과 일치하지 않습니다.');
+                }
 
                 // 다시 제출한 파일 이름, 총 파일 수, 튜플 수 리로드
                 this.$http.post('/api/getTable/' + this.selected + '/' + this.selectedType)
@@ -184,18 +206,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-div {
-  margin : 20px;
-}
-h2 {
-    font-weight: bold;
-}
 select {
   min-width: 100px;
 }
 #fileBox {
   padding-top: 50px;
   width: 70%;
+  padding: 15px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -218,7 +235,9 @@ button[type=submit]{background-color: #247e70;color: white;padding: 14px 20px;ma
 button[type=submit]:hover{background-color: #257e70ad;}
 .mt-3{font-weight: bold; text-align: left; padding: 10px;}
 .s_task{text-align: left; padding: 10px;}
-.score{font-weight:bold; font-size: medium;}
+.score{font-weight:bold; font-size: medium; margin-top: 20px;}
 h3{padding-bottom: 20px; font-weight: bold;}
 span{padding-left: 20px;}
+.period{padding: 10px;}
+.sss{margin: 0!important; padding-top: 5px;}
 </style>

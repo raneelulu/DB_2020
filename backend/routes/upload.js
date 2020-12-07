@@ -21,7 +21,8 @@ router.get('/', (req, res) => {
 router.post('/', upload.single('file'), function(req, res) {
     console.log(req.file);
     console.log(req.body.subNum);
-    console.log(req.body.period);
+    console.log(req.body.start_period);
+    console.log(req.body.end_period);
     console.log(req.body.taskName);
     console.log(req.body.dataType);
     res.json(req.file);

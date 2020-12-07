@@ -11,7 +11,7 @@
       <b-button size="sm" variant="info" @click="selectTask(data.value)">{{ data.value }}</b-button>
     </b-table>
 
-    <p> Selected Task : {{ selected }} </p>
+    <div class="s_task"> Selected Task : {{ selected }} </div>
 
     <br>
 
@@ -22,16 +22,21 @@
 
     <br>
 
-    <b-form-checkbox
-      id="checkbox-1"
-      v-model="status"
-      name="checkbox-1"
-      value="true"
-      unchecked-value="false"
-    >
-      개인정보 이용동의서에 동의하신다면 체크하십시오.(필수)  
-    </b-form-checkbox>
-      <b-button v-b-toggle.collapse-1 variant="info">자세히</b-button>
+    <div class="check">
+        <b-form-checkbox
+          id="checkbox-1"
+          v-model="status"
+          name="checkbox-1"
+          value="true"
+          unchecked-value="false"
+        >
+          개인정보 이용동의서에 동의하신다면 체크하십시오.(필수)  
+        </b-form-checkbox>
+    </div>
+    <div class="detail_btn">
+        <b-button v-b-toggle.collapse-1 variant="info">자세히</b-button>
+    </div>
+
     <b-collapse id="collapse-1" class="mt-2">
       <b-card>
         <p class="card-text">
@@ -92,13 +97,13 @@ export default {
       if (this.selected != '' && this.status == 'true') {
         this.$http.post('/api/registerTask', {taskName: this.selected, userID: this.$route.params.userID})
           .then((res) => {
-            console.log("register Task")
+            if(res.data.stat == 0){
+              alert('태스크 신청이 완료되었습니다.');
+            }
           })
           .catch((err) => {
             console.error(err)
           });
-
-        alert(this.selected + " 가 신청되었습니다.");
 
         // 테이블 다시 리로드
         this.$http.post('/api/getRTable', this.$route.params.userID)
@@ -140,16 +145,6 @@ ul > li {
   margin : 0 80px;
   font-weight : bold;
 }
-a {
-  text-decoration : none;
-}
-a > div {
-  margin : 0px;
-  height : 100px;
-  width : 100px;
-  border-color : #42b983;
-  text-align: center;
-}
 ul > p {
   position : relative;
   top : 300px;
@@ -160,4 +155,8 @@ ul > p {
 .red:hover{background-color: rgba(255, 99, 71, 0.849)!important;}
 button[type=submit]{background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
 button[type=submit]:hover{background-color: #257e70ad;}
+.s_task{text-align: left; padding: 10px;}
+h3{padding-bottom: 20px; font-weight: bold;}
+.check{display: flex; padding-bottom: 10px;}
+.detail_btn{display: flex;}
 </style>
