@@ -192,11 +192,13 @@ export default {
             map_info: this.schema_info}, {"Content-Type": "application-json"})
                 .then((res) => {
                     // post가 성공하면
-                    if (res.data.success) {
+                    if (res.data.stat == 0) {
                         alert('정상적으로 테스크가 생성되었습니다.')
                         this.$route.push("/admin/task")
-                    } else {
-                        alert("테스크 생성에 오류가 발생하였습니다.")
+                    } else if (res.data.stat == -1) {
+                        alert("다시 시도해 주세요.")
+                    } else if (res.data.stat == 6) {
+                        alert("같은 이름의 태스크 또는 원본 데이터 타입이 이미 존재합니다.");
                     }
                 })
                 .catch((err) => {

@@ -4,12 +4,12 @@
     <div style="margin: 10px; flex-grow: 3;">
         <div class="a">
             <div class="b">
-                <div class="c bold">ID</div>
+                <div class="c bold">회원 번호</div>
                 |
                 <div class="c">{{ userinfo[0].id }}</div>
             </div>
             <div class="b" style="width: 30%;">
-                <div class="c bold">Name</div>
+                <div class="c bold">이름</div>
                 |
                 <div class="c">{{ userinfo[0].name }}</div>
             </div>
