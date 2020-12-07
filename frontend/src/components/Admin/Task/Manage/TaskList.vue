@@ -39,7 +39,7 @@ export default {
 
 <style scoped>
 div.content {
-    flex-grow: 3;
+    width:1000px;
     background-color: #cccccc;
     padding: 5px;
     margin: 10px;

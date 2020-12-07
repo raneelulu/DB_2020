@@ -23,16 +23,20 @@ exports.config=(passport)=>{
         session: true,
         passReqToCallback:false,
     },(id,password,done)=>{
-        const result = users.filter((user)=>user.id===id);
-        if(result.length>0){
-            const user = result[0];
-            if(password === user.password){
-                done(null,user,);
+        Functions.get_users()
+        .then((res)=>{ 
+            users = res;
+            const result = users.filter((user)=>user.id===id);
+            if(result.length>0){
+                const user = result[0];
+                if(password === user.password){
+                    done(null,user,);
+                }else{
+                    done(null,false,{message:"비밀번호 틀림"});
+                }
             }else{
-                done(null,false,{message:"비밀번호 틀림"});
-            }
-        }else{
-            done(null,false,{message:"가입되지 않은 회원"});
-        }
+                done(null,false,{message:"가입되지 않은 회원"});
+            } 
+        });
     }));
 }

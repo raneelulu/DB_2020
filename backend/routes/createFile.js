@@ -41,28 +41,14 @@ router.get('/:taskName', function(req, res, next){
         
                 PythonShell.run('./scripts/save_csv.py', options, function(err, results){
                     if(err){
-                        res.json({stat:1});
+                        res.json({stat:1, filename: taskName});
                     } else {
-                        res.json({stat:0});
+                        res.json({stat:0, filename: taskName});
                     }
                 });
             });
         });
     })
-    
-    /*
-
-    var options = {
-        mode: 'text',
-        pythonPath: '',
-        pythonOptions: ['-u'],
-        scriptPath: '',
-        args: [filename, attrs, types]
-    };
-
-    PythonShell.run('./scripts/save_csv.py', options, function(err, results){
-        console.log(req.params.taskName);
-    res.json();*/
 });
 
 module.exports = router;

@@ -5,10 +5,10 @@
       <br>
     <ul>
       <li>
-        <b-button variant="info" @click="GetTask">TASK 신청</b-button>
+        <button type="submit" @click="GetTask">TASK 신청</button>
       </li>
       <li>
-        <b-button variant="info" @click="SubmitData">DATA 제출</b-button>
+        <button type="submit" @click="SubmitData">DATA 제출</button>
       </li>
     </ul>
     <ul>
@@ -70,4 +70,6 @@ p {
   padding-bottom : 40px;
   font-size : small;
 }
+button[type=submit]{background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
+button[type=submit]:hover{background-color: #257e70ad;}
 </style>

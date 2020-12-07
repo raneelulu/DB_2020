@@ -12,7 +12,7 @@
       <EvaluatedFile v-for="file in files" :key="file.id" :fileData="file" />
     </div>
     <div v-else>
-      <h1 class="no-margin">아직 평가할 Task가 없습니다.</h1>
+      <h1 class="no-margin">평가한 파일이 없습니다.</h1>
     </div>
   </div>
 </template>
@@ -43,7 +43,7 @@ export default {
 
 <style scoped>
 div.content {
-  flex-grow: 3;
+  width:1000px;
   background-color: #cccccc;
   padding: 5px;
   margin: 10px;

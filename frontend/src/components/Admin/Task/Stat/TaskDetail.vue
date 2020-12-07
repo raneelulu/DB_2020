@@ -9,7 +9,7 @@
                 <div class="c">{{ task.name }}</div>
             </div>
             <div class="b">
-                <div class="c bold">테스크 설명</div>
+                <div class="c bold">태스크 설명</div>
                 |
                 <div class="c">{{ task.des }}</div>
             </div>
@@ -22,7 +22,7 @@
                 <div class="c">{{ task.all_file_number }}</div>
             </div>
             <div class="b">
-                <div class="c bold">통과된 튜플 개수</div>
+                <div class="c bold">PASS 튜플 개수</div>
                 |
                 <div class="c">{{ task.pass_tuple_number }}</div>
             </div>
@@ -100,8 +100,11 @@ export default {
         CreateFile() {
             this.$http.get('/api/createFile/' + this.task.name)
                 .then((res) => {
-                    console.log("create success")
-                    console.log(res);
+                    if(res.data.stat == 0) {
+                        alert("파일을 성공적으로 생성했습니다.");
+                        this.fileName = res.data.filename;
+                    }
+                    else alert("다시 시도해주세요.")
                 })
                 .catch((err) => {
                     console.error(err)
@@ -110,20 +113,23 @@ export default {
         Download() {
             this.$http.get('/api/download/' + this.fileName)
                 .then((res) => {
-                    console.log("download success")
-                    console.log(res)
-                    const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', this.fileName);
-                    document.body.appendChild(link);
-                    link.click();
-                    })
+                    if (res.data != "해당 파일이 없습니다.") {
+                        console.log("download success")
+                        const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', this.fileName + '.csv');
+                        document.body.appendChild(link);
+                        link.click();
+                    }
+                    else {
+                        alert("해당 파일이 없습니다.");
+                    }
+                })
                 .catch((err) => {
                     console.error(err)
                 })
         }
-
     }
 }
 </script>

@@ -41,9 +41,7 @@
 export default {
     data() {
         return {
-            attri_info: [
-                {name: '', type: '', schema: '', key: 1},
-            ],
+            attri_info: [],
             options: [
                 {value: "text", text: "text"},
                 {value: "integer", text: "integer"},
@@ -55,7 +53,7 @@ export default {
             ],
             schema_options : [],
             data_type_name : '',
-            field_key: 2,
+            field_key: 1,
             show: true,
         }
     },
@@ -70,7 +68,6 @@ export default {
                 alert("데이터 타입 정보를 입력하세요.")
                 return
             }
-            //alert(JSON.stringify(this.form))
             this.$http.post('/api/task/' + this.$route.params.taskName + '/addType', 
             {field_info: this.attri_info, dName: this.data_type_name}, {"Content-Type": "application-json"})
                 .then((res) => {

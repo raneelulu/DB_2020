@@ -1,5 +1,5 @@
 <template>
-  <form v-on:submit.prevent="checkForm">
+  <form v-on:submit.prevent="checkForm" class='form'>
     <div>
       <label for="name">이름 :</label>
       <input id="name" type="text" v-model="name" />
@@ -28,7 +28,7 @@
     </div>
     <div>
       <label for="address">주소:</label>
-      <input id="address" type="text" v-model="address"  />
+      <input id="address" type="textarea" v-model="address"  />
     </div>
     <div>
       <label for="birthday">생일:</label>
@@ -192,8 +192,7 @@ export default {
 		this.$http.post('/api/sign_up', data)
 			.then((response)=>{
 				if(response.data['STAT']==0)	{
-					// 회원가입 성공
-					console.log("success");
+					alert('회원가입이 완료되었습니다.');
 					this.$router.push({name:"LoginPage"});
 				}
 			})
@@ -217,5 +216,13 @@ export default {
 </script>
 
 <style scoped>
-
+.form{border-radius: 5px;background-color: #f2f2f2;padding: 20px;padding-right:100px;}
+label{width: 120px; text-align: right;}
+.radio-label{width:50px;}
+fieldset{display:inline;width: 250px;padding: 12px 20px;margin: 8px 0;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;}
+button[type=submit]{width: 250px;background-color: #247e70;color: white;padding: 14px 20px;margin-left:125px;border: none;border-radius: 4px;cursor: pointer;}
+button[type=submit]:hover{background-color: #257e70ad;}
+input, select {width: 250px;padding: 12px 20px;margin: 8px 0;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;}
+.phone_number{width: 77px;}
+.type{width: 40px;}
 </style>

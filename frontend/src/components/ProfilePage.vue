@@ -1,5 +1,5 @@
 <template>
-  <form v-on:submit.prevent="submit">
+  <form v-on:submit.prevent="submit" class='form'>
     <div>
       <label for="name">이름 :</label>
       <input id="name" type="text" v-model="name" disabled />
@@ -39,14 +39,13 @@
     <div>
       <label for="type">권한:</label>
       <input id='type' class='type' type='text' v-model='type' disabled/>  
-		</div>
+	</div>
     <button type="submit" v-on:click="submit(1)">정보 수정하기</button>
     <button type="submit" class='red' v-on:click="submit(2)">탈퇴하기</button>
   </form>
 </template>
 
 <script>
-import '@/style/base.css'
 export default {
 	data () {
 		return {
@@ -75,7 +74,7 @@ export default {
 		this.old_password_check = this.$store.getters.user.password;
 		this.name = this.$store.getters.user.name;
 		this.type = this.$store.getters.user.position;
-		console.log(this.$store.getters.user);
+		// console.log(this.$store.getters.user);
 		// .then((res) => {
 		// 	const user = res.data.user;
 		// 	alert(user);
@@ -104,7 +103,7 @@ export default {
 		return true;
 	},
 	checkForm: function()	{
-		console.log(this.data);
+		// console.log(this.data);
 		var RegExp = /^[a-zA-Z0-9]{4,12}$/; //id와 pwassword 유효성 검사 정규식
 		var num_RegExp = /^[0-9]*$/; //숫자 유효성검사 정규식
 
@@ -156,7 +155,7 @@ export default {
 			phone_number: this.phone_number1 + this.phone_number2 + this.phone_number3,
 			address: this.address,
 		}
-		console.log(data);
+		// console.log(data);
 		this.$http.post('/api/profile', data)
 			.then((response)=>{
 				if(response.data['STAT']==0)	{
@@ -198,5 +197,12 @@ export default {
 </script>
 
 <style scoped>
-
+.red{background-color: tomato!important;}
+.red:hover{background-color: rgba(255, 99, 71, 0.849)!important;}
+.form{border-radius: 5px;background-color: #f2f2f2;padding: 20px;padding-right:100px;}
+label{width: 120px; text-align: right;}
+button[type=submit]{width: 250px;background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
+button[type=submit]:hover{background-color: #257e70ad;}
+input, select {width: 250px;padding: 12px 20px;margin: 8px 0;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;}
+.phone_number{width: 77px;}
 </style>

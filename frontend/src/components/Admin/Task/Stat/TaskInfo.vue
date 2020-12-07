@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <div v-if ="!isEmpty" class="table">
-            <TaskList :taskData="{name: 'Task 이름', des: '테스크 설명', upload: '최소 업로드 주기', table_name: '테이블 이름',  data_type: '원본 데이터 타입'}" rowType="tableHeader" />
+            <TaskList :taskData="{name: 'TASK 이름', des: 'TASK 설명', upload: '최소업로드 주기', table_name: '테이블 이름',  data_type: '원본 데이터 타입'}" rowType="tableHeader" />
             <div style="display: table-row">
                 <div class="table-hr"></div>
                 <div class="table-hr"></div>
@@ -43,7 +43,7 @@ export default {
 
 <style scoped>
 div.content {
-    flex-grow: 3;
+    width:1000px;
     background-color: #cccccc;
     padding: 5px;
     margin: 10px;

@@ -1,13 +1,16 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>[직책에 맞는 아이디로 로그인 부탁드립니다]</h2>
-      <br>
-    <form v-on:submit.prevent="login">
+  <div>
+    <div class="hello">
+      <h1>{{ msg }}</h1>
+      <img src="../../assets/EDs_DBD.png" alt="logo">
+    </div>
+    <form v-on:submit.prevent="login" class='form'>
       <div>
-       <label for="id">id:</label>
+       <label for="id">아이디 :</label>
        <input name="id" type="text" v-model="id" />
-       <label for="password">PW:</label>
+      </div>
+      <div>
+       <label for="password">비밀번호 :</label>
        <input name="password" type="password" v-model="password"  />
       </div>
       <button type="login" v-on:click="login">로그인</button>
@@ -23,7 +26,7 @@ export default {
     name: 'Hello',
     data() {
         return {
-            msg: 'Welcome! ED\'s DBD에 오신걸 환영합니다',
+            msg: 'Welcome!',
             id: "",
             password:"",
         }
@@ -55,32 +58,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-div {
-  margin : 150px;
-}
-h1, h2 {
-  font-weight : bold;
-}
-ul {
-  position : relative;
-  top : 70px;
-  list-style-type : none;
-  padding : 0;
-}
-ul > li {
-  font-size : large;
-  display : inline-block;
-  margin : 0 80px;
-  font-weight : bold;
-  color : #42b983;
-}
-a {
-  text-decoration : none;
-}
-p {
-  position : relative;
-  top : 300px;
-  margin-bottom : 40px;
-  font-size : small;
-}
+.hello{float: left;padding-left: 100px;}
+.form{width:50%;float:right;border-radius: 5px;background-color: #f2f2f2;margin: 20px;padding:20px;}
+label{width: 80px; text-align: right;}
+button{width: 150px;background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
+button:hover{background-color: #257e70ad;}
+input, select {width: 250px;padding: 12px 20px;margin: 8px 0;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;}
+img{width:250px;}
+div {margin : 20px;}
+h1, h2 {font-weight : bold;}
+ul {position : relative;top : 70px;list-style-type : none;padding : 0;}
+a {text-decoration : none;}
+p {position : relative;top : 300px;margin-bottom : 40px;font-size : small;}
 </style>

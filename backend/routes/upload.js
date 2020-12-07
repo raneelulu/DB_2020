@@ -4,13 +4,13 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const Functions = require('../scripts/Functions');
 let {PythonShell} = require('python-shell');
-var date = new Date();
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, './upload/');      // 업로드 위치
     },
     filename: (req, file, cb) => {
-      cb(null, `${req.user.id}-${date.getMonth()+1}-${date.getDay()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`);
+      var date = new Date();
+      cb(null, `${req.user.id}-${date.getMonth()+1}-${date.getDay()}-${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}-${date.getMilliseconds()}`);
     }
 })
 const upload = multer({ storage });
@@ -42,7 +42,6 @@ router.post('/', upload.single('file'), function(req, res) {
   .then((results)=>{
     var columns = results.columns;
     var eval = results.eval[0].evaluator_id;
-    console.log(eval);
     
     for(var i = 0; i < columns.length; i ++){
       attrs.push(columns[i].column_name);
@@ -98,7 +97,7 @@ router.post('/', upload.single('file'), function(req, res) {
           sql += ',';
         }
       }
-      
+      var date = new Date();
       var currentdate = date.getFullYear().toString()+'-'+(date.getMonth()+1).toString() +'-'+date.getDate().toString();
       Functions.get_duplicates_and_sums(filename, tablename)
       .then((results)=>{

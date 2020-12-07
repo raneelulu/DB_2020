@@ -4,6 +4,46 @@
 const DBConn = require('./DBConnection.js');
 const stats = require('./Stats.js');
 
+async function compute_db1(name, source_data_types, table_name){
+  var res = {};
+  var temp = 0;
+  for(var i = 0; i < source_data_types.length; i ++){
+    source_data_type = source_data_types[i].table_name;
+    query = 'select count(*) from '+source_data_type;
+    results = await DBConn.MakeQuery(query);
+    temp += results[0]['count(*)'];
+  }
+  res.data_type_level_tuple_num = temp;
+
+  query = 'select count(*) from '+table_name;
+  results = await DBConn.MakeQuery(query);
+  res.passed_tuple_num = results;
+
+  query = 'select column_name as value, column_name as text from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.task_schema = results; 
+
+  query = 'select column_name as a from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.task_schema2 = results; 
+  
+  var temp = []
+  for(i = 0; i < source_data_types.length; i ++){
+    source_data_type = source_data_types[i].table_name;
+    query = 'select column_name from information_schema.columns where table_schema = \'main_db\' and table_name = \''+source_data_type+'\'';
+    results = await DBConn.MakeQuery(query);
+    var temp2 = []
+    temp2.push({id:i+1});
+    for(j = 0; j < results.length; j ++){
+      item = results[j];
+      temp2.push({a:item[Object.keys(item)[0]]});
+    }
+    temp.push(temp2);
+  }
+  res.original_data_types =temp;
+  return res;
+}
+
 // 1. parse_and_create_new_task: 
 //    역할: 관리자가 정의한 태스크 정보를 DB의 TASK 테이블에 저장하고, 태스크 데이터 테이블을 생성함
 //    파라미터:
@@ -27,14 +67,15 @@ const stats = require('./Stats.js');
 //    리턴: 실패/성공 여부 메시지
 async function parse_and_create_new_task(task_info, field_info, task_schema, use_sql, data_type_name, mapping_info){
     task_name = task_info.name;
-    table_name = task_info.name.split(' ').join('');
+    task_table_name = task_info.name.split(' ').join('');
+    data_type_table_name = data_type_name.split(' ').join('');
   
     query = 'select name from task where name = \''+task_name+'\'';
     results = await DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
     if(results[0] != null) return stats.ERROR_TASK_NAME_DUPLICATE;
   
-    query = 'select * from information_schema.tables where table_name = \''+table_name+'\'';
+    query = 'select * from information_schema.tables where table_name = \''+task_table_name+'\'';
     results = await DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
     if(results[0] != null) return stats.ERROR_TASK_NAME_DUPLICATEE;
@@ -42,10 +83,10 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
     if(use_sql){
       results = DBConn.MakeQuery(task_schema);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
+      task_table_name = task_schema.split(' ')[2].split('(')[0].split(' ').join('');
     } else {
       fields = field_info;
-      query = 'create table '+table_name+'(';
-      //query += 'file_id varchar(30) not null unique primary key,';
+      query = 'create table '+task_table_name+'(';
       for(f = 0; f < fields.length; f ++){
         query += fields[f]['name'] + ' ';
         
@@ -85,27 +126,25 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
     }
   
-    task_name = task_info['name'];
     description = task_info['description'];
     start_period = task_info['start_period'];
     end_period = task_info['end_period'];
     min_submit_period = task_info['min_submit_period'];
     standard_of_pass = task_info['standard_of_pass'];
-    data_table_name = table_name;
   
     query = 'insert into task values(\''+task_name+'\', \''+description+'\', \''+start_period+'\', \''
-              +end_period+'\','+min_submit_period+', '+standard_of_pass+', \''+data_table_name+'\')';
+              +end_period+'\','+min_submit_period+', '+standard_of_pass+', \''+task_table_name+'\')';
     results = DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
 
-    query = 'select * from source_data_type where table_name = \''+data_type_name+'\'';
+    query = 'select * from source_data_type where table_name = \''+data_type_table_name+'\'';
     results = await DBConn.MakeQuery(query);
     if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
     if(results[0] != null) return stats.ERROR_TASK_NAME_DUPLICATE;
 
     fields = mapping_info;
     save_schema = {};
-    query = 'create table '+data_type_name.split(' ').join('')+'(';
+    query = 'create table '+data_type_table_name+'(';
     query += 'file_id varchar(30) not null,';
       for(f = 0; f < fields.length; f ++){
         save_schema[fields[f]['name']] = fields[f]['schema'];
@@ -146,7 +185,7 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
 
-      query = 'insert into source_data_type values(\''+ task_name +'\',\''+data_type_name.split(' ').join('')+'\',\''+JSON.stringify(save_schema)+'\')';
+      query = 'insert into source_data_type values(\''+ task_name +'\',\''+data_type_table_name+'\',\''+JSON.stringify(save_schema)+'\')';
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
       return stats.SUCCESS;
@@ -155,8 +194,9 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
   async function add_source_data_type(taskname, data_type_name, field_info){
     fields = field_info;
     save_schema = {};
-    query = 'create table '+data_type_name.split(' ').join('')+'(';
-    query += 'file_id varchar(30) not null,';
+    data_type_table_name = data_type_name.split(' ').join('');
+    query = 'create table '+data_type_table_name+'(';
+    query += 'file_id varchar(50) not null,';
       for(f = 0; f < fields.length; f ++){
         save_schema[fields[f]['name']] = fields[f]['schema'];
         query += fields[f]['name'] + ' ';
@@ -196,7 +236,7 @@ async function parse_and_create_new_task(task_info, field_info, task_schema, use
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
 
-      query = 'insert into source_data_type values(\''+ taskname +'\',\''+data_type_name.split(' ').join('')+'\',\''+JSON.stringify(save_schema)+'\')';
+      query = 'insert into source_data_type values(\''+ taskname +'\',\''+data_type_table_name+'\',\''+JSON.stringify(save_schema)+'\')';
       results = await DBConn.MakeQuery(query);
       if(results == -1) return stats.ERROR_DB_CONNECTION_FAIL;
       return stats.SUCCESS;
@@ -324,15 +364,15 @@ async function get_task_source_data_types(name){
   return res;
 }
 
-async function get_source_data_type_info(name){
+async function get_source_data_type_info(id, name){
   res = {};
-  query = 'select id as filename, number as subNum, p_np as isPass from file, parsing_data_sequence_file where table_name = \''+name+'\' and id = file_id';
+  query = 'select f.id as filename, f.number as subNum, p.p_np as isPass from file f, parsing_data_sequence_file p, submit s where f.table_name = \''+name+'\' and f.id = p.file_id and f.id = s.file_id and s.submitter_id = \''+id+'\' order by subNum';
   results = await DBConn.MakeQuery(query);
   res.submitFiles = results;
-  query = 'select count(*) from file where table_name = \''+name+'\'';
+  query = 'select count(*) from file, submit where table_name = \''+name+'\' and file_id = id and submitter_id = \''+id+'\'';
   results = await DBConn.MakeQuery(query);
   res.subFileNum = results;
-  query = 'select count(*) from '+name;
+  query = 'select count(*) from '+name+' where file_id in (select file_id from submit where submitter_id = \''+id+'\')';
   results = await DBConn.MakeQuery(query);
   res.tupleNum = results;
   return res;
@@ -360,8 +400,13 @@ async function get_columns_and_eval(tablename){
   query = 'select column_name, data_type from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\' and column_name != \'FILE_ID\'';
   results = await DBConn.MakeQuery(query);
   res.columns = results;
-  query = 'select evaluator_id from (select evaluator_id, count(*) cnt from parsing_data_sequence_file group by evaluator_id) t order by cnt';
+  //query = 'select evaluator_id from (select evaluator_id, count(*) cnt from parsing_data_sequence_file group by evaluator_id) t order by cnt';
+  query = 'select id as evaluator_id from user where type = \'evaluator\' order by rand() limit 1';
   results = await DBConn.MakeQuery(query);
+  if(results[0] == null){
+    query = 'select id as evaluator_id from user where type = \'evaluator\'';
+    results = await DBConn.MakeQuery(query);
+  }
   res.eval = results;
   return res;
 }
@@ -458,15 +503,12 @@ async function get_task_info(name){
   query = 'select count(*) from file f, source_data_type s where f.table_name = s.table_name and s.task_name = \''+name+'\'';
   results = await DBConn.MakeQuery(query);
   res.info2 = results;
-  query = 'select count(*) from parsing_data_sequence_file p, source_data_type s, file f where p.file_id = f.id and f.table_name = s.table_name and s.task_name = \''+name+'\' and p.p_np = \'PASS\'';
-  results = await DBConn.MakeQuery(query);
-  res.info3 = results;
   query = 'select p.participant_id as id, u.name from participate p, user u where u.id = p.participant_id and p.task_name = \''+name+'\'';
   results = await DBConn.MakeQuery(query);
-  res.info4 = results;
+  res.info3 = results;
   query = 'select table_name from task, source_data_type where task_name = name and name =\''+name+'\'';
   results = await DBConn.MakeQuery(query);
-  res.info5 = results;
+  res.info4 = results;
 
   return res;
 }
@@ -500,17 +542,6 @@ async function get_columns2(tablename){
   query = 'select column_name as value, column_name as text from information_schema.columns where table_schema = \'main_db\' and table_name = \''+tablename+'\'';
   results = await DBConn.MakeQuery(query);
   return results;
-}
-
-async function compute_data_type_tuple_num(name, source_data_types){
-  var res = 0;
-  for(var i = 0; i < source_data_types.length; i ++){
-    source_data_type = source_data_types[i].table_name;
-    query = 'select count(*) from '+source_data_type;
-    results = await DBConn.MakeQuery(query);
-    res += results[0]['count(*)'];
-  }
-  return res;
 }
 
 async function get_members(){
@@ -581,6 +612,90 @@ async function get_table_name(task_name){
   return results;
 }
 
+async function get_member_info(id){
+  res = {};
+  query = 'select id, name, type as role from user where id = \''+id+'\'';
+  results = await DBConn.MakeQuery(query);
+  res.user_info = results;
+  return res;
+}
+
+async function get_submitter_info(id){
+  res = {};
+  query = 'select task_name as name from participate where participant_id = \''+id+'\'';
+  results = await DBConn.MakeQuery(query);
+  task = results;
+  taskList = [];
+  for(i = 0; i < task.length; i ++){
+    task_name = task[i].name;
+    taskList.push(task_name);
+    query = 'select count(*) from submit s, file f, source_data_type sd where s.submitter_id = \''+id+'\' and s.file_id = f.id and f.table_name = sd.table_name and sd.task_name = \''+task_name+'\'';
+    results = await DBConn.MakeQuery(query);
+    num_task_submitter_files = results;
+    task[i].fileNumber = num_task_submitter_files[0]['count(*)'];
+
+    query = 'select s.file_id, p.all_tuple_number from submit s, parsing_data_sequence_file p, file f, source_data_type sd where s.submitter_id = \''+id+'\' and s.file_id = p.file_id and p.p_np = \'PASS\' and s.file_id = f.id and f.table_name = sd.table_name and sd.task_name = \''+task_name+'\'';
+    results = await DBConn.MakeQuery(query);
+    submit_files = results;
+    tupleNumber = 0;
+    for(j = 0; j < submit_files.length; j ++){
+      temp = submit_files[j].all_tuple_number;
+      tupleNumber += temp;
+    }
+    task[i].tupleNumber = tupleNumber;
+
+    query = 'select table_name from source_data_type where task_name = \''+task_name+'\'';
+    results = await DBConn.MakeQuery(query);
+    source_data_types = results;
+    nullProperty = 0;
+    for(j = 0; j < source_data_types.length; j ++){
+      source_data_type = source_data_types[j].table_name;
+      query = 'select column_name from information_schema.columns where table_schema = \'main_db\' and table_name = \''+source_data_type+'\' and column_name != \'FILE_ID\'';
+      results = await DBConn.MakeQuery(query);
+      for(k = 0; k < results.length; k ++){
+        column = results[k].column_name;
+        query = 'select count(*) from '+source_data_type+' sd, submit s where s.submitter_id = \''+id+'\' and s.file_id = sd.file_id and sd.'+column+' is null';
+        results = await DBConn.MakeQuery(query);
+        nullProperty += results[0]['count(*)'];
+      }
+    }
+    task[i].nullProperty = nullProperty;
+  }
+  res.taskList = taskList;
+  res.task = task;
+  return res;
+}
+
+async function get_evaluator_info(id){
+  query = 'select file_id as id, score, p_np as pnp from parsing_data_sequence_file where evaluator_id = \''+id+'\' and p_np != \'EMPTY\'';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function get_search_users(){
+  query = 'select id, name, type as role, birthday from user';
+  results = await DBConn.MakeQuery(query);
+  return results;
+}
+
+async function update_user_score(fileID, score){
+  query = 'select id from user, submit where submitter_id = id and file_id = \''+fileID+'\'';
+  results = await DBConn.MakeQuery(query);
+  user_id = results[0].id;
+
+  query = 'select sum(score) from parsing_data_sequence_file p, submit s where p.file_id = s.file_id and s.submitter_id = \''+user_id+'\' and p.p_np != \'EMPTY\'';
+  results = await DBConn.MakeQuery(query);
+  user_score = results[0]['sum(score)'];
+
+  query = 'select count(*) from parsing_data_sequence_file p, submit s where p.file_id = s.file_id and s.submitter_id = \''+user_id+'\' and p.p_np != \'EMPTY\'';
+  results = await DBConn.MakeQuery(query);
+  user_file_num = results[0]['count(*)'];
+
+  user_score = (user_score + score)/(user_file_num + 1);
+  query = 'update user set score='+user_score+' where id = \''+user_id+'\'';
+  results = await DBConn.MakeQuery(query);
+}
+
 module.exports = {
     parse_and_create_new_task: parse_and_create_new_task,
     user_apply_task: user_apply_task,
@@ -613,7 +728,7 @@ module.exports = {
     confirm_apply: confirm_apply,
     reset_standard: reset_standard,
     get_columns2: get_columns2,
-    compute_data_type_tuple_num: compute_data_type_tuple_num,
+    compute_db1: compute_db1,
     get_members: get_members,
     check_member_type: check_member_type,
     add_source_data_type: add_source_data_type,
@@ -623,4 +738,9 @@ module.exports = {
     make_file: make_file,
     get_file2: get_file2,
     get_table_name: get_table_name,
+    get_member_info: get_member_info,
+    get_submitter_info: get_submitter_info,
+    get_evaluator_info: get_evaluator_info,
+    get_search_users: get_search_users,
+    update_user_score: update_user_score,
 }

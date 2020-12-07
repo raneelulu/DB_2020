@@ -1,25 +1,25 @@
 <template>
   <div v-if="user">
-    <p>{{user.name}}님의 평가 점수 : {{score}}</p>
+    <p class="score">{{user.name}}님의 평가 점수 : {{score}}</p>
     <br>
     <h3>TASK 목록</h3>
     <b-table :fields="fields" :items="items">
       <template #cell(name)="data">
         <!-- 테스크 표 테스크 클릭 시 선택 가능 selected 에 저장 -->
-        <b-button size="sm" @click="selectTask(data.value)">{{ data.value }}</b-button>
+        <b-button size="sm" variant="info" @click="selectTask(data.value)">{{ data.value }}</b-button>
       </template>
     </b-table>
 
-    <p> Selected Task : {{ selected }} </p>
+    <div class="s_task"> Selected Task : {{ selected }} </div>
 
-    <br>
-
-    <select v-model="selectedType" @change="changeType()">
-      <option v-for="type in dataType" v-bind:key="type.typeName" v-bind:value="type.typeName">
-        {{type.typeName}}
-      </option>
-    </select>
-    <span>Original Data Type : {{ selectedType }}</span>
+    <div class="s_task">
+      <select v-model="selectedType" @change="changeType()">
+        <option v-for="type in dataType" v-bind:key="type.typeName" v-bind:value="type.typeName">
+          {{type.typeName}}
+        </option>
+      </select>
+      <span>Original Data Type : {{ selectedType }}</span>
+    </div>
 
     <br>
 
@@ -27,8 +27,10 @@
 
     <br>
 
+    <div class="s_task">
     <p> 제출한 총 파일 수 : {{ subFileNum }} </p>
-    <p> 제출한 총 tuple 수 : {{ tupleNum }} </p>
+    <p> PASS된 총 tuple 수 : {{ tupleNum }} </p>
+    </div>
 
     <div id="fileBox">
       <b-form-file
@@ -39,19 +41,33 @@
           drop-placeholder="Drop file here..."
       ></b-form-file>
     </div>
-    <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+    <div class="mt-3">필수 입력 사항</div>
 
-    <b-form-input v-model="subNum" placeholder="회차를 입력하시오"></b-form-input>
-    <b-form-input v-model="start_period" placeholder="시작기간을 입력하시오"></b-form-input>
-    <b-form-input v-model="end_period" placeholder="종료기간을 입력하시오"></b-form-input>
+    <b-col sm="5">
+      <b-form-input v-model="subNum" placeholder="회차를 입력하시오"></b-form-input>
+    </b-col>
+    <b-row class="period">
+      <b-col sm="1">
+        <label class="sss">시작 날짜 : </label>
+      </b-col>
+      <b-col sm="3">
+        <b-form-input v-model="start_period" type="date"></b-form-input>
+      </b-col>
+      <b-col sm="1">
+        <label class="sss">종료 날짜 : </label>
+      </b-col>
+      <b-col sm="3">
+        <b-form-input v-model="end_period" type="date"></b-form-input>
+      </b-col>
+    </b-row>
     <br>
 
     <ul>
       <li>
-        <b-button variant="info" @click="upload">SUBMIT</b-button>
+        <button type="submit" @click="upload">SUBMIT</button>
       </li>
       <li>
-        <b-button variant="info" @click="backPage">BACK</b-button>
+        <button type="submit" class='red' @click="backPage">BACK</button>
       </li>
     </ul> 
     <ul>
@@ -94,7 +110,8 @@ export default {
               {key: 'isPass', label: 'PASS 여부'}
             ],
             subNum: '',
-            period: '',
+            start_period: '',
+            end_period: '',
             complete: false
         }
     },
@@ -189,18 +206,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-div {
-  margin : 20px;
-}
-h2 {
-    font-weight: bold;
-}
 select {
   min-width: 100px;
 }
 #fileBox {
   padding-top: 50px;
   width: 70%;
+  padding: 15px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -217,4 +229,15 @@ ul > p {
   padding-bottom : 40px;
   font-size : small;
 }
+.red{background-color: tomato!important;}
+.red:hover{background-color: rgba(255, 99, 71, 0.849)!important;}
+button[type=submit]{background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
+button[type=submit]:hover{background-color: #257e70ad;}
+.mt-3{font-weight: bold; text-align: left; padding: 10px;}
+.s_task{text-align: left; padding: 10px;}
+.score{font-weight:bold; font-size: medium; margin-top: 20px;}
+h3{padding-bottom: 20px; font-weight: bold;}
+span{padding-left: 20px;}
+.period{padding: 10px;}
+.sss{margin: 0!important; padding-top: 5px;}
 </style>

@@ -41,8 +41,9 @@ router.post('/:taskName/:typeName', function(req, res, next){
     // 테스크에 체출한 총 파일 수, pass한 총 튜플 수(모든 원본 데이터 타입에 제출된 총 수)
     var name = req.params.typeName;
     var ret = {};
-    Functions.get_source_data_type_info(name)
+    Functions.get_source_data_type_info(req.user.id, name)
     .then((results)=>{
+        console.log(ret);
         ret.submitFiles = results.submitFiles;
         ret.subFileNum = results.subFileNum[0]['count(*)'];
         ret.tupleNum = results.tupleNum[0]['count(*)'];

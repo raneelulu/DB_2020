@@ -1,5 +1,5 @@
 <template>
-  <div style="margin: 10px; flex-grow: 3;">
+  <div style="margin: 10px;">
     <div class="a">
       <div class="b">
         <div class="c bold">File ID</div>
@@ -29,17 +29,17 @@
     </div>
     <hr>
     <div class="a">
-      <div class="b" style="width: 60%;">
+      <div class="b" style="width: 90%;">
         <div class="c bold">Number of Tuples</div>
         |
         <div class="c">{{ file.all_tuple_number }}</div>
       </div>
-      <div class="b" style="width: 60%;">
+      <div class="b" style="width: 90%;">
         <div class="c bold">Number of Duplicates</div>
         |
         <div class="c">{{ file.duplicated_tuple_number }}</div>
       </div>
-      <div class="b" style="width: 40%;">
+      <div class="b" style="width: 90%;">
         <div class="c bold">Download Link</div>
         |
         <div class="c"><b-button variant="info" @click="Download" type="file">Download</b-button></div>
@@ -177,6 +177,7 @@ export default {
 
 <style scoped>
 .a {
+  width: 1000px;
   background-color: #cccccc;
   border-radius: 3px;
   padding: 4px;
@@ -228,4 +229,6 @@ table tbody tr:last-child td:first-child {
 table tbody tr:last-child td:last-child {
   border-radius: 0 0 5px 0;
 }
+input[type=submit]:hover{width:100%;background-color: #257e70;}
+input[type=submit]:hover{background-color: #257e70ad;}
 </style>

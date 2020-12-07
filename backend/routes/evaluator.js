@@ -98,34 +98,40 @@ router.post('/:userID/todo/:fileID', function (req, res, next) {
     // fileID를 ID로 갖는 파싱 데이터 시퀀스 파일에 평가 점수와 P/NP 정보를 저장함.
 
     if(p_np == 'pass'){
-        Functions.evaluate(fileID, score, p_np);
-        Functions.get_mapping_schema(fileID)
+        Functions.update_user_score(fileID, score)
         .then((results)=>{
-            schema_info = JSON.parse(results[0].schema_info);
-            table_name = results[0].table_name;
-            task_name = results[0].task_name;
-            task_table_name = results[0].task_table_name;
-            var columns = [];
-            Functions.get_columns(table_name)
+            Functions.evaluate(fileID, score, p_np);
+            Functions.get_mapping_schema(fileID)
             .then((results)=>{
-                for(i = 0; i < results.columns.length; i ++){
-                    columns.push(results.columns[i].column_name);
-                }
-                Functions.get_file(fileID, table_name)
+                schema_info = JSON.parse(results[0].schema_info);
+                table_name = results[0].table_name;
+                task_name = results[0].task_name;
+                task_table_name = results[0].task_table_name;
+                var columns = [];
+                Functions.get_columns(table_name)
                 .then((results)=>{
-                    var tuples = results;
-                    Functions.put_into_task_table(task_table_name, tuples, columns, schema_info)
-                    .then((stat)=>{
-                        console.log(stat);
-                        res.json({stat:stat});
-                    })
+                    for(i = 0; i < results.columns.length; i ++){
+                        columns.push(results.columns[i].column_name);
+                    }
+                    Functions.get_file(fileID, table_name)
+                    .then((results)=>{
+                        var tuples = results;
+                        Functions.put_into_task_table(task_table_name, tuples, columns, schema_info)
+                        .then((stat)=>{
+                            console.log(stat);
+                            res.json({stat:stat});
+                        })
+                    });
                 });
-            });
-        })
+            })
+        });
     } else {
-        Functions.evaluate(fileID, score, p_np)
-        .then((stat)=>{
-            res.json({stat:0});
+        Functions.update_user_score(fileID, score)
+        .then((results)=>{
+            Functions.evaluate(fileID, score, p_np)
+            .then((stat)=>{
+                res.json({stat:0});
+            });
         });
     }
 

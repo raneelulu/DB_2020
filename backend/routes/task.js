@@ -61,11 +61,6 @@ router.get('/:taskName', function(req, res, next){
             [{id: 2}, {a:'이름'}, {a:'학번'}, {a:'학교'}, {a:'주소'}, {a:'이성친구 유무'}],
             [{id: 3}, {a:'이름'}, {a:'월급'}, {a:'성적'}, {a:'생일'}, {a:'주소'}]
         ]
-        originData_type: [                                  // 원본 데이터 타입
-            [{id: 1}, {a:'이름'}, {a:'학교'}, {a:'나이'}, {a:'생일'}, {a:'성적'}],
-            [{id: 2}, {a:'이름'}, {a:'학번'}, {a:'학교'}, {a:'주소'}, {a:'이성친구 유무'}],
-            [{id: 3}, {a:'이름'}, {a:'월급'}, {a:'성적'}, {a:'생일'}, {a:'주소'}]
-        ]
     };*/
 
     var ret = {};
@@ -74,17 +69,16 @@ router.get('/:taskName', function(req, res, next){
         ret.task = results.info1[0];
         tablename = results.info1[0].data_table_name;
         ret.task.all_file_number = results.info2[0]['count(*)'];
-        ret.task.pass_tuple_number = results.info3[0]['count(*)'];
-        ret.user_list = results.info4;
-        var source_data_types = results.info5;
-        Functions.compute_data_type_tuple_num(name, source_data_types)
+        ret.user_list = results.info3;
+        var source_data_types = results.info4;
+        Functions.compute_db1(name, source_data_types, tablename)
         .then((results)=>{
-            ret.task.data_type_level_tuple_number = results;
-            Functions.get_columns2(tablename)
-            .then((results)=>{
-                ret.task_schema = results;
-                res.json(ret);
-            });
+            ret.task.data_type_level_tuple_number = results['data_type_level_tuple_num'];
+            ret.task.pass_tuple_number = results.passed_tuple_num[0]['count(*)'];
+            ret.task_schema = results.task_schema;
+            ret.tableSchema = results.task_schema2;
+            ret.originData_type = results.original_data_types;
+            res.json(ret);
         });
     });
 });

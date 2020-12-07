@@ -5,10 +5,10 @@
         <br>
       <ul>
         <li>
-          <b-button v-on:click = to_task()>TASK</b-button>
+          <button type="submit" v-on:click = to_task()>TASK</button>
         </li>
         <li>
-          <b-button v-on:click = to_memb()>회원관리</b-button>
+          <button type="submit" v-on:click = to_memb()>회원관리</button>
         </li>
       </ul>
       <ul>
@@ -22,7 +22,7 @@ export default {
     name: 'AdminMain',
     data () {
         return {
-            msg: '[ADMINISTRATOR MAIN PAGE]'
+            msg: '[ADMINISTRATOR Page]'
         }
     },
     methods:{
@@ -74,4 +74,6 @@ p {
   padding-bottom : 40px;
   font-size : small;
 }
+button[type=submit]{background-color: #247e70;color: white;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;cursor: pointer;}
+button[type=submit]:hover{background-color: #257e70ad;}
 </style>
