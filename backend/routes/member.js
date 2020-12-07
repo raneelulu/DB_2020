@@ -32,10 +32,10 @@ router.get('/:userID', function(req, res, next){
         {name: '생각보다 어려웠다4', fileNumber: '10', tupleNumber: '1000', nullProperty: '5'},
       ],
       file_info: [
-        {id: '1', score: '10', pnp: 'pass'},
+        /*{id: '1', score: '10', pnp: 'pass'},
         {id: '2', score: '6', pnp: 'pass'},
         {id: '3', score: '4', pnp: 'non-pass'},
-        {id: '4', score: '1', pnp: 'non-pass'},
+        {id: '4', score: '1', pnp: 'non-pass'},*/
       ]
     };
     res.json(ret)

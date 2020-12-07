@@ -77,7 +77,8 @@ export default {
     methods: {
         onSearch(evt) {
             evt.preventDefault()
-            this.$http.post('/api/member/search')
+            this.$http.post('/api/member/search', {taskName: this.SearchData.taskName, userId: this.SearchData.id,
+            userGender: this.SearchData.gender, userAge: this.SearchData.age, userRole: this.SearchData.role}, {"Content-Type": "application-json"})
                 .then((res) => {
                     this.member_list = res.data.member_list
                 })
