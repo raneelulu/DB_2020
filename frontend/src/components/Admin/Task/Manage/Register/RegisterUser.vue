@@ -33,7 +33,7 @@ export default {
                     // post가 성공하면
                     if (res.data.success) {
                         alert('정상적으로 승인되었습니다')
-                        this.$route.push("/admin/task/manage/" + this.$route.params.taskName)
+                        location.reload();
                     } else {
                         alert("승인 과정에서 오류가 발생하였습니다.")
                     }

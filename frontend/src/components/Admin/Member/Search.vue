@@ -2,30 +2,12 @@
     <div class="wrapper">
         <Menu current="search"/>
         <div class="column">
-            <div id="taskSearch">
-                <b-col sm="2">
-                    <label for="TaskName">TASK 이름:</label>
-                </b-col>
-                <b-col sm="10">
-                    <b-form-input id="TaskName" size="lg" v-model="SearchData.taskName"></b-form-input>
-                </b-col>
-            </div>
-            <hr>
             <div id="IDSearch">
                 <b-col sm="2">
                     <label for="ID">회원 번호:</label>
                 </b-col>
                 <b-col sm="10">
                     <b-form-input id="ID" size="lg" v-model="SearchData.id"></b-form-input>
-                </b-col>
-            </div>
-            <hr>
-            <div id="Gender">
-                <b-col sm="2">
-                    <label for="gender">성별:</label>
-                </b-col>
-                <b-col sm="10">
-                    <b-form-input id="gender" size="lg" v-model="SearchData.gender"></b-form-input>
                 </b-col>
             </div>
             <hr>
@@ -65,9 +47,7 @@ export default {
     data() {
         return {
             SearchData: {
-                taskName:'',
                 id: '',
-                gender: '',
                 age: '',
                 role: ''
             },
@@ -77,8 +57,8 @@ export default {
     methods: {
         onSearch(evt) {
             evt.preventDefault()
-            this.$http.post('/api/member/search', {taskName: this.SearchData.taskName, userId: this.SearchData.id,
-            userGender: this.SearchData.gender, userAge: this.SearchData.age, userRole: this.SearchData.role}, {"Content-Type": "application-json"})
+            this.$http.post('/api/member/search', {userId: this.SearchData.id, 
+            userAge: this.SearchData.age, userRole: this.SearchData.role}, {"Content-Type": "application-json"})
                 .then((res) => {
                     this.member_list = res.data.member_list
                 })
@@ -89,9 +69,7 @@ export default {
         onReset(evt) {
             evt.preventDefault()
                 // Reset our form values
-                this.SearchData.taskName = ''
                 this.SearchData.id = ''
-                this.SearchData.gender = ''
                 this.SearchData.age = ''
                 this.SearchData.role = ''
         }
